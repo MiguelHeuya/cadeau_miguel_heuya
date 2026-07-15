@@ -164,6 +164,12 @@ select option{background:#1a1a1a;color:#fff;}
 .badge-top-global{background:var(--primary);color:#000;font-weight:800;text-transform:uppercase;font-size:.58rem;padding:3px 7px;border-radius:5px;}
 .badge-top-cat{background:#fff;color:#000;font-weight:800;font-size:.58rem;padding:3px 7px;border-radius:5px;}
 .badge-new{background:rgba(100,200,100,.2);color:#6fc97a;font-size:.58rem;padding:3px 7px;border-radius:5px;font-weight:700;}
+.badge-trend-up{background:rgba(100,200,100,.18);color:#6fc97a;font-size:.58rem;padding:3px 7px;border-radius:5px;font-weight:800;}
+.badge-trend-down{background:rgba(255,68,68,.18);color:var(--danger);font-size:.58rem;padding:3px 7px;border-radius:5px;font-weight:800;}
+.badge-inactive{background:rgba(255,255,255,.08);color:rgba(255,255,255,.45);font-size:.58rem;padding:3px 7px;border-radius:5px;font-weight:700;}
+.cat-trend-up{background:rgba(100,200,100,.18);color:#6fc97a;padding:2px 7px;border-radius:4px;font-weight:800;}
+.cat-trend-down{background:rgba(255,68,68,.18);color:var(--danger);padding:2px 7px;border-radius:4px;font-weight:800;}
+.cat-inactive{background:rgba(255,255,255,.08);color:rgba(255,255,255,.45);padding:2px 7px;border-radius:4px;font-weight:700;}
 .badge-private{background:rgba(255,68,68,.15);color:var(--danger);font-size:.58rem;padding:3px 7px;border-radius:5px;font-weight:700;}
 .badge-deadline-urgent{background:rgba(255,140,0,.25);color:#ffaa00;font-size:.58rem;padding:3px 7px;border-radius:5px;font-weight:700;animation:pulse .8s infinite;}
 .badge-deadline-expired{background:rgba(255,68,68,.25);color:var(--danger);font-size:.58rem;padding:3px 7px;border-radius:5px;font-weight:700;}
@@ -530,6 +536,12 @@ footer{width:100%;padding:56px 20px;text-align:center;border-top:1px solid var(-
 .planner-tabs { display: flex; gap: 6px; margin-bottom: 20px; background: rgba(255,255,255,.03); padding: 5px; border-radius: 13px; border: 1px solid var(--glass-border); }
 .planner-tab { flex: 1; padding: 9px; border: none; border-radius: 9px; cursor: pointer; font-family: inherit; font-size: .75rem; font-weight: 700; transition: var(--transition); background: transparent; color: rgba(255,255,255,.4); text-transform: uppercase; letter-spacing: .5px; }
 .planner-tab.active { background: var(--primary); color: #000; }
+.recap-stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(135px,1fr));gap:12px;margin-bottom:28px;}
+.recap-stat-card{background:rgba(255,255,255,.03);border:1px solid var(--glass-border);border-radius:16px;padding:16px 10px;text-align:center;}
+.recap-stat-value{font-size:1.5rem;font-weight:800;color:var(--primary);line-height:1.2;}
+.recap-stat-label{font-size:.6rem;text-transform:uppercase;letter-spacing:.5px;color:rgba(255,255,255,.4);margin-top:6px;font-weight:700;}
+.recap-chart-block{margin-bottom:30px;}
+.recap-chart-title{font-size:.75rem;font-weight:700;color:rgba(255,255,255,.5);margin-bottom:12px;text-transform:uppercase;letter-spacing:1px;}
 
 .planner-progress-bar-wrap { background: rgba(255,255,255,.06); border-radius: 100px; height: 10px; margin-bottom: 6px; overflow: hidden; }
 .planner-progress-bar-fill { height: 100%; border-radius: 100px; background: var(--primary); transition: width .5s cubic-bezier(.23,1,.32,1); }
@@ -758,8 +770,9 @@ footer{width:100%;padding:56px 20px;text-align:center;border-top:1px solid var(-
     </div>
   </section>
 
-  <div id="dead-link-bar">
-    <p><i class="fa-solid fa-triangle-exclamation"></i> <span id="dead-link-msg"></span></p>
+  <div id="dead-link-bar" style="position:relative;">
+    <p style="padding-right:30px;"><i class="fa-solid fa-triangle-exclamation"></i> <span id="dead-link-msg"></span></p>
+    <button onclick="fermerDeadLinkBar()" title="Fermer" style="position:absolute;top:10px;right:14px;background:none;border:none;color:rgba(255,100,100,.8);font-size:1rem;cursor:pointer;padding:4px;line-height:1;"><i class="fa-solid fa-xmark"></i></button>
   </div>
 
   <div id="recents-panel">
@@ -794,6 +807,10 @@ footer{width:100%;padding:56px 20px;text-align:center;border-top:1px solid var(-
     <div id="timeline-section" style="margin-bottom:28px;">
       <p style="font-size:.75rem;color:rgba(255,255,255,.4);font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:14px;">Évolution hebdomadaire des clics</p>
       <div id="timeline-bars"></div>
+    </div>
+    <div id="cat-ranking-section" style="margin-bottom:28px;">
+      <p style="font-size:.75rem;color:rgba(255,255,255,.4);font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:14px;">Classement des catégories par clics</p>
+      <div id="cat-ranking-bars"></div>
     </div>
     <canvas id="analyticsChart"></canvas>
     <div class="never-clicked-section" id="never-clicked-section" style="display:none;">
@@ -1028,6 +1045,7 @@ footer{width:100%;padding:56px 20px;text-align:center;border-top:1px solid var(-
       <button class="planner-tab active" onclick="switchPlannerTab('today',this)"><i class="fa-solid fa-sun"></i> Aujourd'hui</button>
       <button class="planner-tab" onclick="switchPlannerTab('multiday',this)"><i class="fa-solid fa-calendar-days"></i> Multi-jours</button>
       <button class="planner-tab" onclick="switchPlannerTab('history',this)"><i class="fa-solid fa-chart-simple"></i> Historique</button>
+      <button class="planner-tab" onclick="switchPlannerTab('recap',this)"><i class="fa-solid fa-chart-pie"></i> Bilan</button>
     </div>
 
     <!-- ONGLET AUJOURD'HUI -->
@@ -1041,6 +1059,15 @@ footer{width:100%;padding:56px 20px;text-align:center;border-top:1px solid var(-
           <span id="planner-progress-text">0 / 0 tâches terminées</span>
           <span id="planner-progress-pct">0%</span>
         </div>
+      </div>
+
+      <!-- Corbeille de tâches du jour -->
+      <div id="planner-trash-wrap" style="display:none;margin-bottom:16px;background:rgba(255,68,68,.05);border:1px solid rgba(255,68,68,.2);border-radius:16px;padding:14px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:6px;">
+          <span style="font-size:.75rem;font-weight:700;color:#ff8080;"><i class="fa-solid fa-trash"></i> Corbeille du jour (<span id="planner-trash-count">0</span>)</span>
+          <span style="font-size:.62rem;color:rgba(255,255,255,.35);">Vidée automatiquement à la fin de validité du programme</span>
+        </div>
+        <div class="multi-day-task-list" id="planner-trash-list"></div>
       </div>
 
       <!-- Zone de saisie (avant validation) -->
@@ -1069,9 +1096,12 @@ footer{width:100%;padding:56px 20px;text-align:center;border-top:1px solid var(-
 
         <div id="planner-pending-list"></div>
 
-        <button class="planner-validate-btn" onclick="validerProgramme()" id="planner-validate-btn" style="display:none;">
-          <i class="fa-solid fa-check-double"></i> Valider le programme du jour
-        </button>
+        <div style="display:flex;gap:10px;margin-top:10px;flex-wrap:wrap;">
+          <button class="planner-validate-btn" onclick="validerProgramme()" id="planner-validate-btn" style="display:none;flex:2;">
+            <i class="fa-solid fa-check-double"></i> Valider le programme du jour
+          </button>
+          <button class="btn-ghost" style="flex:1;" onclick="switchPlannerTab('multiday', document.querySelectorAll('.planner-tab')[1]); preparerDemain();"><i class="fa-solid fa-forward"></i> Préparer demain</button>
+        </div>
       </div>
 
       <!-- Zone de suivi (après validation) -->
@@ -1100,6 +1130,7 @@ footer{width:100%;padding:56px 20px;text-align:center;border-top:1px solid var(-
         <div id="planner-tasks-list"></div>
         <div style="display:flex;gap:10px;margin-top:16px;flex-wrap:wrap;">
           <button class="btn-annuler" style="flex:1;" onclick="reinitialiserProgramme()"><i class="fa-solid fa-rotate-left"></i> Réinitialiser</button>
+          <button class="btn-ghost" style="flex:1;" onclick="switchPlannerTab('multiday', document.querySelectorAll('.planner-tab')[1]); preparerDemain();"><i class="fa-solid fa-forward"></i> Préparer demain</button>
         </div>
       </div>
     </div>
@@ -1111,6 +1142,7 @@ footer{width:100%;padding:56px 20px;text-align:center;border-top:1px solid var(-
       <div class="multi-day-date-pick">
         <input type="date" id="multiday-date-input">
         <button onclick="ajouterJourMulti()"><i class="fa-solid fa-plus"></i> Ajouter ce jour</button>
+        <button onclick="preparerDemain()"><i class="fa-solid fa-forward"></i> Préparer demain</button>
       </div>
 
       <div id="multiday-days-container"></div>
@@ -1123,6 +1155,43 @@ footer{width:100%;padding:56px 20px;text-align:center;border-top:1px solid var(-
     <div id="planner-history-panel" style="display:none;">
       <p style="color:rgba(255,255,255,.4);font-size:.78rem;margin-bottom:16px;">Bilan de vos programmes journaliers validés (60 derniers jours).</p>
       <div id="planner-history-list"></div>
+    </div>
+
+    <!-- ONGLET BILAN / RÉCAPITULATION -->
+    <div id="planner-recap-panel" style="display:none;">
+      <p style="color:rgba(255,255,255,.4);font-size:.78rem;margin-bottom:16px;">Statistiques cumulées de vos programmes validés (le jour en cours n'est comptabilisé qu'une fois terminé).</p>
+      <div class="recap-stats-grid" id="recap-stats-grid"></div>
+      <div class="recap-chart-block">
+        <div class="recap-chart-title"><i class="fa-solid fa-chart-line"></i> Évolution du taux de complétion</div>
+        <canvas id="recapTimelineChart" height="90"></canvas>
+      </div>
+      <div class="recap-chart-block">
+        <div class="recap-chart-title"><i class="fa-solid fa-chart-bar"></i> Taux de complétion par priorité</div>
+        <canvas id="recapPriorityChart" height="90"></canvas>
+      </div>
+      <div class="recap-chart-block">
+        <div class="recap-chart-title"><i class="fa-solid fa-calendar-week"></i> Productivité par jour de la semaine</div>
+        <canvas id="recapWeekdayChart" height="90"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="moveTaskModal" class="modal">
+  <div class="modal-inner" style="max-width:420px;">
+    <span class="close-modal" onclick="closeMoveTaskModal()">&times;</span>
+    <h2><i class="fa-solid fa-share-from-square" style="margin-right:7px;"></i>Déplacer / copier la tâche</h2>
+    <p style="color:rgba(255,255,255,.4);font-size:.75rem;margin-bottom:18px;" id="move-task-info"></p>
+    <label>Jour cible</label>
+    <input type="date" id="move-task-date" style="margin-bottom:18px;">
+    <label>Action</label>
+    <select id="move-task-mode" style="margin-bottom:22px;">
+      <option value="move">Déplacer (retirer d'ici)</option>
+      <option value="copy">Copier (garder ici aussi)</option>
+    </select>
+    <div class="action-buttons">
+      <button class="btn-annuler" onclick="closeMoveTaskModal()">ANNULER</button>
+      <button class="btn-confirm" onclick="confirmerDeplacementTache()">CONFIRMER</button>
     </div>
   </div>
 </div>
@@ -1720,7 +1789,10 @@ function renderGroupsList() {
     </div>`;
   }).join('');
 }
-function supprimerGroupe(name) { const groups = getGroups(); delete groups[name]; saveGroups(groups); renderGroupsList(); refreshUI(); showToast(`✓ Groupe "${name}" supprimé`); }
+function supprimerGroupe(name) {
+  if(!confirm(`Êtes-vous sûr de vouloir supprimer le groupe "${name}" ?\n\nLes catégories qu'il contient ne seront pas supprimées : elles seront simplement dissociées de ce groupe.`)) return;
+  const groups = getGroups(); delete groups[name]; saveGroups(groups); renderGroupsList(); refreshUI(); showToast(`✓ Groupe "${name}" supprimé`);
+}
 function ajouterCatGroupe(gname) {
   const sel = document.getElementById('add-cat-to-' + CSS.escape(gname)); if (!sel || !sel.value) return;
   const groups = getGroups(); if (!groups[gname].includes(sel.value)) groups[gname].push(sel.value);
@@ -1853,11 +1925,11 @@ function verifierMotDePasse(){
 }
 function validerLockscreen(){
   const pwd = getSitePassword(), input = document.getElementById('lockscreen-pwd-input').value;
-  if(input === pwd){ document.getElementById('app-lockscreen').style.display='none'; refreshUI(); verifierRappelPlanner(); }
+  if(input === pwd){ document.getElementById('app-lockscreen').style.display='none'; refreshUI(); verifierRappelPlanner(); updatePlannerFab(); }
   else { document.getElementById('lockscreen-error').style.display='block'; document.getElementById('lockscreen-pwd-input').value=''; }
 }
 function verifierLockscreenAuChargement(){
-  if(!getSitePassword()){ document.getElementById('app-lockscreen').style.display='none'; verifierRappelPlanner(); return; }
+  if(!getSitePassword()){ document.getElementById('app-lockscreen').style.display='none'; verifierRappelPlanner(); updatePlannerFab(); return; }
   document.getElementById('lockscreen-pwd-input').addEventListener('keypress', e=>{ if(e.key==='Enter') validerLockscreen(); });
 }
 
@@ -2132,6 +2204,8 @@ function verifierLiensMorts(){
   }
 }
 
+function fermerDeadLinkBar(){ document.getElementById('dead-link-bar').style.display='none'; }
+
 // ============================================================
 // CATEGORY ACTIONS
 // ============================================================
@@ -2228,7 +2302,7 @@ function filtrerLiens(query){
 // ============================================================
 // REFRESH UI
 // ============================================================
-function renderCategoryGroup(catName, globalMax, catTotals, topCatName, unlocked) {
+function renderCategoryGroup(catName, globalMax, catTotals, topCatName, unlocked, catIndicators) {
   if(isCategoryEncrypted(catName)){
     const section = document.createElement('div');
     section.className = 'category-group';
@@ -2262,6 +2336,14 @@ function renderCategoryGroup(catName, globalMax, catTotals, topCatName, unlocked
     const displayUrl = isEncryptedLink ? '#' : (l.url.startsWith('http') ? l.url : 'https://' + l.url);
     const isGlobalTop = !isEncryptedLink && l.clicks > 0 && l.clicks === globalMax;
     const isCatTop = !isEncryptedLink && l.clicks > 0 && l.clicks === catMax;
+    const _now = Date.now(); const _win = 7*24*60*60*1000;
+    const _ch = (!isEncryptedLink && l.clickHistory) ? l.clickHistory : [];
+    const _last7 = _ch.filter(ts => _now-ts < _win).length;
+    const _prev7 = _ch.filter(ts => _now-ts >= _win && _now-ts < 2*_win).length;
+    const linkTrendUp = !isEncryptedLink && _last7 > 0 && _last7 > _prev7;
+    const linkTrendDown = !isEncryptedLink && _prev7 > 0 && _last7 < _prev7;
+    const _lastClickTs = _ch.length ? Math.max(..._ch) : 0;
+    const linkInactive = !isEncryptedLink && l.clicks > 0 && _lastClickTs > 0 && (_now - _lastClickTs) > 30*24*60*60*1000;
     const scat = catName.replace(/'/g, "\\'"); const snm = displayName.replace(/'/g, "\\'"); const surl = (isEncryptedLink ? '' : l.url).replace(/'/g, "\\'");
     const isNew = !isEncryptedLink && isNewThisWeek(l.addedAt);
     const tags = (!isEncryptedLink && l.tags) ? (l.tags || []).map(t => typeof t === 'string' ? t : t.name) : [];
@@ -2287,6 +2369,9 @@ function renderCategoryGroup(catName, globalMax, catTotals, topCatName, unlocked
           ${!isEncryptedLink && isGlobalTop ? '<span class="badge-top-global">TOP</span>' : ''}
           ${!isEncryptedLink && isCatTop ? '<span class="badge-top-cat">1</span>' : ''}
           ${!isEncryptedLink && isNew ? '<span class="badge-new">NEW</span>' : ''}
+          ${!isEncryptedLink && linkTrendUp ? '<span class="badge-trend-up" title="Popularité en hausse (7 derniers jours)">📈</span>' : ''}
+          ${!isEncryptedLink && linkTrendDown ? '<span class="badge-trend-down" title="Popularité en baisse (7 derniers jours)">📉</span>' : ''}
+          ${!isEncryptedLink && linkInactive ? '<span class="badge-inactive" title="Aucun clic depuis plus de 30 jours">💤</span>' : ''}
           ${isEncryptedLink ? '<span class="badge-encrypted">🔐 Crypté</span>' : `<span class="badge-clicks">${l.clicks} cliq.</span>`}
         </div>
       </a>
@@ -2329,6 +2414,9 @@ function renderCategoryGroup(catName, globalMax, catTotals, topCatName, unlocked
         <span>${visibleCount} lien(s)</span><span>·</span>
         <span>TOTAL : ${catTotals[catName]} clic(s)</span>
         ${catTotals[catName] > 0 && catName === topCatName ? '<span class="cat-top-1">#1 CATÉGORIE</span>' : ''}
+        ${catIndicators && catIndicators[catName] && catIndicators[catName].trendUp ? '<span class="cat-trend-up" title="Popularité en hausse (7 derniers jours)">📈 Hausse</span>' : ''}
+        ${catIndicators && catIndicators[catName] && catIndicators[catName].trendDown ? '<span class="cat-trend-down" title="Popularité en baisse (7 derniers jours)">📉 Baisse</span>' : ''}
+        ${catIndicators && catIndicators[catName] && catIndicators[catName].inactive ? '<span class="cat-inactive" title="Aucun clic depuis plus de 30 jours">💤 Inactive</span>' : ''}
       </div>
     </div>
     <div class="links-stack" id="stack-${CSS.escape(catName)}"
@@ -2340,11 +2428,28 @@ function renderCategoryGroup(catName, globalMax, catTotals, topCatName, unlocked
 function refreshUI(){
   const container = document.getElementById('categories-container');
   container.innerHTML = ''; container.classList.toggle('drag-mode', dragModeActive);
-  let globalMax = 0; let maxCatTotal = 0; let topCatName = ''; const catTotals = {};
+  let globalMax = 0; let maxCatTotal = 0; let topCatName = ''; const catTotals = {}; const catIndicators = {};
+  const _rNow = Date.now(); const _rWin = 7*24*60*60*1000;
   for(const cat in db){
-    if(isCategoryEncrypted(cat)){ catTotals[cat]=0; continue; }
-    let t=0; db[cat].links.forEach(l=>{ if(!isLinkEncrypted(l)){ t+=l.clicks; if(l.clicks>globalMax) globalMax=l.clicks; } });
+    if(isCategoryEncrypted(cat)){ catTotals[cat]=0; catIndicators[cat]={trendUp:false,trendDown:false,inactive:false}; continue; }
+    let t=0, last7=0, prev7=0, lastClickTs=0, hasClicks=false;
+    db[cat].links.forEach(l=>{
+      if(!isLinkEncrypted(l)){
+        t+=l.clicks; if(l.clicks>globalMax) globalMax=l.clicks;
+        if(l.clicks>0) hasClicks=true;
+        (l.clickHistory||[]).forEach(ts=>{
+          if(_rNow-ts < _rWin) last7++;
+          else if(_rNow-ts < 2*_rWin) prev7++;
+          if(ts>lastClickTs) lastClickTs=ts;
+        });
+      }
+    });
     catTotals[cat]=t; if(t>maxCatTotal){ maxCatTotal=t; topCatName=cat; }
+    catIndicators[cat] = {
+      trendUp: last7>0 && last7>prev7,
+      trendDown: prev7>0 && last7<prev7,
+      inactive: hasClicks && lastClickTs>0 && (_rNow-lastClickTs) > 30*24*60*60*1000
+    };
   }
   const sortedCats = Object.keys(db).sort((a,b)=>db[a].rank-db[b].rank);
   const unlocked = !getSitePassword() || document.getElementById('app-lockscreen').style.display==='none';
@@ -2363,9 +2468,9 @@ function refreshUI(){
       <i class="fa-solid fa-chevron-down parent-group-collapse-icon"></i>
     </div><div class="parent-group-body" id="pgbody-${CSS.escape(gname)}"></div>`;
     container.appendChild(groupEl);
-    if(!isCollapsed){ const body=groupEl.querySelector('.parent-group-body'); gcats.sort((a,b)=>db[a].rank-db[b].rank).forEach(catName=>{ body.appendChild(renderCategoryGroup(catName,globalMax,catTotals,topCatName,unlocked)); }); }
+    if(!isCollapsed){ const body=groupEl.querySelector('.parent-group-body'); gcats.sort((a,b)=>db[a].rank-db[b].rank).forEach(catName=>{ body.appendChild(renderCategoryGroup(catName,globalMax,catTotals,topCatName,unlocked,catIndicators)); }); }
   });
-  sortedCats.filter(c=>!assignedCats.has(c)).forEach(catName=>{ container.appendChild(renderCategoryGroup(catName,globalMax,catTotals,topCatName,unlocked)); });
+  sortedCats.filter(c=>!assignedCats.has(c)).forEach(catName=>{ container.appendChild(renderCategoryGroup(catName,globalMax,catTotals,topCatName,unlocked,catIndicators)); });
   const sel=document.getElementById('category-select');
   sel.innerHTML='<option value="">-- Sélectionner --</option><option value="NEW" style="color:var(--primary);">+ Créer nouvelle</option>';
   Object.keys(db).filter(c=>!isCategoryEncrypted(c)).sort().forEach(c=>{ const o=document.createElement('option'); o.value=o.textContent=c; sel.appendChild(o); });
@@ -2405,9 +2510,30 @@ function openDashboard(){
   }
   const mx=Math.max(...weeks,1); const tl=document.getElementById('timeline-bars');
   tl.innerHTML=weeks.map((v,i)=>`<div class="timeline-bar-wrap"><span class="timeline-bar-label">${labels[i]}</span><div class="timeline-bar-track"><div class="timeline-bar-fill" style="width:${Math.round(v/mx*100)}%"></div></div><span class="timeline-bar-val">${v}</span></div>`).join('');
+  renderCatRanking();
   renderAnalyticsChart();
 }
 function closeDashboard(){ document.getElementById('statsModal').style.display='none'; }
+function renderCatRanking(){
+  const rows = [];
+  for(const cat in db){
+    if(isCategoryEncrypted(cat)) continue;
+    let t=0; db[cat].links.forEach(l=>{ if(!isLinkEncrypted(l)) t+=l.clicks; });
+    rows.push({ cat, total:t });
+  }
+  rows.sort((a,b)=>b.total-a.total);
+  const wrap = document.getElementById('cat-ranking-bars');
+  if(!rows.length){ wrap.innerHTML = '<p style="color:rgba(255,255,255,.3);font-size:.78rem;">Aucune catégorie.</p>'; return; }
+  const mx = Math.max(...rows.map(r=>r.total),1);
+  wrap.innerHTML = rows.map((r,i) => {
+    const pct = mx>0 ? r.total/mx*100 : 0;
+    return `<div class="cat-stat-bar-row">
+      <div class="cat-stat-bar-label" title="${r.cat}">${i===0 && r.total>0 ? '🏆 ' : ''}${r.cat}</div>
+      <div class="cat-stat-bar-track"><div class="cat-stat-bar-fill" style="width:${pct}%"></div></div>
+      <div class="cat-stat-bar-count">${r.total}</div>
+    </div>`;
+  }).join('');
+}
 
 // ============================================================
 // VISIBILITY
@@ -2728,12 +2854,134 @@ function renderPlannerHistory(){
   container.innerHTML = days.map(d => {
     const h = history[d];
     const pct = h.total > 0 ? Math.round(h.done/h.total*100) : 0;
-    return `<div class="cat-stat-bar-row">
+    const hasDetails = Array.isArray(h.tasks) && h.tasks.length;
+    const detailContent = hasDetails ? h.tasks.map(t => `
+        <div class="task-row" style="${t.done ? 'opacity:.55;' : ''}">
+          <div class="task-check${t.done ? ' checked' : ''}" style="cursor:default;">${t.done ? '<i class="fa-solid fa-check"></i>' : ''}</div>
+          <div class="task-info">
+            <div class="task-name">${t.name}</div>
+            <div class="task-badges">
+              <span class="task-badge-priority ${priorityClass(t.priority)}">${priorityLabel(t.priority)}</span>
+              <span class="task-badge-pct">${t.pct}% importance</span>
+            </div>
+          </div>
+        </div>`).join('')
+      : '<div style="color:rgba(255,255,255,.3);font-size:.72rem;padding:8px 0;">Détails non disponibles pour ce jour.</div>';
+    return `<div class="cat-stat-bar-row" style="flex-wrap:wrap;">
       <div class="cat-stat-bar-label" title="${d}">${formatDate(d)}</div>
       <div class="cat-stat-bar-track"><div class="cat-stat-bar-fill" style="width:${pct}%"></div></div>
       <div class="cat-stat-bar-count">${h.done}/${h.total}</div>
+      <button class="btn-ghost" style="padding:6px 14px;font-size:.65rem;" onclick="toggleHistoryDetail('${d}')"><i class="fa-solid fa-eye"></i> Détails</button>
+      <div id="hist-detail-${d}" style="display:none;width:100%;margin-top:6px;">${detailContent}</div>
     </div>`;
   }).join('');
+}
+function toggleHistoryDetail(day){
+  const el = document.getElementById('hist-detail-' + day);
+  if(!el) return;
+  el.style.display = el.style.display === 'none' ? 'block' : 'none';
+}
+
+// ============================================================
+// BILAN / RÉCAPITULATION DU PROGRAMME (hors journée en cours)
+// ============================================================
+let recapTimelineChart, recapPriorityChart, recapWeekdayChart;
+function renderPlannerRecap(){
+  const data = getPlannerData();
+  const history = data.history || {};
+  const days = Object.keys(history).sort();
+  const grid = document.getElementById('recap-stats-grid');
+
+  const clearCanvas = id => { const c = document.getElementById(id); if(c){ const ctx=c.getContext('2d'); ctx.clearRect(0,0,c.width,c.height); } };
+
+  if(!days.length){
+    grid.innerHTML = '<div class="planner-empty" style="grid-column:1/-1;"><i class="fa-solid fa-chart-pie"></i>Pas encore de données. Validez au moins un programme journalier pour voir vos statistiques.</div>';
+    if(recapTimelineChart){ recapTimelineChart.destroy(); recapTimelineChart=null; }
+    if(recapPriorityChart){ recapPriorityChart.destroy(); recapPriorityChart=null; }
+    if(recapWeekdayChart){ recapWeekdayChart.destroy(); recapWeekdayChart=null; }
+    ['recapTimelineChart','recapPriorityChart','recapWeekdayChart'].forEach(clearCanvas);
+    return;
+  }
+
+  let totalTasks = 0, totalDone = 0, sumPct = 0, bestDay = null, bestPct = -1, worstDay = null, worstPct = 101;
+  const priorityStats = { 1:{total:0,done:0}, 2:{total:0,done:0}, 3:{total:0,done:0} };
+  const weekdayStats = Array.from({length:7}, () => ({ total:0, done:0 })); // 0=Lundi ... 6=Dimanche
+
+  days.forEach(d => {
+    const h = history[d];
+    const pct = h.total > 0 ? (h.done / h.total * 100) : 0;
+    sumPct += pct;
+    totalTasks += h.total; totalDone += h.done;
+    if(pct > bestPct){ bestPct = pct; bestDay = d; }
+    if(pct < worstPct){ worstPct = pct; worstDay = d; }
+    const dow = (new Date(d + 'T00:00:00').getDay() + 6) % 7;
+    weekdayStats[dow].total += h.total; weekdayStats[dow].done += h.done;
+    if(Array.isArray(h.tasks)){
+      h.tasks.forEach(t => {
+        const p = priorityStats[t.priority] || priorityStats[2];
+        p.total++; if(t.done) p.done++;
+      });
+    }
+  });
+
+  let bestStreak = 0, streakRun = 0;
+  days.forEach(d => {
+    const h = history[d]; const pct = h.total > 0 ? (h.done / h.total * 100) : 0;
+    if(pct >= 100){ streakRun++; bestStreak = Math.max(bestStreak, streakRun); } else streakRun = 0;
+  });
+  let currentStreak = 0;
+  for(const d of [...days].reverse()){
+    const h = history[d]; const pct = h.total > 0 ? (h.done / h.total * 100) : 0;
+    if(pct >= 100) currentStreak++; else break;
+  }
+
+  const avgPct = Math.round(sumPct / days.length);
+  const globalPct = totalTasks > 0 ? Math.round(totalDone / totalTasks * 100) : 0;
+
+  grid.innerHTML = `
+    <div class="recap-stat-card"><div class="recap-stat-value">${days.length}</div><div class="recap-stat-label">Jours suivis</div></div>
+    <div class="recap-stat-card"><div class="recap-stat-value">${totalDone}/${totalTasks}</div><div class="recap-stat-label">Tâches terminées</div></div>
+    <div class="recap-stat-card"><div class="recap-stat-value">${globalPct}%</div><div class="recap-stat-label">Taux global</div></div>
+    <div class="recap-stat-card"><div class="recap-stat-value">${avgPct}%</div><div class="recap-stat-label">Moyenne / jour</div></div>
+    <div class="recap-stat-card"><div class="recap-stat-value">${currentStreak}</div><div class="recap-stat-label">Série en cours (100%)</div></div>
+    <div class="recap-stat-card"><div class="recap-stat-value">${bestStreak}</div><div class="recap-stat-label">Meilleure série</div></div>
+    <div class="recap-stat-card"><div class="recap-stat-value" style="font-size:1rem;" title="${bestDay || ''}">${bestDay ? formatDate(bestDay) : '—'}</div><div class="recap-stat-label">Meilleur jour (${bestDay ? Math.round(bestPct) : 0}%)</div></div>
+    <div class="recap-stat-card"><div class="recap-stat-value" style="font-size:1rem;" title="${worstDay || ''}">${worstDay ? formatDate(worstDay) : '—'}</div><div class="recap-stat-label">Jour le plus faible (${worstDay ? Math.round(worstPct) : 0}%)</div></div>
+  `;
+
+  // Graphique 1 : évolution du taux de complétion (30 derniers jours suivis)
+  const timelineDays = days.slice(-30);
+  const timelineLabels = timelineDays.map(d => formatDateShort(d));
+  const timelineData = timelineDays.map(d => { const h = history[d]; return h.total > 0 ? Math.round(h.done / h.total * 100) : 0; });
+  const ctx1 = document.getElementById('recapTimelineChart').getContext('2d');
+  if(recapTimelineChart) recapTimelineChart.destroy();
+  recapTimelineChart = new Chart(ctx1, {
+    type: 'line',
+    data: { labels: timelineLabels, datasets: [{ label: '% terminé', data: timelineData, borderColor: getUvPrimaryColor(), backgroundColor: 'rgba(255,198,21,.15)', fill: true, tension: .3, pointRadius: 3 }] },
+    options: { plugins: { legend: { display: false } }, scales: { y: { min:0, max:100, ticks: { color: '#fff' }, grid: { color: 'rgba(255,255,255,.08)' } }, x: { ticks: { color: '#fff' } } } }
+  });
+
+  // Graphique 2 : taux de complétion par priorité
+  const prioLabels = ['🔴 Haute', '🟠 Moyenne', '🟢 Faible'];
+  const prioData = [1,2,3].map(p => { const s = priorityStats[p]; return s.total > 0 ? Math.round(s.done / s.total * 100) : 0; });
+  const ctx2 = document.getElementById('recapPriorityChart').getContext('2d');
+  if(recapPriorityChart) recapPriorityChart.destroy();
+  recapPriorityChart = new Chart(ctx2, {
+    type: 'bar',
+    data: { labels: prioLabels, datasets: [{ label: '% terminé', data: prioData, backgroundColor: ['#ff4444','#ffaa00','#6fc97a'], borderRadius: 10 }] },
+    options: { plugins: { legend: { display: false } }, scales: { y: { min:0, max:100, ticks: { color: '#fff' }, grid: { color: 'rgba(255,255,255,.08)' } }, x: { ticks: { color: '#fff' } } } }
+  });
+
+  // Graphique 3 : productivité par jour de la semaine
+  const wdLabels = ['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'];
+  const wdData = weekdayStats.map(s => s.total > 0 ? Math.round(s.done / s.total * 100) : 0);
+  const ctx3 = document.getElementById('recapWeekdayChart').getContext('2d');
+  if(recapWeekdayChart) recapWeekdayChart.destroy();
+  recapWeekdayChart = new Chart(ctx3, {
+    type: 'bar',
+    data: { labels: wdLabels, datasets: [{ label: '% terminé', data: wdData, backgroundColor: getUvPrimaryColor(), borderRadius: 10 }] },
+    options: { plugins: { legend: { display: false } }, scales: { y: { min:0, max:100, ticks: { color: '#fff' }, grid: { color: 'rgba(255,255,255,.08)' } }, x: { ticks: { color: '#fff' } } } }
+  });
 }
 function todayStr() {
   const d = new Date();
@@ -2744,10 +2992,17 @@ function formatDate(str) {
   const d = new Date(str + 'T00:00:00');
   return d.toLocaleDateString('fr-FR', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
 }
+function formatDateShort(str) {
+  if(!str) return '';
+  const d = new Date(str + 'T00:00:00');
+  return d.toLocaleDateString('fr-FR', { day:'numeric', month:'short' });
+}
 
 // Données planner
 function getPlannerData() {
-  return JSON.parse(localStorage.getItem('hsml_planner') || '{"today":null,"todayTasks":[],"validated":false,"multidays":{}}');
+  const data = JSON.parse(localStorage.getItem('hsml_planner') || '{"today":null,"todayTasks":[],"validated":false,"multidays":{},"taskTrash":[]}');
+  if(!data.taskTrash) data.taskTrash = [];
+  return data;
 }
 function savePlannerData(data) {
   localStorage.setItem('hsml_planner', JSON.stringify(data));
@@ -2762,7 +3017,8 @@ function nettoyerProgrammeObsolete() {
       if(!data.history) data.history = {};
       const total = data.todayTasks.length;
       const done = data.todayTasks.filter(t=>t.done).length;
-      data.history[data.today] = { total, done };
+      const tasksSnapshot = data.todayTasks.map(t => ({ name:t.name, priority:t.priority, pct:t.pct, done:!!t.done }));
+      data.history[data.today] = { total, done, tasks: tasksSnapshot };
       const histDays = Object.keys(data.history).sort();
       if(histDays.length > 60) delete data.history[histDays[0]];
     }
@@ -2770,6 +3026,8 @@ function nettoyerProgrammeObsolete() {
     if(data.validated && unfinished.length){
       data.pendingCarryOver = { fromDate: data.today, tasks: unfinished };
     }
+    // Le programme du jour n'est plus valide : la corbeille de tâches associée est vidée
+    data.taskTrash = [];
     data.today = null;
     data.todayTasks = [];
     data.validated = false;
@@ -2794,24 +3052,29 @@ function verifierReportTaches(){
   data.pendingCarryOver = null;
   savePlannerData(data);
 }
-function verifierChargementMultiJourAujourdhui(){
+// Charge automatiquement le programme du jour s'il a déjà été préparé à l'avance
+// via le planning multi-jours (ex: "Préparer demain"). Si un tel programme existe,
+// il est chargé ET validé directement, sans redemander confirmation.
+function chargerProgrammeMultiJourSiPresent(silent){
   const data = getPlannerData();
   const today = todayStr();
   const dejaProgramme = (data.today === today) && ((data.todayTasks && data.todayTasks.length) || data.validated);
-  if(dejaProgramme) return;
+  if(dejaProgramme) return false;
   if(data.multidays && data.multidays[today] && data.multidays[today].length){
     const tasks = data.multidays[today];
-    const veut = confirm(`Vous avez planifié ${tasks.length} tâche(s) pour aujourd'hui dans le planning multi-jours.\nLes charger dans le programme du jour ?`);
-    if(veut){
-      const loaded = tasks.map(t => ({ name:t.name, priority:t.priority, pct:t.pct, done:false, id:Date.now()+Math.random() }));
-      data.today = today;
-      data.todayTasks = [...(data.todayTasks||[]), ...loaded];
-      data.validated = false;
-      delete data.multidays[today];
-      showToast('✓ Tâches chargées depuis le planning multi-jours');
-    }
+    const loaded = tasks.map(t => ({ name:t.name, priority:t.priority, pct:t.pct, done:false, id:Date.now()+Math.random() }));
+    data.today = today;
+    data.todayTasks = [...(data.todayTasks||[]), ...loaded];
+    data.validated = true;
+    delete data.multidays[today];
+    savePlannerData(data);
+    if(!silent) showToast('✓ Programme du jour déjà préparé — chargé et activé automatiquement');
+    return true;
   }
-  savePlannerData(data);
+  return false;
+}
+function verifierChargementMultiJourAujourdhui(){
+  chargerProgrammeMultiJourSiPresent(false);
 }
 
 function plannerAddTaskPostValidation(){
@@ -2851,6 +3114,9 @@ function modifierTache(idx, isPending){
 // Rappel de début de journée
 function verifierRappelPlanner() {
   nettoyerProgrammeObsolete();
+  // Si le jour a déjà été préparé à l'avance (planning multi-jours), on le charge
+  // silencieusement : le programme est alors déjà validé et le rappel ne s'affiche pas.
+  chargerProgrammeMultiJourSiPresent(true);
   const data = getPlannerData();
   const today = todayStr();
   const lastReminderDay = localStorage.getItem('hsml_planner_reminded');
@@ -2906,7 +3172,9 @@ function switchPlannerTab(tab, btn) {
   document.getElementById('planner-today-panel').style.display = tab === 'today' ? 'block' : 'none';
   document.getElementById('planner-multiday-panel').style.display = tab === 'multiday' ? 'block' : 'none';
   document.getElementById('planner-history-panel').style.display = tab === 'history' ? 'block' : 'none';
+  document.getElementById('planner-recap-panel').style.display = tab === 'recap' ? 'block' : 'none';
   if(tab === 'history') renderPlannerHistory();
+  if(tab === 'recap') renderPlannerRecap();
 }
 
 function priorityLabel(p) {
@@ -2939,11 +3207,19 @@ function plannerAddTask() {
 }
 
 function plannerRemovePending(idx) {
+  if(!verifierMotDePasse()) { showToast('🔒 Suppression annulée'); return; }
+  const removed = plannerPendingTasks[idx];
   plannerPendingTasks.splice(idx, 1);
   const data = getPlannerData();
+  if(removed){
+    if(!data.taskTrash) data.taskTrash = [];
+    data.taskTrash.unshift({ name: removed.name, priority: removed.priority, pct: removed.pct, deletedAt: Date.now(), fromDate: todayStr() });
+    if(data.taskTrash.length > 50) data.taskTrash.length = 50;
+  }
   data.todayTasks = plannerPendingTasks;
   savePlannerData(data);
   renderPlannerToday();
+  showToast('🗑️ Tâche déplacée vers la corbeille du jour');
 }
 
 function validerProgramme() {
@@ -2988,6 +3264,8 @@ function renderPlannerToday() {
   const today = todayStr();
   const isValidated = data.validated && data.today === today;
 
+  renderTaskTrash();
+
   const inputZone = document.getElementById('planner-input-zone');
   const trackingZone = document.getElementById('planner-tracking-zone');
   const progressWrap = document.getElementById('planner-progress-wrap');
@@ -3026,6 +3304,7 @@ function renderPlannerToday() {
             <span class="task-badge-pct">${t.pct}% importance</span>
           </div>
         </div>
+        <button class="task-del-btn" style="border-color:rgba(111,201,122,.3);color:#6fc97a;" title="Déplacer / copier vers un autre jour" onclick="ouvrirDeplacerTache('today', ${t._i})"><i class="fa-solid fa-share-from-square"></i></button>
         <button class="task-del-btn" style="border-color:rgba(122,174,255,.3);color:#7aaeff;" title="Modifier" onclick="modifierTache(${t._i}, false)"><i class="fa-solid fa-pen"></i></button>
         <button class="task-del-btn" title="Supprimer cette tâche" onclick="supprimerTacheValidee(${t._i})"><i class="fa-solid fa-xmark"></i></button>
       </div>
@@ -3055,6 +3334,7 @@ function renderPlannerToday() {
               <span class="task-badge-pct">${t.pct}% importance</span>
             </div>
           </div>
+          <button class="task-del-btn" style="border-color:rgba(111,201,122,.3);color:#6fc97a;" title="Déplacer / copier vers un autre jour" onclick="ouvrirDeplacerTache('today', ${t._i})"><i class="fa-solid fa-share-from-square"></i></button>
           <button class="task-del-btn" style="border-color:rgba(122,174,255,.3);color:#7aaeff;" title="Modifier" onclick="modifierTache(${t._i}, true)"><i class="fa-solid fa-pen"></i></button>
           <button class="task-del-btn" title="Supprimer cette tâche" onclick="plannerRemovePending(${t._i})"><i class="fa-solid fa-xmark"></i></button>
         </div>
@@ -3065,12 +3345,63 @@ function renderPlannerToday() {
 }
 
 function supprimerTacheValidee(idx) {
+  if(!verifierMotDePasse()) { showToast('🔒 Suppression annulée'); return; }
   const data = getPlannerData();
-  data.todayTasks.splice(idx, 1);
+  const [removed] = data.todayTasks.splice(idx, 1);
+  if(removed){
+    if(!data.taskTrash) data.taskTrash = [];
+    data.taskTrash.unshift({ name: removed.name, priority: removed.priority, pct: removed.pct, deletedAt: Date.now(), fromDate: data.today || todayStr() });
+    if(data.taskTrash.length > 50) data.taskTrash.length = 50;
+  }
   if(!data.todayTasks.length) { data.validated = false; plannerPendingTasks = []; }
+  else if(!data.validated) { plannerPendingTasks = data.todayTasks; }
   savePlannerData(data);
   renderPlannerToday();
   updatePlannerFab();
+  showToast('🗑️ Tâche déplacée vers la corbeille du jour');
+}
+
+// Corbeille des tâches supprimées (valable jusqu'à la fin du programme du jour)
+function renderTaskTrash() {
+  const wrap = document.getElementById('planner-trash-wrap');
+  if(!wrap) return;
+  const data = getPlannerData();
+  const trash = data.taskTrash || [];
+  if(!trash.length){ wrap.style.display = 'none'; return; }
+  wrap.style.display = 'block';
+  document.getElementById('planner-trash-count').textContent = trash.length;
+  document.getElementById('planner-trash-list').innerHTML = trash.map((t,i) => `
+    <div class="multi-day-task-chip">
+      <span class="task-badge-priority ${priorityClass(t.priority)}" style="font-size:.58rem;padding:2px 6px;border-radius:12px;">${priorityLabel(t.priority)}</span>
+      <span>${t.name}</span>
+      <button class="multi-day-task-remove" style="color:#6fc97a;" title="Restaurer" onclick="restaurerTacheCorbeille(${i})"><i class="fa-solid fa-rotate-left"></i></button>
+      <button class="multi-day-task-remove" title="Supprimer définitivement" onclick="supprimerDefinitivementTacheCorbeille(${i})"><i class="fa-solid fa-trash"></i></button>
+    </div>
+  `).join('');
+}
+function restaurerTacheCorbeille(i){
+  const data = getPlannerData();
+  const trash = data.taskTrash || [];
+  const t = trash[i]; if(!t) return;
+  trash.splice(i, 1);
+  const restored = { name: t.name, priority: t.priority, pct: t.pct, done: false, id: Date.now() + Math.random() };
+  data.today = data.today || todayStr();
+  data.todayTasks = [...(data.todayTasks || []), restored];
+  data.taskTrash = trash;
+  if(!data.validated) plannerPendingTasks = data.todayTasks;
+  savePlannerData(data);
+  renderPlannerToday();
+  updatePlannerFab();
+  showToast('✓ Tâche restaurée');
+}
+function supprimerDefinitivementTacheCorbeille(i){
+  if(!confirm('Êtes-vous sûr de vouloir supprimer définitivement cette tâche de la corbeille ? Cette action est irréversible.')) return;
+  const data = getPlannerData();
+  const trash = data.taskTrash || [];
+  trash.splice(i, 1);
+  data.taskTrash = trash;
+  savePlannerData(data);
+  renderPlannerToday();
 }
 
 // FAB badge
@@ -3134,6 +3465,7 @@ function renderMultiDayContainer() {
             <span class="task-badge-priority ${priorityClass(t.priority)}" style="font-size:.58rem;padding:2px 6px;border-radius:12px;">${priorityLabel(t.priority)}</span>
             <span>${t.name}</span>
             <span style="font-size:.6rem;color:rgba(255,255,255,.35);">${t.pct}%</span>
+            <button class="multi-day-task-remove" style="color:#6fc97a;" title="Déplacer / copier vers un autre jour" onclick="ouvrirDeplacerTache('multiday', ${i}, '${day}')"><i class="fa-solid fa-share-from-square"></i></button>
             <button class="multi-day-task-remove" onclick="supprimerTacheMulti('${day}',${i})"><i class="fa-solid fa-xmark"></i></button>
           </div>
         `).join('') : '<div style="color:rgba(255,255,255,.25);font-size:.75rem;padding:4px 0;">Aucune tâche — ajoutez-en une ci-dessus.</div>'}
@@ -3158,6 +3490,7 @@ function ajouterJourMulti() {
 }
 
 function supprimerJourMulti(day) {
+  if(!verifierMotDePasse()) { showToast('🔒 Suppression annulée'); return; }
   delete multiDayDraft[day];
   const data = getPlannerData();
   if(data.multidays) delete data.multidays[day];
@@ -3187,12 +3520,99 @@ function ajouterTacheMulti(day) {
 }
 
 function supprimerTacheMulti(day, idx) {
+  if(!verifierMotDePasse()) { showToast('🔒 Suppression annulée'); return; }
   if(!multiDayDraft[day]) {
     const data = getPlannerData();
     multiDayDraft[day] = [...(data.multidays && data.multidays[day] ? data.multidays[day] : [])];
   }
   multiDayDraft[day].splice(idx, 1);
   renderMultiDayContainer();
+}
+
+function preparerDemain() {
+  const t = new Date(); t.setDate(t.getDate() + 1);
+  const day = t.toISOString().slice(0,10);
+  document.getElementById('multiday-date-input').value = day;
+  ajouterJourMulti();
+  showToast('✓ Journée de demain prête à planifier');
+}
+
+// ============================================================
+// DÉPLACER / COPIER UNE TÂCHE VERS UN AUTRE JOUR
+// ============================================================
+let _moveTaskSource = null; // { type:'today'|'multiday', idx:number, day:string|null }
+
+function ouvrirDeplacerTache(type, idx, day) {
+  const data = getPlannerData();
+  let task;
+  if(type === 'today') { task = data.todayTasks[idx]; }
+  else { task = ((data.multidays || {})[day] || multiDayDraft[day] || [])[idx]; }
+  if(!task) { showToast('Tâche introuvable'); return; }
+  _moveTaskSource = { type, idx, day: day || null };
+  document.getElementById('move-task-info').textContent = `Tâche : « ${task.name} »`;
+  const dateInput = document.getElementById('move-task-date');
+  const tomorrow = new Date(); tomorrow.setDate(tomorrow.getDate() + 1);
+  dateInput.min = todayStr();
+  dateInput.value = tomorrow.toISOString().slice(0,10);
+  document.getElementById('move-task-mode').value = 'move';
+  document.getElementById('moveTaskModal').style.display = 'block';
+}
+function closeMoveTaskModal() {
+  document.getElementById('moveTaskModal').style.display = 'none';
+  _moveTaskSource = null;
+}
+function confirmerDeplacementTache() {
+  if(!_moveTaskSource) return;
+  const targetDate = document.getElementById('move-task-date').value;
+  const mode = document.getElementById('move-task-mode').value;
+  if(!targetDate) { showToast('Choisissez un jour cible'); return; }
+
+  const { type, idx, day } = _moveTaskSource;
+  const data = getPlannerData();
+  if(!data.multidays) data.multidays = {};
+
+  let sourceArr, task;
+  if(type === 'today') {
+    sourceArr = data.todayTasks || [];
+    task = sourceArr[idx];
+  } else {
+    if(!data.multidays[day] && multiDayDraft[day]) data.multidays[day] = [...multiDayDraft[day]];
+    sourceArr = data.multidays[day] || [];
+    task = sourceArr[idx];
+  }
+  if(!task) { showToast('Tâche introuvable'); closeMoveTaskModal(); return; }
+
+  const clone = { name: task.name, priority: task.priority, pct: task.pct };
+
+  if(targetDate === todayStr()) {
+    data.todayTasks = [...(data.todayTasks || []), { ...clone, done: false, id: Date.now() + Math.random() }];
+    if(!data.today) data.today = todayStr();
+    if(!data.validated) plannerPendingTasks = data.todayTasks;
+  } else {
+    if(!data.multidays[targetDate]) data.multidays[targetDate] = [];
+    data.multidays[targetDate].push({ ...clone, done: false });
+    if(!multiDayDraft[targetDate]) multiDayDraft[targetDate] = [...data.multidays[targetDate]];
+    else multiDayDraft[targetDate].push({ ...clone, done: false });
+  }
+
+  if(mode === 'move') {
+    sourceArr.splice(idx, 1);
+    if(type === 'today') {
+      data.todayTasks = sourceArr;
+      if(!data.validated) plannerPendingTasks = sourceArr;
+      if(!sourceArr.length) data.validated = false;
+    } else {
+      data.multidays[day] = sourceArr;
+      if(multiDayDraft[day]) multiDayDraft[day].splice(idx, 1);
+    }
+  }
+
+  savePlannerData(data);
+  closeMoveTaskModal();
+  renderPlannerToday();
+  renderMultiDayContainer();
+  updatePlannerFab();
+  showToast(mode === 'move' ? '✓ Tâche déplacée vers le ' + formatDate(targetDate) : '✓ Tâche copiée vers le ' + formatDate(targetDate));
 }
 
 function sauvegarderMultiDays() {
