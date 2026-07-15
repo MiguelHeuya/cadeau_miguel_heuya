@@ -238,6 +238,20 @@ select option{background:#1a1a1a;color:#fff;}
 .modal{display:none;position:fixed;z-index:2000;left:0;top:0;width:100%;height:100%;background:rgba(0,0,0,.88);backdrop-filter:blur(14px);}
 .modal-inner{background:#111;margin:5% auto;padding:30px;border:1px solid var(--primary);border-radius:28px;width:90%;max-width:750px;max-height:88vh;overflow-y:auto;}
 .modal-inner h2{color:var(--primary);margin-bottom:18px;font-size:1.1rem;}
+.share-chk-row{display:flex;align-items:center;gap:9px;font-size:.8rem;color:rgba(255,255,255,.75);background:rgba(255,255,255,.03);border:1px solid var(--glass-border);border-radius:12px;padding:9px 12px;cursor:pointer;}
+.share-chk-row input{width:16px;height:16px;accent-color:var(--primary);cursor:pointer;}
+.share-readonly-section{margin:26px 0;padding:18px;border:1px solid var(--glass-border);border-radius:18px;background:rgba(255,255,255,.02);}
+.share-readonly-section h3{font-size:.85rem;color:var(--primary);margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+.share-locked-card{display:flex;align-items:center;gap:10px;padding:12px 16px;border-radius:14px;background:rgba(255,255,255,.03);border:1px solid var(--glass-border);margin-bottom:8px;font-size:.8rem;color:rgba(255,255,255,.6);cursor:pointer;}
+.share-locked-card:hover{border-color:var(--primary);}
+.share-note-tab{border:1px solid var(--glass-border);border-radius:14px;padding:14px;margin-bottom:10px;}
+.share-note-tab-title{font-size:.78rem;color:var(--primary);margin-bottom:8px;font-weight:700;}
+.share-note-tab-content{font-size:.78rem;color:rgba(255,255,255,.7);white-space:pre-wrap;max-height:220px;overflow-y:auto;}
+.share-gallery-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px;}
+.share-gallery-grid img{width:100%;border-radius:10px;object-fit:cover;aspect-ratio:1;}
+.share-recap-row{display:flex;justify-content:space-between;font-size:.75rem;color:rgba(255,255,255,.6);padding:6px 0;border-bottom:1px solid rgba(255,255,255,.05);}
+body.share-readonly-mode .lbtn,
+body.share-readonly-mode .btn-icon-sm{display:none !important;}
 .close-modal{color:var(--text);float:right;font-size:26px;font-weight:bold;cursor:pointer;line-height:1;}
 .close-modal:hover{color:var(--primary);}
 
@@ -687,7 +701,7 @@ footer{width:100%;padding:56px 20px;text-align:center;border-top:1px solid var(-
       <button class="btn-ghost" onclick="verifierLiensMorts()" style="border-color:rgba(255,68,68,.35);color:rgba(255,120,120,.9);"><i class="fa-solid fa-link-slash"></i> Vérifier liens</button>
       <button class="btn-ghost" onclick="ouvrirExportImportModal()" style="border-color:rgba(100,200,100,.4);color:#6fc97a;"><i class="fa-solid fa-file-export"></i> Exporter / Importer</button>
       <button class="btn-ghost" onclick="ouvrirGroupesParents()" style="border-color:rgba(255, 198, 9,.4);color:var(--primary);"><i class="fa-solid fa-layer-group"></i> Groupes</button>
-      <button class="btn-ghost" onclick="genererLienLectureSeule()" style="border-color:rgba(100,150,255,.4);color:#7aaeff;"><i class="fa-solid fa-share-nodes"></i> Partager</button>
+      <button class="btn-ghost" onclick="ouvrirPartage()" style="border-color:rgba(100,150,255,.4);color:#7aaeff;"><i class="fa-solid fa-share-nodes"></i> Partager</button>
       <button class="btn-ghost" onclick="ouvrirPlanner()" style="border-color:rgba(255, 198, 9,.5);color:var(--primary);"><i class="fa-solid fa-calendar-check"></i> Programme</button>
     </div>
 
@@ -708,6 +722,9 @@ footer{width:100%;padding:56px 20px;text-align:center;border-top:1px solid var(-
       </div>
       <a href="https://miguelheuya.netlify.app/" target="_blank" class="uv-permanent-link">
         <i class="fa-solid fa-user-tie"></i> Miguel Heuya | Business Intelligence Specialist
+      </a>
+      <a href="https://cadeaumiguelheuya.netlify.app/" target="_blank" class="uv-permanent-link" style="border-color:rgba(100,220,140,.4);color:#000;">
+        <i class="fa-solid fa-cloud-arrow-up"></i> Utiliser l'app en ligne
       </a>
       <button class="uv-permanent-link" onclick="document.getElementById('image-gallery-section').scrollIntoView({behavior:'smooth'})">
         <i class="fa-solid fa-images"></i> Galerie
@@ -930,17 +947,40 @@ footer{width:100%;padding:56px 20px;text-align:center;border-top:1px solid var(-
   </div>
 </div>
 
+<div id="shareConfigModal" class="modal">
+  <div class="modal-inner" style="max-width:600px;">
+    <span class="close-modal" onclick="closeShareConfigModal()">&times;</span>
+    <h2><i class="fa-solid fa-share-nodes" style="margin-right:7px;"></i>Partager la page</h2>
+    <p style="color:rgba(255,255,255,.4);font-size:.78rem;margin-bottom:18px;">Choisissez ce que la personne qui reçoit ce lien pourra voir. Elle ne pourra jamais effectuer aucune action (modifier, supprimer, cliquer sur "gérer") : uniquement consulter.</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
+      <label class="share-chk-row"><input type="checkbox" id="chk-share-public" checked> Liens publics</label>
+      <label class="share-chk-row"><input type="checkbox" id="chk-share-private"> Liens privés</label>
+      <label class="share-chk-row"><input type="checkbox" id="chk-share-encrypted"> Liens cryptés</label>
+      <label class="share-chk-row"><input type="checkbox" id="chk-share-images"> Images (galerie)</label>
+      <label class="share-chk-row"><input type="checkbox" id="chk-share-notes"> Textes (bloc-notes)</label>
+      <label class="share-chk-row"><input type="checkbox" id="chk-share-stats"> Statistiques des liens</label>
+      <label class="share-chk-row"><input type="checkbox" id="chk-share-programme"> Programme du jour</label>
+      <label class="share-chk-row"><input type="checkbox" id="chk-share-programme-stats"> Statistiques du programme</label>
+    </div>
+    <p style="color:rgba(255, 198, 9,.7);font-size:.68rem;margin-bottom:18px;"><i class="fa-solid fa-triangle-exclamation"></i> Les liens privés resteront affichés comme "🔒 Privé" : la personne devra entrer le mot de passe actuel du site pour les ouvrir. Les liens cryptés resteront toujours verrouillés, même avec le mot de passe. Seules les images ajoutées par URL (pas les fichiers importés) peuvent être partagées.</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+      <button class="btn-annuler" onclick="closeShareConfigModal()">Annuler</button>
+      <button class="btn-confirm" onclick="genererPartageConfigure()">Générer le lien</button>
+    </div>
+  </div>
+</div>
+
 <div id="readonlyModal" class="modal">
   <div class="modal-inner" style="max-width:560px;">
     <span class="close-modal" onclick="closeReadonlyModal()">&times;</span>
-    <h2><i class="fa-solid fa-share-nodes" style="margin-right:7px;"></i>Mode lecture seule</h2>
-    <p style="color:rgba(255,255,255,.4);font-size:.78rem;margin-bottom:18px;">Ce lien permet à quelqu'un de voir votre bibliothèque sans accès à l'édition. Les liens privés sont exclus.</p>
+    <h2><i class="fa-solid fa-share-nodes" style="margin-right:7px;"></i>Lien de partage généré</h2>
+    <p style="color:rgba(255,255,255,.4);font-size:.78rem;margin-bottom:18px;">Ce lien permet à quelqu'un de voir votre bibliothèque sans aucun accès à l'édition, selon ce que vous avez choisi de partager. Cette URL est unique : elle ne sera jamais utilisée par un autre partage.</p>
     <label>URL partageable</label>
     <div style="display:flex;gap:10px;margin-bottom:18px;">
       <input type="text" id="readonly-url-field" readonly style="flex:1;font-size:.75rem;opacity:.7;">
       <button class="btn-confirm" onclick="copierReadonlyUrl()" style="border-radius:14px;padding:0 18px;white-space:nowrap;">Copier</button>
     </div>
-    <p style="color:rgba(255,255,255,.3);font-size:.7rem;"><i class="fa-solid fa-info-circle"></i> L'URL contient l'intégralité de vos données publiques encodées. Partagez-la avec soin.</p>
+    <p style="color:rgba(255,255,255,.3);font-size:.7rem;"><i class="fa-solid fa-info-circle"></i> L'URL contient l'intégralité des données sélectionnées, encodées. Partagez-la avec soin.</p>
   </div>
 </div>
 
@@ -1292,6 +1332,7 @@ footer{width:100%;padding:56px 20px;text-align:center;border-top:1px solid var(-
     <button class="btn-reset" onclick="footerModifierPassword()">Modifier le mot de passe</button>
     <button class="btn-reset" onclick="footerSupprimerPassword()" style="border-color:rgba(255,68,68,.6);">Supprimer le mot de passe</button>
     <button class="btn-reset" onclick="footerCommentSupprimer()">Comment supprimer un lien</button>
+    <button class="btn-reset" onclick="pourquoiAppEnLigne()" style="border-color:rgba(100,220,140,.5);color:#6fdb95;"><i class="fa-solid fa-circle-question"></i> Pourquoi utiliser l'app en ligne</button>
     <button class="btn-reset" onclick="ouvrirCorbeille()" style="border-color:rgba(255,68,68,.5);color:rgba(255,100,100,.8);"><i class="fa-solid fa-trash-can"></i> Corbeille</button>
   </div>
   <div class="footer-brand">Miguel Heuya DATA LAB • 2026</div>
@@ -1804,43 +1845,175 @@ function retirerCatGroupe(gname, cat) {
 }
 
 // ============================================================
-// READ ONLY MODE
+// APP EN LIGNE / PARTAGE
 // ============================================================
-function genererLienLectureSeule() {
+const ONLINE_APP_HOSTNAME = 'cadeaumiguelheuya.netlify.app';
+function isAppEnLigne(){ return window.location.hostname === ONLINE_APP_HOSTNAME; }
+
+function pourquoiAppEnLigne(){
+  alert("Lorsque vous utilisez l'app en ligne et que vous publiez votre page, elle devient accessible par tout le monde, ce qui n'est pas le cas en local.");
+}
+
+function ouvrirPartage(){
   if (!verifierMotDePasse()) return;
-  const readonlyDb = {};
+  if (!isAppEnLigne()){
+    alert("Le partage n'est disponible que depuis l'application en ligne.\n\nCliquez sur \"Utiliser l'app en ligne\" en haut de la page pour publier votre bibliothèque, puis revenez sur le bouton \"Partager\".");
+    return;
+  }
+  document.getElementById('shareConfigModal').style.display = 'block';
+}
+function closeShareConfigModal(){ document.getElementById('shareConfigModal').style.display = 'none'; }
+
+function genererIdPartageUnique(){
+  if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
+  return 'xxxxxxxxxxxxxxxx'.replace(/x/g, () => (Math.random()*36|0).toString(36)) + '-' + Date.now().toString(36);
+}
+
+function genererPartageConfigure(){
+  const opts = {
+    public: document.getElementById('chk-share-public').checked,
+    private: document.getElementById('chk-share-private').checked,
+    encrypted: document.getElementById('chk-share-encrypted').checked,
+    images: document.getElementById('chk-share-images').checked,
+    notes: document.getElementById('chk-share-notes').checked,
+    stats: document.getElementById('chk-share-stats').checked,
+    programme: document.getElementById('chk-share-programme').checked,
+    programmeStats: document.getElementById('chk-share-programme-stats').checked
+  };
+
+  const shareDb = {};
   for (const cat in db) {
     if (isCategoryEncrypted(cat)) continue;
-    const links = db[cat].links.filter(l => !l.private && !isLinkEncrypted(l)).map(l => ({ name: l.name, url: l.url, clicks: l.clicks, tags: l.tags || [], note: l.note || '', addedAt: l.addedAt || 0 }));
-    if (links.length) readonlyDb[cat] = { rank: db[cat].rank, links };
+    const links = [];
+    db[cat].links.forEach(l => {
+      if (isLinkEncrypted(l)) {
+        if (opts.encrypted) links.push({ encrypted: true, encryptedData: l.encryptedData, addedAt: l.addedAt || 0 });
+        return;
+      }
+      if (l.private) {
+        if (opts.private) links.push({ name: l.name, url: l.url, clicks: opts.stats ? (l.clicks || 0) : 0, tags: l.tags || [], note: l.note || '', addedAt: l.addedAt || 0, private: true });
+        return;
+      }
+      if (opts.public) links.push({ name: l.name, url: l.url, clicks: opts.stats ? (l.clicks || 0) : 0, tags: l.tags || [], note: l.note || '', addedAt: l.addedAt || 0 });
+    });
+    if (links.length) shareDb[cat] = { rank: db[cat].rank, links };
   }
-  const payload = btoa(unescape(encodeURIComponent(JSON.stringify(readonlyDb))));
-  const url = window.location.origin + window.location.pathname + '?readonly=' + payload;
+
+  const payload = { _v: 2, sid: genererIdPartageUnique(), createdAt: Date.now(), opts, db: shareDb };
+
+  if (opts.private) payload.sitePassword = getSitePassword() || '';
+
+  if (opts.images) {
+    payload.images = (galImages || [])
+      .filter(img => img.src && !img.src.startsWith('blob:'))
+      .map(img => ({ src: img.src, title: img.title || '' }));
+  }
+
+  if (opts.notes) {
+    payload.notes = (textTabs || []).map(t => ({ name: t.name, content: t.content || '' }));
+  }
+
+  if (opts.programme) {
+    const pd = getPlannerData();
+    payload.programme = { today: pd.today, todayTasks: pd.todayTasks || [], validated: !!pd.validated };
+  }
+
+  if (opts.programmeStats) {
+    const pd = getPlannerData();
+    payload.programmeStats = pd.history || {};
+  }
+
+  const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
+  const url = window.location.origin + window.location.pathname + '?readonly=' + encoded;
   document.getElementById('readonly-url-field').value = url;
+  closeShareConfigModal();
   document.getElementById('readonlyModal').style.display = 'block';
 }
 function closeReadonlyModal() { document.getElementById('readonlyModal').style.display = 'none'; }
 function copierReadonlyUrl() { navigator.clipboard.writeText(document.getElementById('readonly-url-field').value).then(() => showToast('✓ Lien copié !')); }
+
+// ============================================================
+// READ ONLY MODE (page reçue par un visiteur via un lien partagé)
+// ============================================================
 function checkReadonlyMode() {
   const params = new URLSearchParams(window.location.search);
   const ro = params.get('readonly');
   if (!ro) return false;
   try {
     const data = JSON.parse(decodeURIComponent(escape(atob(ro))));
-    db = data;
+    const isV2 = data && data._v === 2;
+    db = isV2 ? data.db : data;
+
+    document.body.classList.add('share-readonly-mode');
     document.querySelector('.controls').style.display = 'none';
     document.getElementById('app-lockscreen').style.display = 'none';
     document.getElementById('sync-indicator').style.display = 'none';
     document.querySelector('footer').style.display = 'none';
     document.getElementById('sort-bar').style.display = 'none';
     document.getElementById('image-gallery-section').style.display = 'none';
+    document.getElementById('notes-section').style.display = 'none';
     document.getElementById('planner-fab').style.display = 'none';
+
     const banner = document.createElement('div');
     banner.className = 'readonly-banner';
     banner.innerHTML = '<i class="fa-solid fa-eye"></i> Mode lecture seule — Bibliothèque partagée';
     document.querySelector('main').insertBefore(banner, document.getElementById('categories-container'));
-    refreshUI(); return true;
+
+    // Le visiteur ne peut effectuer aucune action : on neutralise toute écriture,
+    // et les liens cryptés restent verrouillés quoi qu'il arrive.
+    save = function(){};
+    ouvrirDecryptageLien = function(){ showToast('🔒 Ce lien crypté reste verrouillé en mode partagé.'); };
+    ouvrirDecryptageCategorie = function(){ showToast('🔒 Ce contenu reste verrouillé en mode partagé.'); };
+
+    if (isV2 && data.opts && data.opts.private && data.sitePassword !== undefined) {
+      // Permet à quiconque de vérifier le mot de passe des liens privés directement depuis son navigateur
+      localStorage.setItem('site_global_password', data.sitePassword);
+    }
+
+    refreshUI();
+    if (isV2) renderPartageExtras(data);
+    return true;
   } catch(e) { return false; }
+}
+
+function renderPartageExtras(data){
+  const main = document.querySelector('main');
+  if (!data.opts) return;
+
+  if (data.opts.images && data.images && data.images.length){
+    const sec = document.createElement('div');
+    sec.className = 'share-readonly-section';
+    sec.innerHTML = `<h3><i class="fa-solid fa-images"></i> Images partagées</h3>
+      <div class="share-gallery-grid">${data.images.map(img => `<img src="${img.src}" alt="${(img.title||'').replace(/"/g,'&quot;')}" title="${(img.title||'').replace(/"/g,'&quot;')}">`).join('')}</div>`;
+    main.appendChild(sec);
+  }
+
+  if (data.opts.notes && data.notes && data.notes.length){
+    const sec = document.createElement('div');
+    sec.className = 'share-readonly-section';
+    sec.innerHTML = `<h3><i class="fa-solid fa-file-lines"></i> Bloc-notes partagé</h3>
+      ${data.notes.map(t => `<div class="share-note-tab"><div class="share-note-tab-title">${(t.name||'Note').replace(/</g,'&lt;')}</div><div class="share-note-tab-content">${(t.content||'').replace(/</g,'&lt;') || 'Vide'}</div></div>`).join('')}`;
+    main.appendChild(sec);
+  }
+
+  if (data.opts.programme && data.programme){
+    const p = data.programme;
+    const sec = document.createElement('div');
+    sec.className = 'share-readonly-section';
+    sec.innerHTML = `<h3><i class="fa-solid fa-calendar-check"></i> Programme du jour${p.today ? ' — ' + formatDate(p.today) : ''}</h3>
+      ${(p.todayTasks && p.todayTasks.length) ? p.todayTasks.map(t => `<div class="share-recap-row"><span>${(t.name || 'Tâche').toString().replace(/</g,'&lt;')}</span><span>${t.done ? '✅ Fait' : '⏳ En cours'}</span></div>`).join('') : '<div class="share-recap-row">Aucune tâche pour le moment.</div>'}`;
+    main.appendChild(sec);
+  }
+
+  if (data.opts.programmeStats && data.programmeStats){
+    const hist = data.programmeStats;
+    const days = Object.keys(hist).sort();
+    const sec = document.createElement('div');
+    sec.className = 'share-readonly-section';
+    sec.innerHTML = `<h3><i class="fa-solid fa-chart-pie"></i> Statistiques du programme</h3>
+      ${days.length ? days.map(d => `<div class="share-recap-row"><span>${formatDate(d)}</span><span>${hist[d].done || 0}/${hist[d].total || 0}</span></div>`).join('') : '<div class="share-recap-row">Pas encore de données.</div>'}`;
+    main.appendChild(sec);
+  }
 }
 
 // ============================================================
