@@ -18,6 +18,8 @@
   --glass: rgba(255,255,255,0.05);
   --glass-border: rgba(255,255,255,0.1);
   --text: #ffffff;
+  --notes-bg: #232323;
+  --notes-text: #ffffff;
   --transition: all 0.4s cubic-bezier(0.23,1,0.32,1);
 }
 *{margin:0;padding:0;box-sizing:border-box;}
@@ -59,7 +61,7 @@ main{width:100%;max-width:1400px;margin:0 auto;padding:110px 20px 80px;}
 .btn-primary:hover{background:var(--primary-hover);transform:translateY(-3px);box-shadow:0 14px 28px rgba(255, 197, 7, 0.4);}
 
 .btn-ghost{
-  background:rgba(255,255,255,0.07);color:#fff;
+  background:rgba(255,255,255,0.07);color:var(--text);
   border:1px solid var(--glass-border);
   padding:12px 22px;border-radius:100px;font-weight:700;
   cursor:pointer;transition:var(--transition);font-family:inherit;font-size:.85rem;
@@ -80,7 +82,7 @@ main{width:100%;max-width:1400px;margin:0 auto;padding:110px 20px 80px;}
 label{display:block;font-size:.7rem;text-transform:uppercase;font-weight:700;color:var(--primary);margin-bottom:7px;margin-left:4px;}
 input,select,textarea{
   width:100%;background:rgba(255,255,255,.03);border:1px solid var(--glass-border);
-  padding:13px 18px;border-radius:14px;color:white;outline:none;
+  padding:13px 18px;border-radius:14px;color:var(--text);outline:none;
   transition:var(--transition);font-family:inherit;font-size:.9rem;
 }
 textarea{resize:vertical;min-height:70px;}
@@ -94,7 +96,7 @@ select option{background:#1a1a1a;color:#fff;}
 
 #search-bar-wrapper{width:100%;max-width:900px;position:relative;margin:0 auto;}
 #search-bar-wrapper i{position:absolute;left:18px;top:50%;transform:translateY(-50%);color:rgba(255,255,255,.35);font-size:.9rem;pointer-events:none;}
-#search-input{width:100%;background:rgba(255,255,255,.04);border:1px solid var(--glass-border);padding:12px 18px 12px 44px;border-radius:100px;color:white;outline:none;font-family:inherit;font-size:.9rem;transition:var(--transition);}
+#search-input{width:100%;background:rgba(255,255,255,.04);border:1px solid var(--glass-border);padding:12px 18px 12px 44px;border-radius:100px;color:var(--text);outline:none;font-family:inherit;font-size:.9rem;transition:var(--transition);}
 #search-input:focus{border-color:var(--primary);background:rgba(255,255,255,.07);}
 #search-input::placeholder{color:rgba(255,255,255,.3);}
 #search-count{position:absolute;right:16px;top:50%;transform:translateY(-50%);font-size:.65rem;font-weight:700;color:rgba(255,255,255,.35);display:none;}
@@ -126,12 +128,24 @@ select option{background:#1a1a1a;color:#fff;}
   border-radius:24px;padding:22px;margin-bottom:28px;transition:var(--transition);
 }
 .category-header{display:flex;flex-direction:column;margin-bottom:20px;gap:7px;}
-.category-title-row{display:flex;align-items:center;justify-content:space-between;}
-.category-title{font-size:.8rem;font-weight:800;text-transform:uppercase;letter-spacing:2px;color:var(--primary);display:flex;align-items:center;gap:9px;}
+.category-title-row{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;row-gap:8px;}
+.category-title-row>div:last-child{flex-wrap:wrap;row-gap:6px;max-width:100%;}
+.category-title{font-size:.8rem;font-weight:800;text-transform:uppercase;letter-spacing:2px;color:var(--primary);display:flex;align-items:center;gap:9px;flex-wrap:wrap;row-gap:6px;max-width:100%;}
 .cat-stats-row{display:flex;align-items:center;gap:8px;font-size:.65rem;font-weight:700;color:rgba(255,255,255,.4);}
 .cat-top-1{background:#fff;color:#000;padding:2px 6px;border-radius:4px;}
-.cat-dead-badge{background:rgba(255,68,68,.2);color:var(--danger);padding:2px 8px;border-radius:6px;font-size:.6rem;font-weight:700;cursor:help;animation:pulse .8s infinite;}
+.cat-dead-badge{background:rgba(255,68,68,.2);color:var(--danger);padding:2px 6px 2px 8px;border-radius:6px;font-size:.6rem;font-weight:700;cursor:help;animation:pulse .8s infinite;display:inline-flex;align-items:center;gap:6px;}
 .cat-dead-badge:hover{background:rgba(255,68,68,.4);}
+.cat-dead-badge-close{cursor:pointer;opacity:.7;animation:none;}
+.cat-dead-badge-close:hover{opacity:1;}
+
+.color-combo-row{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.04);border:1px solid var(--glass-border);border-radius:12px;padding:9px 12px;cursor:pointer;transition:var(--transition);}
+.color-combo-row:hover{background:rgba(255,255,255,.08);border-color:var(--primary);}
+.color-combo-name{font-size:.75rem;font-weight:700;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.color-combo-swatches{display:flex;gap:4px;}
+.color-combo-swatch{width:16px;height:16px;border-radius:50%;border:1px solid rgba(255,255,255,.25);flex-shrink:0;}
+.color-combo-codes{font-size:.6rem;color:rgba(255,255,255,.4);white-space:nowrap;}
+.color-combo-delete{color:rgba(255,100,100,.6);cursor:pointer;padding:4px;}
+.color-combo-delete:hover{color:var(--danger);}
 
 .btn-icon-sm{
   background:rgba(255,255,255,.05);color:rgba(255,255,255,.6);
@@ -376,8 +390,8 @@ body.share-readonly-mode .btn-icon-sm{display:none !important;}
 .notes-tab-close:hover{background:var(--danger);color:#fff;}
 .notes-tab-add{width:38px;height:38px;border-radius:12px;border:1px dashed rgba(255,197,7,.35);background:transparent;color:var(--primary);cursor:pointer;font-size:.9rem;display:flex;align-items:center;justify-content:center;transition:var(--transition);flex-shrink:0;}
 .notes-tab-add:hover{background:rgba(255,197,7,.1);}
-#notes-textarea{width:100%;min-height:340px;background:#232323;border:1px solid var(--glass-border);border-radius:18px;padding:22px;color:#fff;font-family:inherit;font-size:.88rem;line-height:1.6;resize:vertical;transition:var(--transition);}
-#notes-textarea:focus{outline:none;border-color:rgba(255,197,7,.4);background:#262626;}
+#notes-textarea{width:100%;min-height:340px;background:var(--notes-bg);border:1px solid var(--glass-border);border-radius:18px;padding:22px;color:var(--notes-text);font-family:inherit;font-size:.88rem;line-height:1.6;resize:vertical;transition:var(--transition);}
+#notes-textarea:focus{outline:none;border-color:rgba(255,197,7,.4);}
 
 /* Bouton retour en haut de page */
 .scroll-top-btn{
@@ -459,7 +473,7 @@ footer{width:100%;padding:56px 20px;text-align:center;border-top:1px solid var(-
 .tags-input-wrapper:focus-within{border-color:var(--primary);}
 .tag-pill{background:rgba(255, 198, 9, 0.15);color:var(--primary);border:1px solid rgba(255, 199, 13, 0.3);padding:3px 10px;border-radius:20px;font-size:.72rem;font-weight:700;display:flex;align-items:center;gap:5px;}
 .tag-pill button{background:none;border:none;color:var(--primary);cursor:pointer;font-size:.9rem;line-height:1;padding:0;}
-.tags-raw-input{background:none;border:none;color:#fff;outline:none;font-family:inherit;font-size:.85rem;min-width:80px;padding:0;}
+.tags-raw-input{background:none;border:none;color:var(--text);outline:none;font-family:inherit;font-size:.85rem;min-width:80px;padding:0;}
 
 #noteModal .modal-inner{max-width:500px;}
 .note-rendered{font-size:.75rem;color:rgba(255,255,255,.55);margin-top:4px;line-height:1.5;}
@@ -469,7 +483,7 @@ footer{width:100%;padding:56px 20px;text-align:center;border-top:1px solid var(-
 .note-rendered ul,.note-rendered ol{padding-left:14px;}
 .note-rendered li{margin-bottom:2px;}
 .note-rendered-full{font-size:.83rem;color:rgba(255,255,255,.7);line-height:1.6;}
-.note-rendered-full strong{color:#fff;font-weight:700;}
+.note-rendered-full strong{color:var(--text);font-weight:700;}
 .note-rendered-full ul,.note-rendered-full ol{padding-left:18px;margin:6px 0;}
 .note-rendered-full li{margin-bottom:4px;}
 .note-rendered-full a{color:var(--primary);}
@@ -643,7 +657,7 @@ footer{width:100%;padding:56px 20px;text-align:center;border-top:1px solid var(-
 <div id="app-lockscreen">
   <div style="background:rgba(20,20,20,.65);backdrop-filter:blur(30px);border:1px solid var(--glass-border);padding:38px;border-radius:28px;max-width:440px;width:100%;text-align:center;box-shadow:0 25px 50px rgba(0,0,0,.5);">
     <i class="fa-solid fa-lock" style="color:var(--primary);font-size:2.8rem;margin-bottom:18px;"></i>
-    <h2 style="font-weight:800;color:#fff;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;font-size:1.3rem;">Espace Privé</h2>
+    <h2 style="font-weight:800;color:var(--text);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;font-size:1.3rem;">Espace Privé</h2>
     <p style="color:rgba(255,255,255,.55);font-size:.83rem;margin-bottom:22px;">Entrez le mot de passe pour accéder aux ressources.</p>
     <input type="password" id="lockscreen-pwd-input" placeholder="Mot de passe" style="width:100%;text-align:center;margin-bottom:18px;font-size:1.1rem;">
     <button onclick="validerLockscreen()" class="btn-primary" style="width:100%;">Déverrouiller</button>
@@ -723,6 +737,9 @@ footer{width:100%;padding:56px 20px;text-align:center;border-top:1px solid var(-
       <a href="https://miguelheuya.netlify.app/" target="_blank" class="uv-permanent-link">
         <i class="fa-solid fa-user-tie"></i> Miguel Heuya | Business Intelligence Specialist
       </a>
+      <a href="https://cadeaumiguelheuya.netlify.app/" target="_blank" class="uv-permanent-link" style="border-color:rgba(100,220,140,.4);color:#000;">
+        <i class="fa-solid fa-cloud-arrow-up"></i> Utiliser l'app en ligne
+      </a>
       <button class="uv-permanent-link" onclick="document.getElementById('image-gallery-section').scrollIntoView({behavior:'smooth'})">
         <i class="fa-solid fa-images"></i> Galerie
       </button>
@@ -789,6 +806,11 @@ footer{width:100%;padding:56px 20px;text-align:center;border-top:1px solid var(-
     <button onclick="fermerDeadLinkBar()" title="Fermer" style="position:absolute;top:10px;right:14px;background:none;border:none;color:rgba(255,100,100,.8);font-size:1rem;cursor:pointer;padding:4px;line-height:1;"><i class="fa-solid fa-xmark"></i></button>
   </div>
 
+  <div id="offline-bar" style="display:none;position:relative;background:rgba(255,170,0,.08);border:1px solid rgba(255,170,0,.25);border-radius:16px;padding:14px 20px;margin-bottom:20px;max-width:1400px;margin-left:auto;margin-right:auto;">
+    <p style="padding-right:30px;font-size:.8rem;color:rgba(255,190,90,.95);font-weight:600;"><i class="fa-solid fa-wifi" style="opacity:.7;"></i> <span id="offline-bar-msg">Vous êtes hors ligne. Certaines fonctionnalités (comme la vérification des liens) sont désactivées.</span></p>
+    <button onclick="fermerOfflineBar()" title="Fermer" style="position:absolute;top:10px;right:14px;background:none;border:none;color:rgba(255,190,90,.8);font-size:1rem;cursor:pointer;padding:4px;line-height:1;"><i class="fa-solid fa-xmark"></i></button>
+  </div>
+
   <div id="recents-panel">
     <div class="recents-header">
       <i class="fa-solid fa-clock" style="color:rgba(255,255,255,.3);font-size:.8rem;"></i>
@@ -852,7 +874,14 @@ footer{width:100%;padding:56px 20px;text-align:center;border-top:1px solid var(-
       <div style="text-align:center;"><label style="display:block;margin-bottom:9px;">Fond</label><input type="color" id="theme-bg-picker" style="width:65px;height:48px;border:none;border-radius:11px;cursor:pointer;background:transparent;" value="#080808"></div>
       <div style="text-align:center;"><label style="display:block;margin-bottom:9px;">Actions</label><input type="color" id="theme-danger-picker" style="width:65px;height:48px;border:none;border-radius:11px;cursor:pointer;background:transparent;" value="#ff4444"></div>
     </div>
-    <div style="text-align:center;"><button class="btn-confirm" onclick="applySelectedTheme()" style="padding:13px 28px;width:80%;border-radius:14px;">Appliquer</button></div>
+    <div style="display:flex;gap:10px;justify-content:center;margin-bottom:24px;">
+      <button class="btn-confirm" onclick="applySelectedTheme()" style="padding:13px 28px;border-radius:14px;flex:1;">Appliquer</button>
+      <button class="btn-ghost" onclick="enregistrerCombinaisonCouleur()" style="padding:13px 20px;border-radius:14px;white-space:nowrap;"><i class="fa-solid fa-floppy-disk"></i> Enregistrer</button>
+    </div>
+    <div>
+      <label style="display:block;margin-bottom:9px;text-align:center;">Combinaisons enregistrées</label>
+      <div id="color-combos-list" style="display:flex;flex-direction:column;gap:8px;max-height:220px;overflow-y:auto;"></div>
+    </div>
   </div>
 </div>
 
@@ -1329,6 +1358,7 @@ footer{width:100%;padding:56px 20px;text-align:center;border-top:1px solid var(-
     <button class="btn-reset" onclick="footerModifierPassword()">Modifier le mot de passe</button>
     <button class="btn-reset" onclick="footerSupprimerPassword()" style="border-color:rgba(255,68,68,.6);">Supprimer le mot de passe</button>
     <button class="btn-reset" onclick="footerCommentSupprimer()">Comment supprimer un lien</button>
+    <button class="btn-reset" onclick="pourquoiAppEnLigne()" style="border-color:rgba(100,220,140,.5);color:#6fdb95;"><i class="fa-solid fa-circle-question"></i> Pourquoi utiliser l'app en ligne</button>
     <button class="btn-reset" onclick="ouvrirCorbeille()" style="border-color:rgba(255,68,68,.5);color:rgba(255,100,100,.8);"><i class="fa-solid fa-trash-can"></i> Corbeille</button>
   </div>
   <div class="footer-brand">Miguel Heuya DATA LAB • 2026</div>
@@ -1636,7 +1666,17 @@ function lireFichierImportComplet(event) {
 // ============================================================
 // AUTO DEAD LINK CHECK
 // ============================================================
+function afficherOfflineBar(msg){
+  const bar = document.getElementById('offline-bar');
+  if (msg) document.getElementById('offline-bar-msg').textContent = msg;
+  bar.style.display = 'block';
+}
+function fermerOfflineBar(){ document.getElementById('offline-bar').style.display = 'none'; }
+window.addEventListener('offline', () => afficherOfflineBar("Vous êtes hors ligne. Certaines fonctionnalités (comme la vérification des liens) sont désactivées."));
+window.addEventListener('online', () => fermerOfflineBar());
+
 function autoCheckDeadLinks() {
+  if (!navigator.onLine) return;
   for (const cat in db) {
     if (isCategoryEncrypted(cat)) continue;
     db[cat].links.forEach((l, i) => {
@@ -1920,7 +1960,8 @@ function genererPartageConfigure(){
   }
 
   const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
-  const url = window.location.origin + window.location.pathname + '?readonly=' + encoded;
+  const baseUrl = window.location.href.split('#')[0].split('?')[0];
+  const url = baseUrl + '?readonly=' + encoded;
   document.getElementById('readonly-url-field').value = url;
   closeShareConfigModal();
   document.getElementById('readonlyModal').style.display = 'block';
@@ -1941,14 +1982,14 @@ function checkReadonlyMode() {
     db = isV2 ? data.db : data;
 
     document.body.classList.add('share-readonly-mode');
-    document.querySelector('.controls').style.display = 'none';
-    document.getElementById('app-lockscreen').style.display = 'none';
-    document.getElementById('sync-indicator').style.display = 'none';
-    document.querySelector('footer').style.display = 'none';
-    document.getElementById('sort-bar').style.display = 'none';
-    document.getElementById('image-gallery-section').style.display = 'none';
-    document.getElementById('notes-section').style.display = 'none';
-    document.getElementById('planner-fab').style.display = 'none';
+    document.querySelector('.controls')?.style && (document.querySelector('.controls').style.display = 'none');
+    document.getElementById('app-lockscreen')?.style && (document.getElementById('app-lockscreen').style.display = 'none');
+    document.getElementById('sync-indicator')?.style && (document.getElementById('sync-indicator').style.display = 'none');
+    document.querySelector('footer')?.style && (document.querySelector('footer').style.display = 'none');
+    document.getElementById('sort-bar')?.style && (document.getElementById('sort-bar').style.display = 'none');
+    document.getElementById('image-gallery-section')?.style && (document.getElementById('image-gallery-section').style.display = 'none');
+    document.getElementById('notes-section')?.style && (document.getElementById('notes-section').style.display = 'none');
+    document.getElementById('planner-fab')?.style && (document.getElementById('planner-fab').style.display = 'none');
 
     const banner = document.createElement('div');
     banner.className = 'readonly-banner';
@@ -2048,6 +2089,24 @@ function renderAnalyticsChart() {
 // ============================================================
 // THEME
 // ============================================================
+function hexToRgb(hex){
+  const c = hex.replace('#','').trim();
+  const full = c.length===3 ? c.split('').map(x=>x+x).join('') : c;
+  const r = parseInt(full.substr(0,2),16), g = parseInt(full.substr(2,2),16), b = parseInt(full.substr(4,2),16);
+  return { r: isNaN(r)?0:r, g: isNaN(g)?0:g, b: isNaN(b)?0:b };
+}
+function rgbToHex(r,g,b){ return '#' + [r,g,b].map(x => Math.max(0,Math.min(255,Math.round(x))).toString(16).padStart(2,'0')).join(''); }
+// Renvoie noir ou blanc selon la luminosité perçue d'une couleur (pour un contraste lisible)
+function getContrastTextColor(hex){
+  const { r, g, b } = hexToRgb(hex);
+  const lum = (0.299*r + 0.587*g + 0.114*b) / 255;
+  return lum > 0.6 ? '#000000' : '#ffffff';
+}
+// Éclaircit une couleur (mélange avec du blanc) sans jamais la rendre transparente
+function lightenColor(hex, amount){
+  const { r, g, b } = hexToRgb(hex);
+  return rgbToHex(r + (255-r)*amount, g + (255-g)*amount, b + (255-b)*amount);
+}
 function applyTheme(){
   const p = getUvPrimaryColor(), bg = getUvBgColor(), d = getUvDangerColor();
   document.documentElement.style.setProperty('--primary', p);
@@ -2056,10 +2115,81 @@ function applyTheme(){
   document.documentElement.style.setProperty('--danger', d);
   document.documentElement.style.setProperty('--danger-hover', d);
   document.body.style.background = `radial-gradient(circle at 50% -20%,#1a1a1a 0%,${bg} 100%)`;
+
+  // Texte des éléments de la page : blanc si le fond est foncé, noir si le fond est clair
+  document.documentElement.style.setProperty('--text', getContrastTextColor(bg));
+
+  // Zone de texte du bloc-notes : plus claire que le fond (jamais grise, jamais transparente),
+  // avec un texte dont la couleur dépend de cette zone (blanc si foncée, noir si claire)
+  const notesBg = lightenColor(bg, 0.22);
+  const notesText = getContrastTextColor(notesBg);
+  document.documentElement.style.setProperty('--notes-bg', notesBg);
+  document.documentElement.style.setProperty('--notes-text', notesText);
 }
-function modifierTheme(){ if(!verifierMotDePasse()) return; document.getElementById('theme-primary-picker').value = getUvPrimaryColor(); document.getElementById('theme-bg-picker').value = getUvBgColor(); document.getElementById('theme-danger-picker').value = getUvDangerColor(); document.getElementById('themeModal').style.display = 'block'; }
+function modifierTheme(){ if(!verifierMotDePasse()) return; document.getElementById('theme-primary-picker').value = getUvPrimaryColor(); document.getElementById('theme-bg-picker').value = getUvBgColor(); document.getElementById('theme-danger-picker').value = getUvDangerColor(); renderCombinaisonsCouleurs(); document.getElementById('themeModal').style.display = 'block'; }
 function closeThemeModal(){ document.getElementById('themeModal').style.display='none'; }
 function applySelectedTheme(){ localStorage.setItem('uv_primary_color', document.getElementById('theme-primary-picker').value); localStorage.setItem('uv_bg_color', document.getElementById('theme-bg-picker').value); localStorage.setItem('uv_danger_color', document.getElementById('theme-danger-picker').value); applyTheme(); updateQuoteElements(); refreshUI(); closeThemeModal(); }
+
+// ============================================================
+// COMBINAISONS DE COULEURS (Thème - Fond - Action) enregistrées
+// ============================================================
+function getCombinaisonsCouleurs(){ try{ return JSON.parse(localStorage.getItem('uv_color_combos')||'[]'); } catch(e){ return []; } }
+function setCombinaisonsCouleurs(list){ localStorage.setItem('uv_color_combos', JSON.stringify(list)); }
+function enregistrerCombinaisonCouleur(){
+  const nom = prompt("Nom de cette combinaison de couleurs :");
+  if(nom === null || !nom.trim()) return;
+  const combo = {
+    nom: nom.trim(),
+    primary: document.getElementById('theme-primary-picker').value,
+    bg: document.getElementById('theme-bg-picker').value,
+    danger: document.getElementById('theme-danger-picker').value
+  };
+  const list = getCombinaisonsCouleurs();
+  list.push(combo);
+  setCombinaisonsCouleurs(list);
+  renderCombinaisonsCouleurs();
+  showToast('✓ Combinaison enregistrée');
+}
+function appliquerCombinaisonCouleur(i){
+  const combo = getCombinaisonsCouleurs()[i];
+  if(!combo) return;
+  localStorage.setItem('uv_primary_color', combo.primary);
+  localStorage.setItem('uv_bg_color', combo.bg);
+  localStorage.setItem('uv_danger_color', combo.danger);
+  document.getElementById('theme-primary-picker').value = combo.primary;
+  document.getElementById('theme-bg-picker').value = combo.bg;
+  document.getElementById('theme-danger-picker').value = combo.danger;
+  applyTheme();
+  updateQuoteElements();
+  refreshUI();
+  showToast(`✓ Combinaison "${combo.nom}" appliquée`);
+}
+function supprimerCombinaisonCouleur(i, event){
+  event.stopPropagation();
+  const list = getCombinaisonsCouleurs();
+  if(!list[i]) return;
+  if(!confirm(`Supprimer la combinaison "${list[i].nom}" ?`)) return;
+  list.splice(i,1);
+  setCombinaisonsCouleurs(list);
+  renderCombinaisonsCouleurs();
+}
+function renderCombinaisonsCouleurs(){
+  const container = document.getElementById('color-combos-list');
+  if(!container) return;
+  const list = getCombinaisonsCouleurs();
+  if(!list.length){ container.innerHTML = '<p style="font-size:.7rem;color:rgba(255,255,255,.4);text-align:center;">Aucune combinaison enregistrée pour le moment.</p>'; return; }
+  container.innerHTML = list.map((c,i) => `
+    <div class="color-combo-row" onclick="appliquerCombinaisonCouleur(${i})" title="Cliquer pour appliquer cette combinaison">
+      <span class="color-combo-name">${(c.nom||'').replace(/</g,'&lt;')}</span>
+      <span class="color-combo-swatches">
+        <span class="color-combo-swatch" style="background:${c.primary};" title="Thème : ${c.primary}"></span>
+        <span class="color-combo-swatch" style="background:${c.bg};" title="Fond : ${c.bg}"></span>
+        <span class="color-combo-swatch" style="background:${c.danger};" title="Action : ${c.danger}"></span>
+      </span>
+      <span class="color-combo-codes">${c.primary} · ${c.bg} · ${c.danger}</span>
+      <i class="fa-solid fa-trash color-combo-delete" title="Supprimer" onclick="supprimerCombinaisonCouleur(${i}, event)"></i>
+    </div>`).join('');
+}
 
 // ============================================================
 // QUOTES / HEADER
@@ -2347,6 +2477,7 @@ function sortedLinks(links){
 // ============================================================
 function verifierLiensMorts(){
   if(!verifierMotDePasse()) return;
+  if(!navigator.onLine){ afficherOfflineBar("Impossible de vérifier les liens : l'ordinateur est hors ligne."); return; }
   showToast('⏳ Vérification en cours…');
   let checked=0, deadCount=0, total=0; const deadUrls=[];
   for(const cat in db){ if(isCategoryEncrypted(cat)) continue; total+=db[cat].links.filter(l => !isLinkEncrypted(l)).length; }
@@ -2567,9 +2698,9 @@ function renderCategoryGroup(catName, globalMax, catTotals, topCatName, unlocked
           <span class="cat-collapse-icon"><i class="fa-solid fa-chevron-down" style="font-size:.6rem;opacity:.5;"></i></span>
           ${dragModeActive ? '<i class="fa-solid fa-grip-vertical" style="color:rgba(255,255,255,.3);cursor:grab;"></i>' : '<i class="fa-solid fa-folder-closed"></i>'}
           ${catName}
-          ${deadCount > 0 ? `<span class="cat-dead-badge" ${deadTooltip}><i class="fa-solid fa-link-slash"></i> ${deadCount} lien mort</span>` : ''}
+          ${deadCount > 0 ? `<span class="cat-dead-badge" ${deadTooltip}><i class="fa-solid fa-link-slash"></i> ${deadCount} lien mort<i class="fa-solid fa-xmark cat-dead-badge-close" title="Fermer" onclick="event.stopPropagation(); this.parentElement.style.display='none';"></i></span>` : ''}
         </div>
-        <div style="display:flex;gap:6px;align-items:center;">
+        <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;row-gap:6px;">
           <button class="btn-icon-sm" title="Ajouter un lien ici" onclick="ajouterLienDansCategorie('${scn}')"><i class="fa-solid fa-plus"></i></button>
           <button class="btn-icon-sm" title="Statistiques" onclick="openCatStats('${scn}')"><i class="fa-solid fa-chart-bar"></i></button>
           <button class="btn-icon-sm" title="Renommer" onclick="renommerCategorie('${scn}')"><i class="fa-solid fa-tag"></i></button>
@@ -2758,7 +2889,7 @@ function galGetAll(){ return new Promise((resolve)=>{ if(!galDB){ resolve([]); r
 function galAdd(entry){ return new Promise((resolve,reject)=>{ const tx=galDB.transaction(GAL_STORE,'readwrite'); const req=tx.objectStore(GAL_STORE).add(entry); req.onsuccess=()=>resolve(req.result); req.onerror=()=>reject(req.error); }); }
 function galDelete(id){ return new Promise((resolve)=>{ const tx=galDB.transaction(GAL_STORE,'readwrite'); tx.objectStore(GAL_STORE).delete(id); tx.oncomplete=resolve; }); }
 function galRender(){ const grid=document.getElementById('gallery-grid'); const badge=document.getElementById('gallery-count-badge'); const n=galImages.length; badge.textContent=n===0?'0 image':n===1?'1 image':`${n} images`; grid.innerHTML=''; if(!n){ grid.innerHTML='<div class="gallery-empty-msg"><i class="fa-regular fa-image"></i>Aucune image pour le moment.</div>'; return; } galImages.forEach((img,i)=>{ const src=img.src||(img.blob?URL.createObjectURL(img.blob):''); const item=document.createElement('div'); item.className='gallery-item'; const title=(img.title||'').trim(); const safeTitle=title.replace(/</g,'&lt;').replace(/>/g,'&gt;'); item.innerHTML=`<div class="gallery-thumb"><img src="${src}" alt="Image ${i+1}" loading="lazy"><div class="gallery-thumb-overlay"><button class="gallery-thumb-btn" title="Agrandir" onclick="galOpenLightbox(${i})"><i class="fa-solid fa-expand"></i></button><button class="gallery-thumb-btn del" title="Supprimer" onclick="galConfirmDelete(${i},event)"><i class="fa-solid fa-trash"></i></button></div></div><div class="gallery-caption${title?'':' empty'}" title="Cliquer pour modifier le titre" onclick="galEditTitle(${i})">${title||'Sans titre'}</div>`; grid.appendChild(item); }); }
-function galEditTitle(i){ const img=galImages[i]; if(!img) return; const current=img.title||''; const nt=prompt("Titre de l'image :", current); if(nt===null) return; const newTitle=nt.trim(); if(newTitle===current) return; img.title=newTitle; if(img.id!==undefined && galDB){ const toStore={...img}; if(toStore.src && toStore.src.startsWith('blob:')) delete toStore.src; const tx=galDB.transaction(GAL_STORE,'readwrite'); tx.objectStore(GAL_STORE).put(toStore); } galRender(); }
+function galEditTitle(i){ if(!verifierMotDePasse()) return; const img=galImages[i]; if(!img) return; const current=img.title||''; const nt=prompt("Titre de l'image :", current); if(nt===null) return; const newTitle=nt.trim(); if(newTitle===current) return; img.title=newTitle; if(img.id!==undefined && galDB){ const toStore={...img}; if(toStore.src && toStore.src.startsWith('blob:')) delete toStore.src; const tx=galDB.transaction(GAL_STORE,'readwrite'); tx.objectStore(GAL_STORE).put(toStore); } galRender(); }
 async function galLoad(){ try{ await galOpenDB(); const rows=await galGetAll(); galImages=rows.map(r=>{ if(r.blob&&!r.src) r.src=URL.createObjectURL(r.blob); return r; }); galRender(); } catch(e){ console.warn('Gallery IndexedDB error:',e); galRender(); } }
 async function galAddBlob(file, title){ if(!file||!file.type.startsWith('image/')){ showToast('⚠ Fichier invalide'); return; } const entry={blob:file,name:file.name||'image',title:(title||'').trim(),addedAt:Date.now(),w:0,h:0}; await new Promise(resolve=>{ const img=new Image(); const url=URL.createObjectURL(file); img.onload=()=>{ entry.w=img.naturalWidth; entry.h=img.naturalHeight; URL.revokeObjectURL(url); resolve(); }; img.onerror=()=>resolve(); img.src=url; }); try{ const id=await galAdd(entry); entry.id=id; entry.src=URL.createObjectURL(file); galImages.push(entry); galRender(); showToast('✓ Image ajoutée'); } catch(e){ showToast('⚠ Erreur lors de l\'ajout'); } }
 let galImportQueue=[]; let galImportIndex=0;
@@ -3810,6 +3941,7 @@ if(!isReadonly){
   refreshUI();
   galLoad();
   verifierLockscreenAuChargement();
+  if(!navigator.onLine) afficherOfflineBar();
   setTimeout(autoCheckDeadLinks, 3000);
   nettoyerProgrammeObsolete();
   updatePlannerFab();
