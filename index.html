@@ -1946,7 +1946,7 @@ function genererPartageConfigure(){
   }
 
   if (opts.notes) {
-    payload.notes = (textTabs || []).map(t => ({ name: t.name, content: t.content || '' }));
+    payload.notes = (textTabs || []).map(t => ({ name: getTabAutoName(t), content: t.content || '' }));
   }
 
   if (opts.programme) {
@@ -2963,13 +2963,21 @@ function saveTextTabs(){
 
 function getActiveTextTab(){ return textTabs.find(t => t.id === activeTextTabId) || textTabs[0]; }
 
+function getTabAutoName(tab){
+  const c = (tab && tab.content || '').trim();
+  if(!c) return 'Vide';
+  const firstLine = c.split('\n').find(l => l.trim()) || c;
+  const base = firstLine.trim();
+  return base.length > 28 ? base.slice(0,28).trim() + '…' : base;
+}
+
 function renderTextTabs(){
   const bar = document.getElementById('notes-tabbar');
   if(!textTabs.length){ textTabs = [{ id: Date.now()+Math.random(), name: 'Note 1', content: '' }]; activeTextTabId = textTabs[0].id; }
   if(!textTabs.find(t => t.id === activeTextTabId)) activeTextTabId = textTabs[0].id;
   bar.innerHTML = textTabs.map(t => `
-    <div class="notes-tab ${t.id===activeTextTabId?'active':''}" onclick="switchTextTab(${t.id})" ondblclick="renameTextTab(${t.id})" title="Double-clic pour renommer">
-      <span class="notes-tab-name">${(t.name||'Sans titre').replace(/</g,'&lt;')}</span>
+    <div class="notes-tab ${t.id===activeTextTabId?'active':''}" data-tab-id="${t.id}" onclick="switchTextTab(${t.id})" title="${getTabAutoName(t).replace(/"/g,'&quot;')}">
+      <span class="notes-tab-name">${getTabAutoName(t).replace(/</g,'&lt;')}</span>
       <button class="notes-tab-close" onclick="event.stopPropagation();closeTextTab(${t.id})" title="Fermer l'onglet"><i class="fa-solid fa-xmark"></i></button>
     </div>
   `).join('') + `<button class="notes-tab-add" onclick="newTextTab()" title="Nouvel onglet"><i class="fa-solid fa-plus"></i></button>`;
@@ -2996,7 +3004,7 @@ async function closeTextTab(id){
   if(textTabs.length <= 1){ showToast('⚠ Impossible de fermer le dernier onglet'); return; }
   const tab = textTabs.find(t=>t.id===id);
   if(tab && tab.content.trim()){
-    const wantSave = confirm(`Voulez-vous sauvegarder "${tab.name}" avant de fermer cet onglet ?`);
+    const wantSave = confirm(`Voulez-vous sauvegarder "${getTabAutoName(tab)}" avant de fermer cet onglet ?`);
     if(wantSave){
       if(!verifierMotDePasse()) return; // mot de passe incorrect ou annulé : on n'annule pas la fermeture par erreur, on stoppe
       await _saveTabContentToFile(tab);
@@ -3009,7 +3017,7 @@ async function closeTextTab(id){
 }
 
 async function _saveTabContentToFile(tab){
-  let filename = (tab.name || 'notes').replace(/[\\/:*?"<>|]/g, '').trim() || 'notes';
+  let filename = getTabAutoName(tab).replace(/[\\/:*?"<>|]/g, '').trim() || 'notes';
   if(!filename.toLowerCase().endsWith('.txt')) filename += '.txt';
   if(window.showSaveFilePicker){
     try{
@@ -3030,15 +3038,21 @@ async function _saveTabContentToFile(tab){
   showToast('✓ Fichier téléchargé');
 }
 
-function renameTextTab(id){
-  const tab = textTabs.find(t => t.id === id); if(!tab) return;
-  const name = prompt('Nom de l\'onglet :', tab.name);
-  if(name !== null && name.trim()){ tab.name = name.trim(); saveTextTabs(); renderTextTabs(); }
+function updateActiveTabNameDisplay(){
+  const active = getActiveTextTab(); if(!active) return;
+  const bar = document.getElementById('notes-tabbar');
+  const tabEl = bar.querySelector(`.notes-tab[data-tab-id="${active.id}"]`);
+  if(!tabEl) return;
+  const autoName = getTabAutoName(active);
+  const nameEl = tabEl.querySelector('.notes-tab-name');
+  if(nameEl) nameEl.textContent = autoName;
+  tabEl.title = autoName;
 }
 
 function onNotesInput(value){
   const active = getActiveTextTab(); if(!active) return;
   active.content = value;
+  updateActiveTabNameDisplay();
   document.getElementById('notes-charcount').textContent = `${value.length} caractère${value.length>1?'s':''}`;
   const stateEl = document.getElementById('notes-savedstate');
   stateEl.textContent = 'Modification en cours…';
@@ -3049,7 +3063,7 @@ function onNotesInput(value){
 function downloadTextTab(){
   if(!verifierMotDePasse()) return;
   const active = getActiveTextTab();
-  document.getElementById('notes-filename-input').value = (active && active.name) ? active.name : 'notes';
+  document.getElementById('notes-filename-input').value = getTabAutoName(active);
   document.getElementById('notesSaveAsModal').style.display = 'block';
   setTimeout(()=>document.getElementById('notes-filename-input').focus(),50);
 }
