@@ -3957,6 +3957,7 @@ function sauvegarderMultiDays() {
 // INIT
 // ============================================================
 const isReadonly = checkReadonlyMode();
+if (isAppEnLigne()) document.title = 'Online Liens — Miguel Heuya';
 applyTheme();
 updateQuoteElements();
 if(!isReadonly){
