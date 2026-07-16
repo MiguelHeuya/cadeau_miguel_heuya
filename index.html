@@ -737,7 +737,7 @@ footer{width:100%;padding:56px 20px;text-align:center;border-top:1px solid var(-
       <a href="https://miguelheuya.netlify.app/" target="_blank" class="uv-permanent-link">
         <i class="fa-solid fa-user-tie"></i> Miguel Heuya | Business Intelligence Specialist
       </a>
-      <a href="https://cadeaumiguelheuya.netlify.app/" target="_blank" class="uv-permanent-link" style="border-color:rgba(100,220,140,.4);color:#000;" onclick="return clicUtiliserAppEnLigne(event)">
+      <a href="https://cadeaumiguelheuya.netlify.app/" target="_blank" id="btn-app-en-ligne" class="uv-permanent-link" style="border-color:rgba(100,220,140,.4);color:#000;" onclick="return clicUtiliserAppEnLigne(event)">
         <i class="fa-solid fa-cloud-arrow-up"></i> Utiliser l'app en ligne
       </a>
       <button class="uv-permanent-link" onclick="document.getElementById('image-gallery-section').scrollIntoView({behavior:'smooth'})">
@@ -1885,6 +1885,10 @@ function retirerCatGroupe(gname, cat) {
 // ============================================================
 const ONLINE_APP_HOSTNAME = 'cadeaumiguelheuya.netlify.app';
 function isAppEnLigne(){ return window.location.hostname === ONLINE_APP_HOSTNAME; }
+function majBoutonAppEnLigne(){
+  const btn = document.getElementById('btn-app-en-ligne');
+  if(btn) btn.style.display = isAppEnLigne() ? 'none' : '';
+}
 function clicUtiliserAppEnLigne(event){
   if (isAppEnLigne()){
     event.preventDefault();
@@ -2273,6 +2277,7 @@ function renderTagPills(){
 }
 function removeTag(i){ currentTags.splice(i,1); renderTagPills(); }
 document.addEventListener('DOMContentLoaded',()=>{
+  majBoutonAppEnLigne();
   const raw = document.getElementById('tag-raw');
   if(raw) raw.addEventListener('keydown', e=>{
     if((e.key==='Enter'||e.key===','||e.key===';') && raw.value.trim()){
