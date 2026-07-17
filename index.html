@@ -686,6 +686,45 @@ footer{width:100%;padding:56px 20px;text-align:center;border-top:1px solid var(-
 .multi-day-task-remove:hover { color: var(--danger); }
 .planner-save-multi-btn { width: 100%; padding: 13px; background: rgba(255, 198, 9,.12); color: var(--primary); border: 1px solid rgba(255, 198, 9,.3); border-radius: 12px; font-weight: 800; font-size: .85rem; cursor: pointer; transition: var(--transition); font-family: inherit; text-transform: uppercase; margin-top: 6px; }
 .planner-save-multi-btn:hover { background: var(--primary); color: #000; }
+
+/* ============ NOTES RAPPEL PLEIN ECRAN ============ */
+#remindersModal .modal-inner{max-width:680px;}
+.reminder-note-form{background:rgba(255,255,255,.02);border:1px solid var(--glass-border);border-radius:16px;padding:18px;margin-bottom:20px;}
+.reminder-interval-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px;}
+.reminder-interval-grid div label{font-size:.62rem;margin-bottom:4px;}
+.reminder-interval-grid input{padding:10px;text-align:center;font-size:.85rem;}
+.reminder-presets{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;}
+.reminder-preset-chip{background:rgba(180,120,255,.1);color:#c9a0ff;border:1px solid rgba(180,120,255,.3);padding:6px 14px;border-radius:100px;font-size:.72rem;font-weight:700;cursor:pointer;transition:var(--transition);font-family:inherit;}
+.reminder-preset-chip:hover{background:#c9a0ff;color:#000;}
+.reminder-note-add-btn{width:100%;padding:13px;background:rgba(180,120,255,.15);color:#c9a0ff;border:1px solid rgba(180,120,255,.35);border-radius:12px;font-weight:800;font-size:.85rem;cursor:pointer;transition:var(--transition);font-family:inherit;text-transform:uppercase;letter-spacing:.5px;}
+.reminder-note-add-btn:hover{background:#c9a0ff;color:#000;}
+.reminder-note-row{display:flex;align-items:flex-start;gap:12px;background:rgba(255,255,255,.03);border:1px solid var(--glass-border);border-radius:14px;padding:14px 16px;margin-bottom:10px;transition:var(--transition);}
+.reminder-note-row.paused{opacity:.5;}
+.reminder-note-info{flex:1;min-width:0;}
+.reminder-note-text{font-size:.85rem;font-weight:600;color:var(--text);white-space:pre-wrap;word-break:break-word;margin-bottom:6px;}
+.reminder-note-meta{display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
+.reminder-note-badge{font-size:.62rem;font-weight:700;background:rgba(180,120,255,.12);color:#c9a0ff;border:1px solid rgba(180,120,255,.28);padding:3px 10px;border-radius:20px;}
+.reminder-note-next{font-size:.62rem;color:rgba(255,255,255,.4);font-weight:600;}
+.reminder-note-actions{display:flex;gap:6px;flex-shrink:0;}
+.reminder-note-actions button{background:none;border:1px solid var(--glass-border);color:rgba(255,255,255,.5);cursor:pointer;font-size:.72rem;padding:7px 10px;border-radius:8px;transition:.2s;font-family:inherit;}
+.reminder-note-actions button:hover{border-color:var(--primary);color:var(--primary);}
+.reminder-note-actions .rn-del:hover{border-color:var(--danger);color:var(--danger);}
+.reminder-notes-empty{text-align:center;padding:30px 0;color:rgba(255,255,255,.25);font-size:.85rem;}
+.reminder-notes-empty i{display:block;font-size:2.2rem;margin-bottom:12px;opacity:.3;}
+
+#note-fullscreen-overlay{display:none;position:fixed;inset:0;z-index:5000;background:rgba(5,5,8,.97);backdrop-filter:blur(24px);align-items:center;justify-content:center;padding:24px;animation:fadeInNoteFs .35s ease-out;}
+#note-fullscreen-overlay.open{display:flex;}
+@keyframes fadeInNoteFs{from{opacity:0;}to{opacity:1;}}
+.note-fs-card{max-width:780px;width:100%;max-height:85vh;overflow-y:auto;background:rgba(20,20,20,.7);border:1px solid var(--primary);border-radius:28px;padding:44px;box-shadow:0 30px 70px rgba(0,0,0,.6);position:relative;animation:slideDown .4s ease-out;}
+.note-fs-icon{font-size:2.4rem;color:var(--primary);margin-bottom:18px;}
+.note-fs-content{font-size:1.3rem;line-height:1.6;color:var(--text);word-break:break-word;}
+.note-fs-content ul{margin-left:22px;}
+.note-fs-queue{font-size:.72rem;color:rgba(255,255,255,.35);font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:14px;}
+.note-fs-close{position:absolute;top:20px;right:26px;background:none;border:none;color:rgba(255,255,255,.5);font-size:1.8rem;cursor:pointer;line-height:1;transition:.2s;}
+.note-fs-close:hover{color:var(--primary);transform:rotate(90deg);}
+.note-fs-actions{display:flex;justify-content:flex-end;margin-top:26px;}
+.note-fs-actions button{background:var(--primary);color:#000;border:none;padding:12px 30px;border-radius:100px;font-weight:800;cursor:pointer;transition:var(--transition);text-transform:uppercase;letter-spacing:1px;font-family:inherit;}
+.note-fs-actions button:hover{background:var(--primary-hover);transform:translateY(-2px);}
 </style>
 </head>
 <body>
@@ -710,6 +749,19 @@ footer{width:100%;padding:56px 20px;text-align:center;border-top:1px solid var(-
     <div class="reminder-btns">
       <button class="reminder-btn-create" onclick="ouvrirPlannerDepuisRappel()"><i class="fa-solid fa-plus"></i> Créer mon programme</button>
       <button class="reminder-btn-skip" onclick="fermerRappelPlanner()">Plus tard</button>
+    </div>
+  </div>
+</div>
+
+<!-- OVERLAY PLEIN ECRAN - NOTE RAPPEL -->
+<div id="note-fullscreen-overlay">
+  <div class="note-fs-card">
+    <button class="note-fs-close" onclick="fermerNoteFullscreen()" title="Fermer">&times;</button>
+    <div class="note-fs-icon"><i class="fa-solid fa-bell"></i></div>
+    <div class="note-fs-queue" id="note-fs-queue-label"></div>
+    <div class="note-fs-content" id="note-fs-content"></div>
+    <div class="note-fs-actions">
+      <button onclick="fermerNoteFullscreen()">Fermer</button>
     </div>
   </div>
 </div>
@@ -753,6 +805,7 @@ footer{width:100%;padding:56px 20px;text-align:center;border-top:1px solid var(-
       <button class="btn-ghost" onclick="ouvrirGroupesParents()" style="border-color:rgba(255, 198, 9,.4);color:var(--primary);"><i class="fa-solid fa-layer-group"></i> Groupes</button>
       <button class="btn-ghost" onclick="ouvrirPartage()" style="border-color:rgba(100,150,255,.4);color:#7aaeff;"><i class="fa-solid fa-share-nodes"></i> Partager</button>
       <button class="btn-ghost" onclick="ouvrirPlanner()" style="border-color:rgba(255, 198, 9,.5);color:var(--primary);"><i class="fa-solid fa-calendar-check"></i> Programme</button>
+      <button class="btn-ghost" onclick="ouvrirRappelsNotes()" style="border-color:rgba(180,120,255,.4);color:#c9a0ff;"><i class="fa-solid fa-bell"></i> Notes Rappel</button>
     </div>
 
     <div id="sort-bar">
@@ -920,6 +973,40 @@ footer{width:100%;padding:56px 20px;text-align:center;border-top:1px solid var(-
       <label style="display:block;margin-bottom:9px;text-align:center;">Combinaisons enregistrées</label>
       <div id="color-combos-list" style="display:flex;flex-direction:column;gap:8px;max-height:220px;overflow-y:auto;"></div>
     </div>
+  </div>
+</div>
+
+<div id="remindersModal" class="modal">
+  <div class="modal-inner">
+    <span class="close-modal" onclick="closeRemindersModal()">&times;</span>
+    <h2><i class="fa-solid fa-bell" style="margin-right:7px;"></i>Notes Rappel Plein Écran</h2>
+    <p style="color:rgba(255,255,255,.4);font-size:.75rem;margin-bottom:16px;">Créez une ou plusieurs notes qui s'afficheront en grand écran à l'intervalle de votre choix.</p>
+
+    <div class="reminder-note-form">
+      <label>Contenu de la note</label>
+      <textarea id="reminder-note-text" placeholder="ex: Boire un verre d'eau, penser à s'étirer..." style="margin-bottom:14px;min-height:70px;"></textarea>
+
+      <label>Intervalle de répétition</label>
+      <div class="reminder-interval-grid">
+        <div><label>Jours</label><input type="number" id="ri-days" min="0" value="0"></div>
+        <div><label>Heures</label><input type="number" id="ri-hours" min="0" value="0"></div>
+        <div><label>Minutes</label><input type="number" id="ri-minutes" min="0" value="0"></div>
+        <div><label>Secondes</label><input type="number" id="ri-seconds" min="0" value="30"></div>
+      </div>
+      <div class="reminder-presets">
+        <button type="button" class="reminder-preset-chip" onclick="appliquerPresetRappel(0,0,0,30)">30 sec</button>
+        <button type="button" class="reminder-preset-chip" onclick="appliquerPresetRappel(0,0,1,0)">1 min</button>
+        <button type="button" class="reminder-preset-chip" onclick="appliquerPresetRappel(0,0,2,0)">2 min</button>
+        <button type="button" class="reminder-preset-chip" onclick="appliquerPresetRappel(0,0,43,0)">43 min</button>
+        <button type="button" class="reminder-preset-chip" onclick="appliquerPresetRappel(0,1,0,0)">1 h</button>
+        <button type="button" class="reminder-preset-chip" onclick="appliquerPresetRappel(0,1,30,0)">1 h 30</button>
+        <button type="button" class="reminder-preset-chip" onclick="appliquerPresetRappel(1,0,0,0)">1 jour</button>
+        <button type="button" class="reminder-preset-chip" onclick="appliquerPresetRappel(1,15,30,0)">1j 15h 30min</button>
+      </div>
+      <button class="reminder-note-add-btn" onclick="ajouterNoteRappel()"><i class="fa-solid fa-plus"></i> Ajouter cette note</button>
+    </div>
+
+    <div id="reminder-notes-list"></div>
   </div>
 </div>
 
@@ -1622,9 +1709,10 @@ function getCompleteBackup() {
   const plannerReminded = localStorage.getItem('hsml_planner_reminded') || null;
   const sitePassword = localStorage.getItem('site_global_password') || null;
   const colorCombos = JSON.parse(localStorage.getItem('uv_color_combos') || '[]');
+  const reminderNotes = JSON.parse(localStorage.getItem('hsml_reminder_notes') || '[]');
   const meta = {
     textTabs: textTabsBackup, activeTextTabId: activeTextTabIdBackup,
-    planner, plannerReminded, sitePassword, colorCombos
+    planner, plannerReminded, sitePassword, colorCombos, reminderNotes
   };
   return new Promise((resolve) => {
     if (!galDB) {
@@ -1705,6 +1793,7 @@ function lireFichierImportComplet(event) {
         if (m.activeTextTabId) localStorage.setItem('hsml_active_text_tab', String(m.activeTextTabId));
         if (m.planner) localStorage.setItem('hsml_planner', JSON.stringify(m.planner));
         if (m.plannerReminded) localStorage.setItem('hsml_planner_reminded', m.plannerReminded);
+        if (m.reminderNotes) localStorage.setItem('hsml_reminder_notes', JSON.stringify(m.reminderNotes));
         if (m.sitePassword) localStorage.setItem('site_global_password', m.sitePassword);
         if (m.colorCombos) localStorage.setItem('uv_color_combos', JSON.stringify(m.colorCombos));
       }
@@ -4200,6 +4289,161 @@ function sauvegarderMultiDays() {
 }
 
 // ============================================================
+// NOTES RAPPEL PLEIN ECRAN
+// ============================================================
+function getReminderNotes(){ return JSON.parse(localStorage.getItem('hsml_reminder_notes') || '[]'); }
+function saveReminderNotes(list){ localStorage.setItem('hsml_reminder_notes', JSON.stringify(list)); }
+
+function appliquerPresetRappel(d,h,m,s){
+  document.getElementById('ri-days').value = d;
+  document.getElementById('ri-hours').value = h;
+  document.getElementById('ri-minutes').value = m;
+  document.getElementById('ri-seconds').value = s;
+}
+
+function intervalMsFromFields(d,h,m,s){
+  return (((d*24+h)*60+m)*60+s)*1000;
+}
+
+function formatIntervalRappel(ms){
+  let total = Math.round(ms/1000);
+  const d = Math.floor(total/86400); total%=86400;
+  const h = Math.floor(total/3600); total%=3600;
+  const m = Math.floor(total/60); const s = total%60;
+  const parts = [];
+  if(d) parts.push(d+'j');
+  if(h) parts.push(h+'h');
+  if(m) parts.push(m+'min');
+  if(s || !parts.length) parts.push(s+'s');
+  return parts.join(' ');
+}
+
+function ouvrirRappelsNotes(){
+  if(!verifierMotDePasse()) return;
+  renderReminderNotesList();
+  document.getElementById('remindersModal').style.display = 'block';
+}
+function closeRemindersModal(){ document.getElementById('remindersModal').style.display = 'none'; }
+
+function ajouterNoteRappel(){
+  const text = document.getElementById('reminder-note-text').value.trim();
+  const d = parseInt(document.getElementById('ri-days').value) || 0;
+  const h = parseInt(document.getElementById('ri-hours').value) || 0;
+  const m = parseInt(document.getElementById('ri-minutes').value) || 0;
+  const s = parseInt(document.getElementById('ri-seconds').value) || 0;
+  const ms = intervalMsFromFields(d,h,m,s);
+  if(!text){ showToast("⚠️ Entrez le contenu de la note"); return; }
+  if(ms < 1000){ showToast("⚠️ L'intervalle doit être d'au moins 1 seconde"); return; }
+  const list = getReminderNotes();
+  list.push({
+    id: 'rn_'+Date.now()+'_'+Math.floor(Math.random()*10000),
+    text, days:d, hours:h, minutes:m, seconds:s,
+    intervalMs: ms,
+    active: true,
+    nextTrigger: Date.now() + ms
+  });
+  saveReminderNotes(list);
+  document.getElementById('reminder-note-text').value = '';
+  renderReminderNotesList();
+  showToast('✓ Note rappel ajoutée');
+}
+
+function toggleNoteRappelActive(id){
+  const list = getReminderNotes();
+  const n = list.find(x=>x.id===id);
+  if(!n) return;
+  n.active = !n.active;
+  if(n.active) n.nextTrigger = Date.now() + n.intervalMs;
+  saveReminderNotes(list);
+  renderReminderNotesList();
+}
+
+function supprimerNoteRappel(id){
+  if(!confirm('Supprimer définitivement cette note rappel ?')) return;
+  let list = getReminderNotes();
+  list = list.filter(x=>x.id!==id);
+  saveReminderNotes(list);
+  reminderNotesQueue = reminderNotesQueue.filter(n=>n.id!==id);
+  renderReminderNotesList();
+}
+
+function renderReminderNotesList(){
+  const container = document.getElementById('reminder-notes-list');
+  const list = getReminderNotes();
+  if(!list.length){
+    container.innerHTML = '<div class="reminder-notes-empty"><i class="fa-solid fa-bell-slash"></i>Aucune note rappel pour l\'instant.</div>';
+    return;
+  }
+  container.innerHTML = list.map(n => {
+    const remainingMs = Math.max(0, n.nextTrigger - Date.now());
+    const nextLabel = n.active ? ('Prochain affichage dans ' + formatIntervalRappel(remainingMs)) : 'En pause';
+    return `
+    <div class="reminder-note-row ${n.active ? '' : 'paused'}">
+      <div class="reminder-note-info">
+        <div class="reminder-note-text">${renderMarkdown(n.text)}</div>
+        <div class="reminder-note-meta">
+          <span class="reminder-note-badge"><i class="fa-solid fa-repeat"></i> ${formatIntervalRappel(n.intervalMs)}</span>
+          <span class="reminder-note-next">${nextLabel}</span>
+        </div>
+      </div>
+      <div class="reminder-note-actions">
+        <button onclick="toggleNoteRappelActive('${n.id}')" title="${n.active ? 'Mettre en pause' : 'Reprendre'}"><i class="fa-solid ${n.active ? 'fa-pause' : 'fa-play'}"></i></button>
+        <button class="rn-del" onclick="supprimerNoteRappel('${n.id}')" title="Supprimer"><i class="fa-solid fa-trash"></i></button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+let reminderNotesQueue = [];
+let reminderNotesTickerHandle = null;
+
+function checkReminderNotesDue(){
+  const list = getReminderNotes();
+  if(!list.length) return;
+  const now = Date.now();
+  let changed = false;
+  list.forEach(n => {
+    if(!n.active) return;
+    if(n.nextTrigger <= now){
+      if(!reminderNotesQueue.some(q=>q.id===n.id)) reminderNotesQueue.push(n);
+      while(n.nextTrigger <= now) n.nextTrigger += n.intervalMs;
+      changed = true;
+    }
+  });
+  if(changed) saveReminderNotes(list);
+  if(reminderNotesQueue.length && !document.getElementById('note-fullscreen-overlay').classList.contains('open')){
+    afficherProchaineNoteFullscreen();
+  }
+  // Rafraîchir la liste si le modal de gestion est ouvert
+  if(document.getElementById('remindersModal').style.display === 'block') renderReminderNotesList();
+}
+
+function afficherProchaineNoteFullscreen(){
+  if(!reminderNotesQueue.length) return;
+  const n = reminderNotesQueue[0];
+  const overlay = document.getElementById('note-fullscreen-overlay');
+  const queueLabel = document.getElementById('note-fs-queue-label');
+  queueLabel.textContent = reminderNotesQueue.length > 1 ? `Note 1 sur ${reminderNotesQueue.length}` : '';
+  document.getElementById('note-fs-content').innerHTML = renderMarkdown(n.text);
+  overlay.classList.add('open');
+}
+
+function fermerNoteFullscreen(){
+  reminderNotesQueue.shift();
+  const overlay = document.getElementById('note-fullscreen-overlay');
+  overlay.classList.remove('open');
+  if(reminderNotesQueue.length){
+    setTimeout(afficherProchaineNoteFullscreen, 300);
+  }
+}
+
+function startReminderNotesTicker(){
+  if(reminderNotesTickerHandle) clearInterval(reminderNotesTickerHandle);
+  checkReminderNotesDue();
+  reminderNotesTickerHandle = setInterval(checkReminderNotesDue, 1000);
+}
+
+// ============================================================
 // INIT
 // ============================================================
 const idPartageHeberge = detecterIdPartageHeberge();
@@ -4217,6 +4461,7 @@ if (idPartageHeberge){
   setTimeout(autoCheckDeadLinks, 3000);
   nettoyerProgrammeObsolete();
   updatePlannerFab();
+  startReminderNotesTicker();
 }
 </script>
 </body>
