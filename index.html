@@ -704,6 +704,8 @@ footer{width:100%;padding:56px 20px;text-align:center;border-top:1px solid var(-
 .reminder-note-text{font-size:.85rem;font-weight:600;color:var(--text);white-space:pre-wrap;word-break:break-word;margin-bottom:6px;}
 .reminder-note-meta{display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
 .reminder-note-badge{font-size:.62rem;font-weight:700;background:rgba(180,120,255,.12);color:#c9a0ff;border:1px solid rgba(180,120,255,.28);padding:3px 10px;border-radius:20px;}
+.reminder-note-badge-important{background:rgba(255,68,68,.12);color:#ff8080;border-color:rgba(255,68,68,.3);}
+.reminder-note-row.editing{border-color:var(--primary);background:rgba(255,198,9,.05);}
 .reminder-note-next{font-size:.62rem;color:rgba(255,255,255,.4);font-weight:600;}
 .reminder-note-actions{display:flex;gap:6px;flex-shrink:0;}
 .reminder-note-actions button{background:none;border:1px solid var(--glass-border);color:rgba(255,255,255,.5);cursor:pointer;font-size:.72rem;padding:7px 10px;border-radius:8px;transition:.2s;font-family:inherit;}
@@ -725,6 +727,51 @@ footer{width:100%;padding:56px 20px;text-align:center;border-top:1px solid var(-
 .note-fs-actions{display:flex;justify-content:flex-end;margin-top:26px;}
 .note-fs-actions button{background:var(--primary);color:#000;border:none;padding:12px 30px;border-radius:100px;font-weight:800;cursor:pointer;transition:var(--transition);text-transform:uppercase;letter-spacing:1px;font-family:inherit;}
 .note-fs-actions button:hover{background:var(--primary-hover);transform:translateY(-2px);}
+
+/* ============ RAPPEL DE SAUVEGARDE ============ */
+#backup-reminder-bar{display:none;position:relative;background:rgba(255,68,68,.06);border:1px solid rgba(255,68,68,.22);border-radius:16px;padding:14px 20px;margin-bottom:20px;max-width:1400px;margin-left:auto;margin-right:auto;}
+#backup-reminder-bar p{padding-right:200px;font-size:.8rem;color:rgba(255,150,150,.95);font-weight:600;}
+#backup-reminder-bar .backup-reminder-actions{position:absolute;top:10px;right:14px;display:flex;gap:8px;align-items:center;}
+.backup-reminder-btn{background:var(--danger);color:#fff;border:none;padding:8px 18px;border-radius:100px;font-size:.72rem;font-weight:800;cursor:pointer;transition:var(--transition);font-family:inherit;text-transform:uppercase;white-space:nowrap;}
+.backup-reminder-btn:hover{background:var(--danger-hover);}
+.backup-reminder-close{background:none;border:none;color:rgba(255,100,100,.7);font-size:1rem;cursor:pointer;padding:4px;line-height:1;}
+
+/* ============ AUJOURD'HUI EN UN COUP D'OEIL ============ */
+#todayGlanceModal .modal-inner{max-width:640px;}
+.glance-section{margin-bottom:22px;}
+.glance-section-title{font-size:.7rem;text-transform:uppercase;font-weight:800;letter-spacing:1px;color:var(--primary);margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+.glance-task-row{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.03);border:1px solid var(--glass-border);border-radius:12px;padding:10px 14px;margin-bottom:6px;font-size:.82rem;}
+.glance-task-row.done{opacity:.5;text-decoration:line-through;}
+.glance-empty{color:rgba(255,255,255,.35);font-size:.8rem;font-style:italic;padding:8px 2px;}
+.glance-empty a{color:var(--primary);font-style:normal;font-weight:700;text-decoration:none;}
+.glance-link-row{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.03);border:1px solid var(--glass-border);border-radius:12px;padding:10px 14px;margin-bottom:6px;font-size:.82rem;}
+.glance-link-row span:nth-child(2){flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.glance-link-count{flex-shrink:0;font-size:.68rem;font-weight:700;color:var(--primary);background:rgba(255,198,9,.1);padding:2px 10px;border-radius:20px;}
+.glance-quote{text-align:center;font-style:italic;color:rgba(255,255,255,.65);padding:18px;background:rgba(255,255,255,.02);border-radius:14px;border:1px solid var(--glass-border);font-size:.9rem;}
+.glance-quote i{color:var(--primary);margin-right:8px;}
+.glance-tasks-progress{font-size:.68rem;color:rgba(255,255,255,.4);margin-bottom:8px;font-weight:700;}
+
+/* ============ RECHERCHE RAPIDE (CTRL+K) ============ */
+#quickSearchOverlay{display:none;position:fixed;inset:0;z-index:5500;background:rgba(5,5,8,.75);backdrop-filter:blur(10px);align-items:flex-start;justify-content:center;padding:10vh 20px 24px;}
+#quickSearchOverlay.open{display:flex;}
+.qs-box{width:100%;max-width:640px;background:rgba(18,18,20,.9);backdrop-filter:blur(30px);border:1px solid var(--primary);border-radius:20px;box-shadow:0 30px 70px rgba(0,0,0,.6);overflow:hidden;animation:slideDown .3s ease-out;}
+.qs-input-wrap{display:flex;align-items:center;gap:12px;padding:16px 20px;border-bottom:1px solid var(--glass-border);}
+.qs-input-wrap i{color:var(--primary);font-size:1rem;}
+#qs-input{flex:1;background:none;border:none;padding:6px 0;font-size:1rem;color:var(--text);}
+#qs-input:focus{border:none;background:none;}
+.qs-hint-kbd{font-size:.62rem;font-weight:800;color:rgba(255,255,255,.35);border:1px solid var(--glass-border);padding:3px 8px;border-radius:6px;flex-shrink:0;}
+#qs-results{max-height:50vh;overflow-y:auto;padding:8px;}
+.qs-item{display:flex;align-items:center;gap:14px;padding:12px 14px;border-radius:12px;cursor:pointer;transition:.12s;}
+.qs-item.active,.qs-item:hover{background:rgba(255,198,9,.1);}
+.qs-item-icon{width:22px;text-align:center;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+.qs-item-icon img{border-radius:3px;}
+.qs-item-info{flex:1;min-width:0;}
+.qs-item-title{font-size:.87rem;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.qs-item-sub{font-size:.7rem;color:rgba(255,255,255,.4);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.qs-empty{text-align:center;padding:36px 0;color:rgba(255,255,255,.3);font-size:.85rem;}
+.qs-footer-hint{padding:10px 20px;border-top:1px solid var(--glass-border);font-size:.65rem;color:rgba(255,255,255,.3);display:flex;gap:16px;}
+.qs-footer-hint span{display:flex;align-items:center;gap:5px;}
+.qs-footer-hint kbd{border:1px solid var(--glass-border);padding:1px 6px;border-radius:5px;font-family:inherit;}
 </style>
 </head>
 <body>
@@ -766,6 +813,23 @@ footer{width:100%;padding:56px 20px;text-align:center;border-top:1px solid var(-
   </div>
 </div>
 
+<!-- RECHERCHE RAPIDE (CTRL+K) -->
+<div id="quickSearchOverlay">
+  <div class="qs-box">
+    <div class="qs-input-wrap">
+      <i class="fa-solid fa-magnifying-glass"></i>
+      <input type="text" id="qs-input" placeholder="Rechercher un lien, une note, une catégorie..." oninput="qsHandleInput(this.value)" autocomplete="off">
+      <span class="qs-hint-kbd">ESC</span>
+    </div>
+    <div id="qs-results"></div>
+    <div class="qs-footer-hint">
+      <span><kbd>↑</kbd><kbd>↓</kbd> Naviguer</span>
+      <span><kbd>Enter</kbd> Ouvrir</span>
+      <span><kbd>Esc</kbd> Fermer</span>
+    </div>
+  </div>
+</div>
+
 <div id="sync-indicator">
   <div id="sync-dot"></div>
   <span id="sync-label">Sauvegardé</span>
@@ -794,6 +858,8 @@ footer{width:100%;padding:56px 20px;text-align:center;border-top:1px solid var(-
       <button class="btn-ghost" onclick="modifierPhrase()"><i class="fa-solid fa-pen"></i> Modifier</button>
       <button class="btn-ghost" onclick="modifierTheme()"><i class="fa-solid fa-palette"></i> Thème</button>
       <button class="btn-ghost" onclick="openDashboard()"><i class="fa-solid fa-chart-line"></i> Analytics</button>
+      <button class="btn-ghost" onclick="ouvrirAujourdhui()" style="border-color:rgba(255,170,0,.4);color:#ffb84d;"><i class="fa-solid fa-sun"></i> Aujourd'hui</button>
+      <button class="btn-ghost" onclick="ouvrirQuickSearch()" style="border-color:rgba(120,180,255,.4);color:#7aaeff;"><i class="fa-solid fa-magnifying-glass"></i> Recherche <span style="opacity:.5;font-size:.68rem;margin-left:4px;">Ctrl+K</span></button>
     </div>
 
     <div class="btn-group">
@@ -900,6 +966,14 @@ footer{width:100%;padding:56px 20px;text-align:center;border-top:1px solid var(-
     <button onclick="fermerOfflineBar()" title="Fermer" style="position:absolute;top:10px;right:14px;background:none;border:none;color:rgba(255,190,90,.8);font-size:1rem;cursor:pointer;padding:4px;line-height:1;"><i class="fa-solid fa-xmark"></i></button>
   </div>
 
+  <div id="backup-reminder-bar">
+    <p><i class="fa-solid fa-triangle-exclamation"></i> <span id="backup-reminder-msg"></span></p>
+    <div class="backup-reminder-actions">
+      <button class="backup-reminder-btn" onclick="exporterDepuisRappel()"><i class="fa-solid fa-file-export"></i> Exporter maintenant</button>
+      <button class="backup-reminder-close" onclick="fermerRappelSauvegarde()" title="Plus tard"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+  </div>
+
   <div id="recents-panel">
     <div class="recents-header">
       <i class="fa-solid fa-clock" style="color:rgba(255,255,255,.3);font-size:.8rem;"></i>
@@ -1003,10 +1077,44 @@ footer{width:100%;padding:56px 20px;text-align:center;border-top:1px solid var(-
         <button type="button" class="reminder-preset-chip" onclick="appliquerPresetRappel(1,0,0,0)">1 jour</button>
         <button type="button" class="reminder-preset-chip" onclick="appliquerPresetRappel(1,15,30,0)">1j 15h 30min</button>
       </div>
-      <button class="reminder-note-add-btn" onclick="ajouterNoteRappel()"><i class="fa-solid fa-plus"></i> Ajouter cette note</button>
+      <div class="toggle-wrap" style="margin-bottom:16px;">
+        <label class="toggle">
+          <input type="checkbox" id="reminder-note-important">
+          <span class="toggle-slider"></span>
+        </label>
+        <span class="toggle-label">Note importante (protégée par mot de passe + double confirmation avant suppression)</span>
+      </div>
+      <div style="display:flex;gap:10px;">
+        <button class="reminder-note-add-btn" id="reminder-note-submit-btn" onclick="enregistrerNoteRappel()" style="flex:1;"><i class="fa-solid fa-plus"></i> Ajouter cette note</button>
+        <button class="btn-annuler" id="reminder-note-cancel-btn" onclick="annulerEditionNoteRappel()" style="display:none;flex:0 0 auto;padding:13px 20px;">Annuler</button>
+      </div>
     </div>
 
     <div id="reminder-notes-list"></div>
+  </div>
+</div>
+
+<div id="todayGlanceModal" class="modal">
+  <div class="modal-inner">
+    <span class="close-modal" onclick="closeAujourdhui()">&times;</span>
+    <h2><i class="fa-solid fa-sun" style="margin-right:7px;"></i>Aujourd'hui en un coup d'œil</h2>
+    <div id="glance-date" style="color:rgba(255,255,255,.4);font-size:.75rem;margin-bottom:22px;text-transform:capitalize;"></div>
+
+    <div class="glance-section">
+      <div class="glance-section-title"><i class="fa-solid fa-calendar-check"></i> Programme du jour</div>
+      <div id="glance-tasks"></div>
+    </div>
+
+    <div class="glance-section">
+      <div class="glance-section-title"><i class="fa-solid fa-fire"></i> Liens les plus utilisés cette semaine</div>
+      <div id="glance-top-links"></div>
+    </div>
+
+    <div class="glance-section glance-quote">
+      <i class="fa-solid fa-quote-left"></i><span id="glance-quote-text"></span>
+    </div>
+
+    <button class="btn-primary" style="width:100%;margin-top:6px;" onclick="closeAujourdhui()">Commencer la journée</button>
   </div>
 </div>
 
@@ -1741,7 +1849,7 @@ async function exporterComplet(destination) {
   if (destination === 'local') {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a'); a.href = url; a.download = filename; a.click();
-    URL.revokeObjectURL(url); showToast('✓ Sauvegarde téléchargée');
+    URL.revokeObjectURL(url); showToast('✓ Sauvegarde téléchargée'); marquerSauvegardeEffectuee();
   } else if (destination === 'drive') {
     showToast('Fonctionnalité Google Drive à configurer avec un client ID');
   }
@@ -3163,7 +3271,6 @@ function footerResetStats(){ if(!verifierMotDePasse()) return; if(!confirm("Réi
 // KEYBOARD SHORTCUTS
 // ============================================================
 document.addEventListener('keydown', function(e){
-  if((e.ctrlKey||e.metaKey) && e.key==='k'){ e.preventDefault(); const s=document.getElementById('search-input'); s.focus(); s.select(); }
   if(e.key==='Escape'){ const s=document.getElementById('search-input'); if(document.activeElement===s && s.value){ s.value=''; filtrerLiens(''); s.blur(); } }
   if(e.altKey && (e.key==='ArrowUp'||e.key==='ArrowDown')){ e.preventDefault(); const catEls=getCategoryElements(); if(!catEls.length) return; const cur=getCurrentCatIndex(catEls); let next=e.key==='ArrowDown'?Math.min(cur+1,catEls.length-1):Math.max(cur-1,0); catEls[next].scrollIntoView({behavior:'smooth',block:'start'}); catEls[next].style.transition='box-shadow .3s'; catEls[next].style.boxShadow=`0 0 0 2px var(--primary)`; setTimeout(()=>{ catEls[next].style.boxShadow=''; },700); }
 });
@@ -4323,10 +4430,40 @@ function ouvrirRappelsNotes(){
   renderReminderNotesList();
   document.getElementById('remindersModal').style.display = 'block';
 }
-function closeRemindersModal(){ document.getElementById('remindersModal').style.display = 'none'; }
+function closeRemindersModal(){ document.getElementById('remindersModal').style.display = 'none'; resetReminderNoteForm(); }
 
-function ajouterNoteRappel(){
+let editingReminderNoteId = null;
+
+function resetReminderNoteForm(){
+  document.getElementById('reminder-note-text').value = '';
+  document.getElementById('reminder-note-important').checked = false;
+  appliquerPresetRappel(0,0,0,30);
+  editingReminderNoteId = null;
+  document.getElementById('reminder-note-submit-btn').innerHTML = '<i class="fa-solid fa-plus"></i> Ajouter cette note';
+  document.getElementById('reminder-note-cancel-btn').style.display = 'none';
+}
+
+function editerNoteRappel(id){
+  const n = getReminderNotes().find(x=>x.id===id);
+  if(!n) return;
+  editingReminderNoteId = id;
+  document.getElementById('reminder-note-text').value = n.text;
+  document.getElementById('reminder-note-important').checked = !!n.important;
+  appliquerPresetRappel(n.days||0, n.hours||0, n.minutes||0, n.seconds||0);
+  document.getElementById('reminder-note-submit-btn').innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Enregistrer les modifications';
+  document.getElementById('reminder-note-cancel-btn').style.display = 'inline-block';
+  renderReminderNotesList();
+  document.querySelector('#remindersModal .reminder-note-form').scrollIntoView({behavior:'smooth', block:'center'});
+}
+
+function annulerEditionNoteRappel(){
+  resetReminderNoteForm();
+  renderReminderNotesList();
+}
+
+function enregistrerNoteRappel(){
   const text = document.getElementById('reminder-note-text').value.trim();
+  const important = document.getElementById('reminder-note-important').checked;
   const d = parseInt(document.getElementById('ri-days').value) || 0;
   const h = parseInt(document.getElementById('ri-hours').value) || 0;
   const m = parseInt(document.getElementById('ri-minutes').value) || 0;
@@ -4334,16 +4471,36 @@ function ajouterNoteRappel(){
   const ms = intervalMsFromFields(d,h,m,s);
   if(!text){ showToast("⚠️ Entrez le contenu de la note"); return; }
   if(ms < 1000){ showToast("⚠️ L'intervalle doit être d'au moins 1 seconde"); return; }
+
   const list = getReminderNotes();
+
+  if(editingReminderNoteId){
+    const n = list.find(x=>x.id===editingReminderNoteId);
+    if(!n){ resetReminderNoteForm(); renderReminderNotesList(); return; }
+    // Si l'utilisateur retire le statut "importante", on protège quand même ce changement par mot de passe
+    if(n.important && !important){ if(!verifierMotDePasse()) return; }
+    n.text = text;
+    n.important = important;
+    n.days = d; n.hours = h; n.minutes = m; n.seconds = s;
+    n.intervalMs = ms;
+    n.nextTrigger = Date.now() + ms; // l'intervalle a pu changer, on relance le décompte
+    saveReminderNotes(list);
+    reminderNotesQueue = reminderNotesQueue.filter(q=>q.id!==n.id);
+    resetReminderNoteForm();
+    renderReminderNotesList();
+    showToast('✓ Note rappel modifiée');
+    return;
+  }
+
   list.push({
     id: 'rn_'+Date.now()+'_'+Math.floor(Math.random()*10000),
-    text, days:d, hours:h, minutes:m, seconds:s,
+    text, important, days:d, hours:h, minutes:m, seconds:s,
     intervalMs: ms,
     active: true,
     nextTrigger: Date.now() + ms
   });
   saveReminderNotes(list);
-  document.getElementById('reminder-note-text').value = '';
+  resetReminderNoteForm();
   renderReminderNotesList();
   showToast('✓ Note rappel ajoutée');
 }
@@ -4359,12 +4516,22 @@ function toggleNoteRappelActive(id){
 }
 
 function supprimerNoteRappel(id){
-  if(!confirm('Supprimer définitivement cette note rappel ?')) return;
-  let list = getReminderNotes();
-  list = list.filter(x=>x.id!==id);
-  saveReminderNotes(list);
-  reminderNotesQueue = reminderNotesQueue.filter(n=>n.id!==id);
+  const list = getReminderNotes();
+  const n = list.find(x=>x.id===id);
+  if(!n) return;
+  if(n.important){
+    if(!verifierMotDePasse()) return;
+    if(!confirm('⚠️ Cette note est marquée IMPORTANTE.\n\nPremière confirmation : voulez-vous vraiment la supprimer définitivement ?')) return;
+    if(!confirm('⚠️ Deuxième confirmation : cette action est irréversible. Confirmez-vous la suppression ?')) return;
+  } else {
+    if(!confirm('Supprimer définitivement cette note rappel ?')) return;
+  }
+  let updated = getReminderNotes().filter(x=>x.id!==id);
+  saveReminderNotes(updated);
+  reminderNotesQueue = reminderNotesQueue.filter(q=>q.id!==id);
+  if(editingReminderNoteId===id) resetReminderNoteForm();
   renderReminderNotesList();
+  showToast('✓ Note rappel supprimée');
 }
 
 function renderReminderNotesList(){
@@ -4378,15 +4545,17 @@ function renderReminderNotesList(){
     const remainingMs = Math.max(0, n.nextTrigger - Date.now());
     const nextLabel = n.active ? ('Prochain affichage dans ' + formatIntervalRappel(remainingMs)) : 'En pause';
     return `
-    <div class="reminder-note-row ${n.active ? '' : 'paused'}">
+    <div class="reminder-note-row ${n.active ? '' : 'paused'} ${editingReminderNoteId===n.id ? 'editing' : ''}">
       <div class="reminder-note-info">
         <div class="reminder-note-text">${renderMarkdown(n.text)}</div>
         <div class="reminder-note-meta">
           <span class="reminder-note-badge"><i class="fa-solid fa-repeat"></i> ${formatIntervalRappel(n.intervalMs)}</span>
+          ${n.important ? '<span class="reminder-note-badge reminder-note-badge-important"><i class="fa-solid fa-star"></i> Importante</span>' : ''}
           <span class="reminder-note-next">${nextLabel}</span>
         </div>
       </div>
       <div class="reminder-note-actions">
+        <button onclick="editerNoteRappel('${n.id}')" title="Modifier"><i class="fa-solid fa-pen"></i></button>
         <button onclick="toggleNoteRappelActive('${n.id}')" title="${n.active ? 'Mettre en pause' : 'Reprendre'}"><i class="fa-solid ${n.active ? 'fa-pause' : 'fa-play'}"></i></button>
         <button class="rn-del" onclick="supprimerNoteRappel('${n.id}')" title="Supprimer"><i class="fa-solid fa-trash"></i></button>
       </div>
@@ -4444,6 +4613,261 @@ function startReminderNotesTicker(){
 }
 
 // ============================================================
+// UTILITAIRE HTML
+// ============================================================
+function escapeHtml(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+// ============================================================
+// RAPPEL DE SAUVEGARDE AUTOMATIQUE
+// ============================================================
+const BACKUP_REMINDER_INTERVAL_MS = 7 * 24 * 60 * 60 * 1000; // 1 semaine
+
+function getFirstUseTs(){
+  let t = localStorage.getItem('hsml_first_use_ts');
+  if(!t){ t = String(Date.now()); localStorage.setItem('hsml_first_use_ts', t); }
+  return parseInt(t);
+}
+function getLastBackupTs(){ const v = localStorage.getItem('hsml_last_backup_ts'); return v ? parseInt(v) : null; }
+function marquerSauvegardeEffectuee(){
+  localStorage.setItem('hsml_last_backup_ts', String(Date.now()));
+  localStorage.removeItem('hsml_backup_reminder_last_shown');
+  document.getElementById('backup-reminder-bar').style.display = 'none';
+}
+
+function verifierRappelSauvegarde(){
+  const lastBackup = getLastBackupTs() || getFirstUseTs();
+  const elapsed = Date.now() - lastBackup;
+  if(elapsed < BACKUP_REMINDER_INTERVAL_MS) return;
+  const lastShown = localStorage.getItem('hsml_backup_reminder_last_shown');
+  const today = todayStr();
+  if(lastShown === today) return; // déjà affiché aujourd'hui, on ne spamme pas plus d'une fois par jour
+  localStorage.setItem('hsml_backup_reminder_last_shown', today);
+  const days = Math.floor(elapsed / (24*60*60*1000));
+  document.getElementById('backup-reminder-msg').textContent =
+    `Dernière sauvegarde il y a ${days} jour${days>1?'s':''} — pensez à exporter vos données pour ne rien perdre.`;
+  document.getElementById('backup-reminder-bar').style.display = 'block';
+}
+
+function fermerRappelSauvegarde(){
+  document.getElementById('backup-reminder-bar').style.display = 'none';
+  // Le rappel reviendra demain (chaque jour) tant qu'aucune exportation n'aura été faite.
+}
+
+function exporterDepuisRappel(){
+  ouvrirExportImportModal();
+}
+
+// ============================================================
+// AUJOURD'HUI EN UN COUP D'ŒIL
+// ============================================================
+function ouvrirAujourdhui(){
+  const now = new Date();
+  document.getElementById('glance-date').textContent = now.toLocaleDateString('fr-FR', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
+
+  // --- Programme du jour ---
+  const pd = getPlannerData();
+  const tasksEl = document.getElementById('glance-tasks');
+  const todayTasks = (pd.today === todayStr()) ? (pd.todayTasks || []) : [];
+  if(!todayTasks.length){
+    tasksEl.innerHTML = '<div class="glance-empty">Aucune tâche programmée aujourd\'hui. <a href="#" onclick="closeAujourdhui();ouvrirPlanner();return false;">Créer mon programme →</a></div>';
+  } else {
+    const done = todayTasks.filter(t=>t.done).length;
+    tasksEl.innerHTML = `<div class="glance-tasks-progress">${done}/${todayTasks.length} tâche(s) terminée(s)</div>` +
+      todayTasks.slice(0,6).map(t => `
+        <div class="glance-task-row ${t.done ? 'done' : ''}">
+          <i class="fa-solid ${t.done ? 'fa-circle-check' : 'fa-circle'}" style="color:${t.done ? '#6fc97a' : 'rgba(255,255,255,.2)'};"></i>
+          <span>${escapeHtml(t.name)}</span>
+        </div>`).join('') +
+      (todayTasks.length > 6 ? `<div class="glance-empty">+ ${todayTasks.length-6} autre(s) tâche(s)</div>` : '');
+  }
+
+  // --- Liens les plus utilisés cette semaine ---
+  const since = Date.now() - 7*24*60*60*1000;
+  const allLinks = [];
+  for(const cat in db){
+    if(isCategoryEncrypted(cat)) continue;
+    db[cat].links.forEach(l => {
+      if(isLinkEncrypted(l)) return;
+      const cnt = (l.clickHistory || []).filter(ts => ts >= since).length;
+      if(cnt > 0) allLinks.push({ name: l.name, url: l.url, cnt });
+    });
+  }
+  allLinks.sort((a,b) => b.cnt - a.cnt);
+  const topEl = document.getElementById('glance-top-links');
+  if(!allLinks.length){
+    topEl.innerHTML = '<div class="glance-empty">Aucun clic enregistré cette semaine.</div>';
+  } else {
+    topEl.innerHTML = allLinks.slice(0,5).map(l => `
+      <div class="glance-link-row">
+        ${faviconHtml(l.url)}
+        <span>${escapeHtml(l.name)}</span>
+        <span class="glance-link-count">${l.cnt} clic${l.cnt>1?'s':''}</span>
+      </div>`).join('');
+  }
+
+  // --- Citation du jour ---
+  document.getElementById('glance-quote-text').textContent = getUvQuote();
+
+  document.getElementById('todayGlanceModal').style.display = 'block';
+  localStorage.setItem('hsml_glance_last_shown', todayStr());
+}
+function closeAujourdhui(){ document.getElementById('todayGlanceModal').style.display = 'none'; }
+
+function verifierAujourdhuiAuto(){
+  // On évite d'empiler cette fenêtre par-dessus le rappel du programme du jour s'il est déjà ouvert.
+  if(document.getElementById('planner-reminder-overlay').classList.contains('open')) return;
+  const last = localStorage.getItem('hsml_glance_last_shown');
+  if(last !== todayStr()) ouvrirAujourdhui();
+}
+
+// ============================================================
+// RECHERCHE RAPIDE (CTRL+K / CMD+K)
+// ============================================================
+let qsResults = [];
+let qsIndex = -1;
+const QS_COMMANDS = [
+  { type:'command', label:'Nouveau lien', icon:'fa-plus-circle', action:() => { fermerQuickSearch(); toggleInput(true); } },
+  { type:'command', label:'Programme du jour', icon:'fa-calendar-check', action:() => { fermerQuickSearch(); ouvrirPlanner(); } },
+  { type:'command', label:'Notes Rappel', icon:'fa-bell', action:() => { fermerQuickSearch(); ouvrirRappelsNotes(); } },
+  { type:'command', label:'Aujourd\'hui en un coup d\'œil', icon:'fa-sun', action:() => { fermerQuickSearch(); ouvrirAujourdhui(); } },
+  { type:'command', label:'Analytics', icon:'fa-chart-line', action:() => { fermerQuickSearch(); openDashboard(); } },
+  { type:'command', label:'Bloc-notes', icon:'fa-file-lines', action:() => { fermerQuickSearch(); document.getElementById('notes-section').scrollIntoView({behavior:'smooth'}); } },
+  { type:'command', label:'Galerie', icon:'fa-images', action:() => { fermerQuickSearch(); document.getElementById('image-gallery-section').scrollIntoView({behavior:'smooth'}); } },
+  { type:'command', label:'Exporter / Importer', icon:'fa-file-export', action:() => { fermerQuickSearch(); ouvrirExportImportModal(); } },
+];
+
+function ouvrirQuickSearch(){
+  document.getElementById('quickSearchOverlay').classList.add('open');
+  const input = document.getElementById('qs-input');
+  input.value = '';
+  qsHandleInput('');
+  setTimeout(() => input.focus(), 30);
+}
+function fermerQuickSearch(){
+  document.getElementById('quickSearchOverlay').classList.remove('open');
+}
+
+function qsSearch(query){
+  const q = query.trim().toLowerCase();
+  if(!q) return QS_COMMANDS.slice();
+  const results = [];
+
+  for(const cat in db){
+    if(isCategoryEncrypted(cat)) continue;
+    db[cat].links.forEach((l, i) => {
+      if(isLinkEncrypted(l)) return;
+      const tagNames = (l.tags || []).map(t => typeof t === 'string' ? t : t.name).join(' ');
+      const tagMemo = (l.tags || []).map(t => (typeof t === 'object' && t.memo) ? t.memo : '').join(' ');
+      const hay = [l.name, l.url, cat, tagNames, tagMemo, l.note].filter(Boolean).join(' ').toLowerCase();
+      if(hay.includes(q)) results.push({ type:'link', cat, idx:i, name:l.name, url:l.url, catLabel:cat, private: !!l.private });
+    });
+  }
+
+  textTabs.forEach(t => {
+    const title = getTabAutoName(t);
+    const hay = ((t.content || '') + ' ' + title).toLowerCase();
+    if(hay.includes(q)) results.push({ type:'note', id:t.id, title, snippet:(t.content || '').replace(/\n/g,' ').slice(0,90) });
+  });
+
+  getReminderNotes().forEach(n => {
+    if((n.text || '').toLowerCase().includes(q)) results.push({ type:'reminder', id:n.id, text:n.text });
+  });
+
+  return results.slice(0, 30);
+}
+
+function qsHandleInput(query){
+  qsResults = qsSearch(query);
+  qsIndex = qsResults.length ? 0 : -1;
+  qsRenderResults();
+}
+
+function qsRenderResults(){
+  const container = document.getElementById('qs-results');
+  if(!qsResults.length){
+    container.innerHTML = '<div class="qs-empty">Aucun résultat.</div>';
+    return;
+  }
+  container.innerHTML = qsResults.map((r, i) => qsRenderItem(r, i)).join('');
+}
+
+function qsRenderItem(r, i){
+  const activeClass = i === qsIndex ? 'active' : '';
+  if(r.type === 'command'){
+    return `<div class="qs-item ${activeClass}" data-idx="${i}"><div class="qs-item-icon"><i class="fa-solid ${r.icon}" style="color:var(--primary);"></i></div><div class="qs-item-info"><div class="qs-item-title">${escapeHtml(r.label)}</div><div class="qs-item-sub">Action rapide</div></div></div>`;
+  }
+  if(r.type === 'link'){
+    const icon = r.private ? '<i class="fa-solid fa-lock" style="color:#ffaa00;"></i>' : faviconHtml(r.url);
+    return `<div class="qs-item ${activeClass}" data-idx="${i}"><div class="qs-item-icon">${icon}</div><div class="qs-item-info"><div class="qs-item-title">${escapeHtml(r.name)}</div><div class="qs-item-sub">${escapeHtml(r.catLabel)} · ${escapeHtml(r.url)}</div></div></div>`;
+  }
+  if(r.type === 'note'){
+    return `<div class="qs-item ${activeClass}" data-idx="${i}"><div class="qs-item-icon"><i class="fa-solid fa-file-lines" style="color:#7aaeff;"></i></div><div class="qs-item-info"><div class="qs-item-title">${escapeHtml(r.title)}</div><div class="qs-item-sub">Bloc-notes — ${escapeHtml(r.snippet)}</div></div></div>`;
+  }
+  if(r.type === 'reminder'){
+    return `<div class="qs-item ${activeClass}" data-idx="${i}"><div class="qs-item-icon"><i class="fa-solid fa-bell" style="color:#c9a0ff;"></i></div><div class="qs-item-info"><div class="qs-item-title">Note rappel</div><div class="qs-item-sub">${escapeHtml((r.text||'').slice(0,90))}</div></div></div>`;
+  }
+  return '';
+}
+
+function qsMove(delta){
+  if(!qsResults.length) return;
+  qsIndex = Math.max(0, Math.min(qsResults.length - 1, qsIndex + delta));
+  qsRenderResults();
+  const active = document.querySelector('#qs-results .qs-item.active');
+  if(active) active.scrollIntoView({ block:'nearest' });
+}
+
+function qsActivate(index){
+  const r = qsResults[index];
+  if(!r) return;
+  if(r.type === 'command'){ r.action(); return; }
+  if(r.type === 'link'){ qsOpenLink(r.cat, r.idx); return; }
+  if(r.type === 'note'){ fermerQuickSearch(); switchTextTab(r.id); document.getElementById('notes-section').scrollIntoView({behavior:'smooth'}); return; }
+  if(r.type === 'reminder'){ fermerQuickSearch(); ouvrirRappelsNotes(); return; }
+}
+
+function qsOpenLink(cat, idx){
+  if(isCategoryEncrypted(cat)){ fermerQuickSearch(); ouvrirDecryptageCategorie(cat); return; }
+  const link = db[cat] && db[cat].links[idx];
+  if(!link) return;
+  if(isLinkEncrypted(link)){ fermerQuickSearch(); ouvrirDecryptageLien(cat, idx); return; }
+  const url = link.url.startsWith('http') ? link.url : 'https://' + link.url;
+  if(link.private){
+    const pwd = getSitePassword();
+    if(!pwd){ trackClick(cat, idx); window.open(url, '_blank'); fermerQuickSearch(); return; }
+    const input = prompt("Ce lien est confidentiel. Entrez le mot de passe :");
+    if(input === null) return; // on garde la palette ouverte
+    if(input === pwd){ trackClick(cat, idx); window.open(url, '_blank'); fermerQuickSearch(); }
+    else showToast('🔒 Mot de passe incorrect');
+    return;
+  }
+  trackClick(cat, idx);
+  window.open(url, '_blank');
+  fermerQuickSearch();
+}
+
+document.getElementById('qs-results').addEventListener('click', e => {
+  const item = e.target.closest('.qs-item');
+  if(!item) return;
+  qsActivate(parseInt(item.dataset.idx));
+});
+
+document.addEventListener('keydown', function(e){
+  const overlay = document.getElementById('quickSearchOverlay');
+  if((e.ctrlKey || e.metaKey) && e.key === 'k'){
+    e.preventDefault();
+    if(overlay.classList.contains('open')) fermerQuickSearch();
+    else ouvrirQuickSearch();
+    return;
+  }
+  if(!overlay.classList.contains('open')) return;
+  if(e.key === 'Escape'){ e.preventDefault(); fermerQuickSearch(); }
+  else if(e.key === 'ArrowDown'){ e.preventDefault(); qsMove(1); }
+  else if(e.key === 'ArrowUp'){ e.preventDefault(); qsMove(-1); }
+  else if(e.key === 'Enter'){ e.preventDefault(); qsActivate(qsIndex); }
+});
+
+// ============================================================
 // INIT
 // ============================================================
 const idPartageHeberge = detecterIdPartageHeberge();
@@ -4462,6 +4886,8 @@ if (idPartageHeberge){
   nettoyerProgrammeObsolete();
   updatePlannerFab();
   startReminderNotesTicker();
+  verifierRappelSauvegarde();
+  setTimeout(verifierAujourdhuiAuto, 2500);
 }
 </script>
 </body>
