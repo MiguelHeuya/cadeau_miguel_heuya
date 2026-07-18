@@ -49,7 +49,27 @@ header{
 }
 .header-cursive{font-family:'Allura',cursive;font-size:2.2rem;color:var(--primary);opacity:.8;transform:rotate(-5deg);min-width:180px;}
 
-main{width:100%;max-width:1400px;margin:0 auto;padding:110px 20px 80px;}
+#live-clock-widget{
+  position:fixed;top:95px;left:0;right:0;margin:0 auto;width:fit-content;
+  z-index:999;display:flex;align-items:center;gap:14px;
+  background:rgba(8,8,8,0.85);backdrop-filter:blur(20px);
+  border:1px solid var(--glass-border);border-radius:100px;
+  padding:10px 26px;box-shadow:0 8px 24px rgba(0,0,0,.35);
+  transition:right .35s cubic-bezier(0.23,1,0.32,1), top .3s ease;
+}
+body.panel-open-side #live-clock-widget{right:min(440px,92vw);}
+#live-clock-day{font-weight:800;color:var(--primary);text-transform:uppercase;letter-spacing:1.5px;font-size:1rem;}
+#live-clock-date{color:var(--text);opacity:.65;font-size:.85rem;font-weight:500;}
+#live-clock-time{font-weight:800;color:var(--text);font-size:1.35rem;letter-spacing:1px;font-variant-numeric:tabular-nums;}
+#live-clock-time .clock-sep{color:var(--primary);}
+@media(max-width:768px){
+  #live-clock-widget{top:auto;bottom:20px;padding:8px 18px;gap:10px;}
+  #live-clock-day{font-size:.75rem;}
+  #live-clock-date{font-size:.7rem;}
+  #live-clock-time{font-size:1.1rem;}
+}
+
+main{width:100%;max-width:1400px;margin:0 auto;padding:165px 20px 80px;}
 
 .controls{margin-bottom:50px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:14px;}
 .btn-group{display:flex;align-items:center;gap:12px;flex-wrap:wrap;justify-content:center;}
@@ -847,6 +867,12 @@ footer{width:100%;padding:56px 20px;text-align:center;border-top:1px solid var(-
   </div>
   <div class="header-cursive uv-header-name" style="text-align:right;">Miguel Heuya</div>
 </header>
+
+<div id="live-clock-widget">
+  <span id="live-clock-day"></span>
+  <span id="live-clock-date"></span>
+  <span id="live-clock-time"></span>
+</div>
 
 <main>
   <section class="controls">
@@ -2670,6 +2696,28 @@ function renderTagPills(){
   currentTags.forEach((t,i)=>{ const pill = document.createElement('div'); pill.className='tag-pill'; pill.innerHTML=`${t} <button onclick="removeTag(${i})">×</button>`; wrapper.insertBefore(pill, raw); });
 }
 function removeTag(i){ currentTags.splice(i,1); renderTagPills(); }
+// ============================================================
+// HORLOGE TEMPS REEL (jour + date + heure)
+// ============================================================
+function majHorlogeTempsReel(){
+  const now = new Date();
+  const jours = ['Dimanche','Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi'];
+  const mois = ['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'];
+  const dayEl = document.getElementById('live-clock-day');
+  const dateEl = document.getElementById('live-clock-date');
+  const timeEl = document.getElementById('live-clock-time');
+  if(dayEl) dayEl.textContent = jours[now.getDay()];
+  if(dateEl) dateEl.textContent = `${now.getDate()} ${mois[now.getMonth()]} ${now.getFullYear()}`;
+  if(timeEl){
+    const hh = String(now.getHours()).padStart(2,'0');
+    const mm = String(now.getMinutes()).padStart(2,'0');
+    const ss = String(now.getSeconds()).padStart(2,'0');
+    timeEl.innerHTML = `${hh}<span class="clock-sep">:</span>${mm}<span class="clock-sep">:</span>${ss}`;
+  }
+}
+majHorlogeTempsReel();
+setInterval(majHorlogeTempsReel, 1000);
+
 document.addEventListener('DOMContentLoaded',()=>{
   majBoutonAppEnLigne();
   const raw = document.getElementById('tag-raw');
