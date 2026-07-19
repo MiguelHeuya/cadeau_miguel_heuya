@@ -312,6 +312,24 @@ body.share-readonly-mode .btn-icon-sm{display:none !important;}
 .drop-zone p{color:rgba(255,255,255,.4);font-size:.8rem;}
 .drop-zone span{color:var(--primary);font-weight:700;font-size:.8rem;}
 
+.import-mode-choice{display:flex;gap:10px;margin-bottom:12px;}
+.import-mode-option{flex:1;display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.03);border:1px solid var(--glass-border);border-radius:12px;padding:11px 14px;cursor:pointer;font-size:.78rem;font-weight:700;color:rgba(255,255,255,.6);transition:var(--transition);}
+.import-mode-option:has(input:checked){border-color:var(--primary);background:rgba(255,198,9,.08);color:var(--text);}
+.import-mode-option input{width:auto;margin:0;}
+#import-mode-hint{font-size:.7rem;line-height:1.5;padding:10px 14px;border-radius:12px;background:rgba(255,255,255,.03);margin-bottom:14px;}
+
+.export-divider{border:none;border-top:1px solid var(--glass-border);margin:22px 0 16px;}
+.export-selective-title{font-size:.78rem;font-weight:800;color:var(--text);margin-bottom:6px;display:flex;align-items:center;gap:8px;}
+.export-selective-sub{color:rgba(255,255,255,.4);font-size:.72rem;margin-bottom:12px;}
+.export-cat-toolbar{display:flex;gap:8px;margin-bottom:10px;}
+.export-cat-toolbar button{width:auto;flex:0 0 auto;background:rgba(255,255,255,.05);border:1px solid var(--glass-border);color:rgba(255,255,255,.6);padding:6px 14px;border-radius:100px;font-size:.68rem;font-weight:700;cursor:pointer;font-family:inherit;transition:var(--transition);}
+.export-cat-toolbar button:hover{border-color:var(--primary);color:var(--primary);}
+.export-cat-list{max-height:200px;overflow-y:auto;background:rgba(255,255,255,.02);border:1px solid var(--glass-border);border-radius:14px;padding:6px;margin-bottom:14px;}
+.export-cat-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:9px;cursor:pointer;font-size:.8rem;transition:.15s;}
+.export-cat-item:hover{background:rgba(255,255,255,.04);}
+.export-cat-item input{width:auto;margin:0;}
+.export-cat-item em{font-style:normal;color:rgba(255,255,255,.35);font-size:.72rem;}
+
 #toast{
   position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(18px);
   background:rgba(10,10,10,.96);border:1px solid var(--primary);color:var(--primary);
@@ -734,6 +752,21 @@ footer{width:100%;padding:56px 20px;text-align:center;border-top:1px solid var(-
 .reminder-notes-empty{text-align:center;padding:30px 0;color:rgba(255,255,255,.25);font-size:.85rem;}
 .reminder-notes-empty i{display:block;font-size:2.2rem;margin-bottom:12px;opacity:.3;}
 
+/* ============ EDITEUR RICHE - NOTE RAPPEL ============ */
+.rn-toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:12px;padding:10px;background:rgba(255,255,255,.02);border:1px solid var(--glass-border);border-radius:12px;}
+.rn-tool-btn{background:rgba(180,120,255,.1);color:#c9a0ff;border:1px solid rgba(180,120,255,.3);padding:7px 13px;border-radius:100px;font-size:.7rem;font-weight:700;cursor:pointer;transition:var(--transition);font-family:inherit;display:inline-flex;align-items:center;gap:6px;white-space:nowrap;}
+.rn-tool-btn:hover{background:#c9a0ff;color:#000;}
+.rn-tool-btn.rn-tool-clear{background:rgba(255,68,68,.1);color:#ff8080;border-color:rgba(255,68,68,.3);}
+.rn-tool-btn.rn-tool-clear:hover{background:var(--danger);color:#fff;}
+.rn-tool-group{display:flex;align-items:center;gap:6px;font-size:.68rem;color:rgba(255,255,255,.45);font-weight:700;text-transform:uppercase;letter-spacing:.4px;}
+.rn-tool-group input[type="color"]{width:34px;height:32px;padding:2px;border:1px solid var(--glass-border);border-radius:8px;background:none;cursor:pointer;}
+.rn-tool-group input[type="number"]{width:64px;padding:8px 10px;text-align:center;}
+.reminder-note-editor{width:100%;min-height:70px;max-height:280px;overflow-y:auto;background:rgba(255,255,255,.03);border:1px solid var(--glass-border);border-radius:14px;padding:13px 18px;color:var(--text);font-family:inherit;font-size:.9rem;line-height:1.6;transition:var(--transition);margin-bottom:14px;}
+.reminder-note-editor:focus{outline:none;border-color:var(--primary);background:rgba(255,255,255,.06);}
+.reminder-note-editor:empty:before{content:attr(data-placeholder);color:rgba(255,255,255,.3);}
+.reminder-note-editor p{margin:0 0 8px 0;}
+.reminder-note-editor p:last-child{margin-bottom:0;}
+
 #note-fullscreen-overlay{display:none;position:fixed;inset:0;z-index:5000;background:rgba(5,5,8,.97);backdrop-filter:blur(24px);align-items:center;justify-content:center;padding:24px;animation:fadeInNoteFs .35s ease-out;}
 #note-fullscreen-overlay.open{display:flex;}
 @keyframes fadeInNoteFs{from{opacity:0;}to{opacity:1;}}
@@ -1084,7 +1117,16 @@ footer{width:100%;padding:56px 20px;text-align:center;border-top:1px solid var(-
 
     <div class="reminder-note-form">
       <label>Contenu de la note</label>
-      <textarea id="reminder-note-text" placeholder="ex: Boire un verre d'eau, penser à s'étirer..." style="margin-bottom:14px;min-height:70px;"></textarea>
+      <p style="color:rgba(255,255,255,.35);font-size:.68rem;margin:-8px 0 10px;">Sélectionnez du texte (un mot, une phrase, un paragraphe...) puis cliquez sur un bouton ci-dessous pour le styler.</p>
+      <div class="rn-toolbar">
+        <button type="button" class="rn-tool-btn" onmousedown="event.preventDefault()" onclick="appliquerStyleSelectionNote({fontWeight:'800'})"><i class="fa-solid fa-bold"></i> Gras</button>
+        <button type="button" class="rn-tool-btn" onmousedown="event.preventDefault()" onclick="appliquerStyleSelectionNote({color:'var(--primary)'})"><i class="fa-solid fa-fill-drip"></i> Couleur du thème</button>
+        <button type="button" class="rn-tool-btn" onmousedown="event.preventDefault()" onclick="appliquerStyleSelectionNote({fontWeight:'800',color:'var(--primary)'})"><i class="fa-solid fa-bold"></i><i class="fa-solid fa-fill-drip"></i> Gras + thème</button>
+        <label class="rn-tool-group">Couleur libre <input type="color" id="rn-color-picker" value="#ffc609" onmousedown="saveNoteEditorSelection()" onchange="appliquerCouleurPersonnaliseeNote()"></label>
+        <label class="rn-tool-group">Taille (px) <input type="number" id="rn-fontsize" min="8" max="96" value="16"><button type="button" class="rn-tool-btn" onmousedown="event.preventDefault()" onclick="appliquerTailleNote()">Appliquer</button></label>
+        <button type="button" class="rn-tool-btn rn-tool-clear" onmousedown="event.preventDefault()" onclick="effacerStyleSelectionNote()"><i class="fa-solid fa-eraser"></i> Effacer le style</button>
+      </div>
+      <div id="reminder-note-editor" class="reminder-note-editor" contenteditable="true" data-placeholder="ex: Boire un verre d'eau, penser à s'étirer..." onmouseup="saveNoteEditorSelection()" onkeyup="saveNoteEditorSelection()"></div>
 
       <label>Intervalle de répétition</label>
       <div class="reminder-interval-grid">
@@ -1347,11 +1389,32 @@ footer{width:100%;padding:56px 20px;text-align:center;border-top:1px solid var(-
           <i class="fa-brands fa-google-drive"></i> Sauvegarder sur Google Drive
         </button>
       </div>
+
+      <hr class="export-divider">
+      <div class="export-selective-title"><i class="fa-solid fa-filter" style="color:var(--primary);"></i> Export sélectif (par catégorie)</div>
+      <p class="export-selective-sub">Choisissez uniquement les catégories à exporter, par exemple pour partager un sous-ensemble sans tout donner. Le fichier obtenu se réimporte avec l'option "Fusionner".</p>
+      <div class="export-cat-toolbar">
+        <button type="button" onclick="exportCatToggleAll(true)">Tout cocher</button>
+        <button type="button" onclick="exportCatToggleAll(false)">Tout décocher</button>
+      </div>
+      <div class="export-cat-list" id="export-cat-list"></div>
+      <button class="reminder-note-add-btn" style="width:100%;" onclick="exporterSelectionCategories()"><i class="fa-solid fa-file-export"></i> Exporter la sélection</button>
     </div>
     <div id="import-panel" class="import-panel">
-      <p style="color:rgba(255,255,255,.5);font-size:.78rem;margin-bottom:18px;">
-        <i class="fa-solid fa-upload"></i> Importez un fichier de sauvegarde complet (.json). Toutes les données actuelles seront remplacées.
+      <p style="color:rgba(255,255,255,.5);font-size:.78rem;margin-bottom:14px;">
+        <i class="fa-solid fa-upload"></i> Importez un fichier de sauvegarde (.json), complet ou partiel.
       </p>
+      <div class="import-mode-choice">
+        <label class="import-mode-option">
+          <input type="radio" name="import-mode" value="replace" checked onchange="setImportMode('replace')">
+          <span><i class="fa-solid fa-rotate"></i> Remplacer tout</span>
+        </label>
+        <label class="import-mode-option">
+          <input type="radio" name="import-mode" value="merge" onchange="setImportMode('merge')">
+          <span><i class="fa-solid fa-code-merge"></i> Fusionner</span>
+        </label>
+      </div>
+      <div id="import-mode-hint" style="color:rgba(255,150,150,.85);">⚠️ Toutes les données actuelles seront remplacées par celles du fichier importé.</div>
       <div class="drop-zone" id="import-dropzone" onclick="document.getElementById('import-full-file').click()"
         ondragover="importDragOver(event)" ondragleave="importDragLeave(event)" ondrop="importDrop(event)">
         <i class="fa-solid fa-cloud-arrow-up"></i>
@@ -1880,12 +1943,12 @@ async function exporterComplet(destination) {
     showToast('Fonctionnalité Google Drive à configurer avec un client ID');
   }
 }
-function ouvrirExportImportModal() { if (!verifierMotDePasse()) return; document.getElementById('importExportModal').style.display = 'block'; switchImportTab('export'); }
+function ouvrirExportImportModal() { if (!verifierMotDePasse()) return; document.getElementById('importExportModal').style.display = 'block'; switchImportTab('export'); renderExportCategoryList(); }
 function closeImportExportModal() { document.getElementById('importExportModal').style.display = 'none'; }
 function switchImportTab(tab) {
   document.querySelectorAll('.import-tab').forEach(t => t.classList.remove('active'));
   document.querySelectorAll('.import-panel').forEach(p => p.classList.remove('active'));
-  if (tab === 'export') { document.querySelector('.import-tab:first-child').classList.add('active'); document.getElementById('export-panel').classList.add('active'); }
+  if (tab === 'export') { document.querySelector('.import-tab:first-child').classList.add('active'); document.getElementById('export-panel').classList.add('active'); renderExportCategoryList(); }
   else { document.querySelector('.import-tab:last-child').classList.add('active'); document.getElementById('import-panel').classList.add('active'); }
 }
 function importDragOver(e) { e.preventDefault(); document.getElementById('import-dropzone').classList.add('drag-over'); }
@@ -1896,57 +1959,214 @@ function importDrop(e) {
   if (file && file.name.endsWith('.json')) { lireFichierImportComplet({ target: { files: [file] } }); }
   else { showToast('Veuillez déposer un fichier .json'); }
 }
+
+// ============ EXPORT SÉLECTIF (PAR CATÉGORIE) ============
+function renderExportCategoryList(){
+  const container = document.getElementById('export-cat-list');
+  if(!container) return;
+  const cats = Object.keys(db).sort((a,b) => (db[a].rank||99) - (db[b].rank||99));
+  if(!cats.length){ container.innerHTML = '<p style="color:rgba(255,255,255,.3);font-size:.75rem;padding:10px;">Aucune catégorie pour l\'instant.</p>'; return; }
+  container.innerHTML = cats.map(cat => `
+    <label class="export-cat-item">
+      <input type="checkbox" class="export-cat-checkbox" value="${escapeHtml(cat)}">
+      <span>${escapeHtml(cat)} <em>(${(db[cat].links||[]).length} lien(s))</em></span>
+    </label>`).join('');
+}
+function exportCatToggleAll(state){
+  document.querySelectorAll('.export-cat-checkbox').forEach(cb => cb.checked = state);
+}
+function exporterSelectionCategories(){
+  if (!verifierMotDePasse()) return;
+  const checked = Array.from(document.querySelectorAll('.export-cat-checkbox:checked')).map(cb => cb.value);
+  if(!checked.length){ showToast('⚠️ Sélectionnez au moins une catégorie'); return; }
+  const subsetDb = {};
+  checked.forEach(cat => { if(db[cat]) subsetDb[cat] = db[cat]; });
+  const groups = getGroups();
+  const subsetGroups = {};
+  for(const gName in groups){
+    const filtered = groups[gName].filter(c => checked.includes(c));
+    if(filtered.length) subsetGroups[gName] = filtered;
+  }
+  const backup = { partial: true, exportedCategories: checked, db: subsetDb, groups: subsetGroups, meta: {} };
+  const jsonStr = JSON.stringify(backup, null, 2);
+  const blob = new Blob([jsonStr], { type: 'application/json' });
+  const filename = `miguelheuya_export_partiel_${new Date().toISOString().slice(0,19).replace(/:/g,'-')}.json`;
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href = url; a.download = filename; a.click();
+  URL.revokeObjectURL(url);
+  showToast(`✓ ${checked.length} catégorie(s) exportée(s) — importable via "Fusionner"`);
+}
+
+// ============ IMPORT : REMPLACER OU FUSIONNER ============
+let importFileMode = 'replace';
+function setImportMode(mode){
+  importFileMode = mode;
+  const hint = document.getElementById('import-mode-hint');
+  if(!hint) return;
+  if(mode === 'merge'){
+    hint.style.color = 'rgba(150,220,150,.9)';
+    hint.innerHTML = '✓ Les catégories, liens (dédupliqués par URL), groupes, notes rappel, onglets de notes et images seront <strong>ajoutés</strong> sans rien supprimer. Le thème, les citations, le mot de passe et le planificateur restent inchangés.';
+  } else {
+    hint.style.color = 'rgba(255,150,150,.85)';
+    hint.innerHTML = '⚠️ Toutes les données actuelles seront remplacées par celles du fichier importé.';
+  }
+}
 function lireFichierImportComplet(event) {
   const file = event.target.files[0]; if (!file) return;
   const reader = new FileReader();
   reader.onload = function(e) {
     try {
       const imported = JSON.parse(e.target.result);
-      if (!confirm('⚠️ Attention: Cette opération va REMPLACER TOUTES vos données actuelles. Êtes-vous sûr ?')) return;
-      if (imported.db) db = imported.db;
-      if (imported.groups) localStorage.setItem('hsml_groups', JSON.stringify(imported.groups));
-      if (imported.trash) localStorage.setItem('hsml_trash', JSON.stringify(imported.trash));
-      if (imported.recents) localStorage.setItem('hsml_recents', JSON.stringify(imported.recents));
-      if (imported.collapsedCats) localStorage.setItem('hsml_collapsed', JSON.stringify(imported.collapsedCats));
-      if (imported.collapsedGroups) localStorage.setItem('hsml_collapsed_groups', JSON.stringify(imported.collapsedGroups));
-      if (imported.theme) {
-        if (imported.theme.primary) localStorage.setItem('uv_primary_color', imported.theme.primary);
-        if (imported.theme.bg) localStorage.setItem('uv_bg_color', imported.theme.bg);
-        if (imported.theme.danger) localStorage.setItem('uv_danger_color', imported.theme.danger);
-        applyTheme();
+      if (importFileMode === 'merge') {
+        if (!confirm('Fusionner ce fichier avec vos données actuelles ?\n\nRien ne sera supprimé : seuls les éléments nouveaux (catégories, liens non dupliqués, groupes, notes rappel, onglets de notes, images) seront ajoutés.')) { event.target.value=''; return; }
+        fusionnerImportComplet(imported);
+      } else {
+        if (!confirm('⚠️ Attention: Cette opération va REMPLACER TOUTES vos données actuelles. Êtes-vous sûr ?')) { event.target.value=''; return; }
+        remplacerImportComplet(imported);
       }
-      if (imported.quotes) {
-        if (imported.quotes.main) localStorage.setItem('uv_quote', imported.quotes.main);
-        if (imported.quotes.header) localStorage.setItem('uv_header_quote', imported.quotes.header);
-        if (imported.quotes.name) localStorage.setItem('uv_header_name', imported.quotes.name);
-        updateQuoteElements();
-      }
-      if (imported.meta) {
-        const m = imported.meta;
-        if (m.textTabs) localStorage.setItem('hsml_text_tabs', JSON.stringify(m.textTabs));
-        if (m.activeTextTabId) localStorage.setItem('hsml_active_text_tab', String(m.activeTextTabId));
-        if (m.planner) localStorage.setItem('hsml_planner', JSON.stringify(m.planner));
-        if (m.plannerReminded) localStorage.setItem('hsml_planner_reminded', m.plannerReminded);
-        if (m.reminderNotes) localStorage.setItem('hsml_reminder_notes', JSON.stringify(m.reminderNotes));
-        if (m.sitePassword) localStorage.setItem('site_global_password', m.sitePassword);
-        if (m.colorCombos) localStorage.setItem('uv_color_combos', JSON.stringify(m.colorCombos));
-      }
-      if (imported.gallery && imported.gallery.length && galDB) {
-        const tx = galDB.transaction('images', 'readwrite');
-        const store = tx.objectStore('images');
-        store.clear();
-        imported.gallery.forEach(img => {
-          if (img.blob && img.blob.length) { store.add({ blob: new Blob([new Uint8Array(img.blob)]), name: img.name, addedAt: img.addedAt, w: img.w, h: img.h }); }
-          else if (img.src) { store.add({ src: img.src, name: img.name, addedAt: img.addedAt, w: img.w, h: img.h }); }
-        });
-        tx.oncomplete = () => galLoad();
-      }
-      save(); showToast('✓ Restauration complète terminée');
-      setTimeout(() => location.reload(), 1500);
     } catch(err) { alert('Fichier invalide: ' + err.message); }
     event.target.value = '';
   };
   reader.readAsText(file);
+}
+
+function remplacerImportComplet(imported){
+  if (imported.db) db = imported.db;
+  if (imported.groups) localStorage.setItem('hsml_groups', JSON.stringify(imported.groups));
+  if (imported.trash) localStorage.setItem('hsml_trash', JSON.stringify(imported.trash));
+  if (imported.recents) localStorage.setItem('hsml_recents', JSON.stringify(imported.recents));
+  if (imported.collapsedCats) localStorage.setItem('hsml_collapsed', JSON.stringify(imported.collapsedCats));
+  if (imported.collapsedGroups) localStorage.setItem('hsml_collapsed_groups', JSON.stringify(imported.collapsedGroups));
+  if (imported.theme) {
+    if (imported.theme.primary) localStorage.setItem('uv_primary_color', imported.theme.primary);
+    if (imported.theme.bg) localStorage.setItem('uv_bg_color', imported.theme.bg);
+    if (imported.theme.danger) localStorage.setItem('uv_danger_color', imported.theme.danger);
+    applyTheme();
+  }
+  if (imported.quotes) {
+    if (imported.quotes.main) localStorage.setItem('uv_quote', imported.quotes.main);
+    if (imported.quotes.header) localStorage.setItem('uv_header_quote', imported.quotes.header);
+    if (imported.quotes.name) localStorage.setItem('uv_header_name', imported.quotes.name);
+    updateQuoteElements();
+  }
+  if (imported.meta) {
+    const m = imported.meta;
+    if (m.textTabs) localStorage.setItem('hsml_text_tabs', JSON.stringify(m.textTabs));
+    if (m.activeTextTabId) localStorage.setItem('hsml_active_text_tab', String(m.activeTextTabId));
+    if (m.planner) localStorage.setItem('hsml_planner', JSON.stringify(m.planner));
+    if (m.plannerReminded) localStorage.setItem('hsml_planner_reminded', m.plannerReminded);
+    if (m.reminderNotes) localStorage.setItem('hsml_reminder_notes', JSON.stringify(m.reminderNotes));
+    if (m.sitePassword) localStorage.setItem('site_global_password', m.sitePassword);
+    if (m.colorCombos) localStorage.setItem('uv_color_combos', JSON.stringify(m.colorCombos));
+  }
+  if (imported.gallery && imported.gallery.length && galDB) {
+    const tx = galDB.transaction('images', 'readwrite');
+    const store = tx.objectStore('images');
+    store.clear();
+    imported.gallery.forEach(img => {
+      if (img.blob && img.blob.length) { store.add({ blob: new Blob([new Uint8Array(img.blob)]), name: img.name, addedAt: img.addedAt, w: img.w, h: img.h }); }
+      else if (img.src) { store.add({ src: img.src, name: img.name, addedAt: img.addedAt, w: img.w, h: img.h }); }
+    });
+    tx.oncomplete = () => galLoad();
+  }
+  save(); showToast('✓ Restauration complète terminée');
+  setTimeout(() => location.reload(), 1500);
+}
+
+function fusionnerImportComplet(imported){
+  let addedCats = 0, addedLinks = 0, addedNotes = 0;
+
+  if (imported.db) {
+    let maxRank = Object.values(db).reduce((mx,c) => Math.max(mx, c.rank||0), 0);
+    for (const catName in imported.db) {
+      const impCat = imported.db[catName];
+      if (!db[catName]) {
+        maxRank++;
+        db[catName] = { ...impCat, rank: maxRank };
+        addedCats++;
+        addedLinks += (impCat.links||[]).length;
+      } else {
+        const existingUrls = new Set((db[catName].links||[]).map(l => (l.url||'').trim().toLowerCase()));
+        (impCat.links||[]).forEach(l => {
+          const key = (l.url||'').trim().toLowerCase();
+          if (!existingUrls.has(key)) { db[catName].links.push(l); existingUrls.add(key); addedLinks++; }
+        });
+      }
+    }
+  }
+
+  if (imported.groups) {
+    const groups = getGroups();
+    for (const gName in imported.groups) {
+      if (!groups[gName]) groups[gName] = [];
+      (imported.groups[gName]||[]).forEach(cat => { if (!groups[gName].includes(cat)) groups[gName].push(cat); });
+    }
+    saveGroups(groups);
+  }
+
+  if (imported.trash && imported.trash.length) {
+    const trash = getTrash();
+    const existingKeys = new Set(trash.map(t => `${t._cat}|${t.url}|${t.deletedAt}`));
+    imported.trash.forEach(t => {
+      const key = `${t._cat}|${t.url}|${t.deletedAt}`;
+      if (!existingKeys.has(key)) { trash.push(t); existingKeys.add(key); }
+    });
+    saveTrash(trash);
+  }
+
+  if (imported.collapsedCats) {
+    const local = JSON.parse(localStorage.getItem('hsml_collapsed') || '[]');
+    localStorage.setItem('hsml_collapsed', JSON.stringify(Array.from(new Set([...local, ...imported.collapsedCats]))));
+  }
+  if (imported.collapsedGroups) {
+    const local = JSON.parse(localStorage.getItem('hsml_collapsed_groups') || '[]');
+    localStorage.setItem('hsml_collapsed_groups', JSON.stringify(Array.from(new Set([...local, ...imported.collapsedGroups]))));
+  }
+
+  if (imported.meta && imported.meta.colorCombos) {
+    const localCombos = getCombinaisonsCouleurs();
+    const existingNames = new Set(localCombos.map(c => c.name));
+    imported.meta.colorCombos.forEach(c => { if (!existingNames.has(c.name)) { localCombos.push(c); existingNames.add(c.name); } });
+    setCombinaisonsCouleurs(localCombos);
+  }
+
+  if (imported.meta && imported.meta.reminderNotes) {
+    const localNotes = getReminderNotes();
+    const existingIds = new Set(localNotes.map(n => n.id));
+    imported.meta.reminderNotes.forEach(n => { if (!existingIds.has(n.id)) { localNotes.push(n); addedNotes++; } });
+    saveReminderNotes(localNotes);
+  }
+
+  if (imported.meta && imported.meta.textTabs) {
+    const localTabs = JSON.parse(localStorage.getItem('hsml_text_tabs') || '[]');
+    const existingIds = new Set(localTabs.map(t => t.id));
+    imported.meta.textTabs.forEach(t => { if (!existingIds.has(t.id)) localTabs.push(t); });
+    localStorage.setItem('hsml_text_tabs', JSON.stringify(localTabs));
+  }
+
+  const finaliserFusion = () => {
+    save();
+    showToast(`✓ Fusion terminée : ${addedCats} catégorie(s), ${addedLinks} lien(s), ${addedNotes} note(s) rappel ajoutés`);
+    setTimeout(() => location.reload(), 1800);
+  };
+
+  if (imported.gallery && imported.gallery.length && galDB) {
+    galGetAll().then(existingImages => {
+      const existingKeys = new Set(existingImages.map(img => `${img.name}|${img.addedAt}`));
+      const tx = galDB.transaction('images', 'readwrite');
+      const store = tx.objectStore('images');
+      imported.gallery.forEach(img => {
+        const key = `${img.name}|${img.addedAt}`;
+        if (existingKeys.has(key)) return;
+        if (img.blob && img.blob.length) store.add({ blob: new Blob([new Uint8Array(img.blob)]), name: img.name, addedAt: img.addedAt, w: img.w, h: img.h });
+        else if (img.src) store.add({ src: img.src, name: img.name, addedAt: img.addedAt, w: img.w, h: img.h });
+      });
+      tx.oncomplete = () => { galLoad(); finaliserFusion(); };
+      tx.onerror = () => finaliserFusion();
+    }).catch(finaliserFusion);
+  } else {
+    finaliserFusion();
+  }
 }
 
 // ============================================================
@@ -2154,14 +2374,17 @@ function renderGroupsList() {
 }
 function supprimerGroupe(name) {
   if(!confirm(`Êtes-vous sûr de vouloir supprimer le groupe "${name}" ?\n\nLes catégories qu'il contient ne seront pas supprimées : elles seront simplement dissociées de ce groupe.`)) return;
+  pushUndoSnapshot(`Suppression du groupe "${name}"`);
   const groups = getGroups(); delete groups[name]; saveGroups(groups); renderGroupsList(); refreshUI(); showToast(`✓ Groupe "${name}" supprimé`);
 }
 function ajouterCatGroupe(gname) {
   const sel = document.getElementById('add-cat-to-' + CSS.escape(gname)); if (!sel || !sel.value) return;
+  pushUndoSnapshot(`Ajout d'une catégorie au groupe "${gname}"`);
   const groups = getGroups(); if (!groups[gname].includes(sel.value)) groups[gname].push(sel.value);
   saveGroups(groups); renderGroupsList(); refreshUI();
 }
 function retirerCatGroupe(gname, cat) {
+  pushUndoSnapshot(`Retrait d'une catégorie du groupe "${gname}"`);
   const groups = getGroups(); groups[gname] = groups[gname].filter(c => c !== cat);
   saveGroups(groups); renderGroupsList(); refreshUI();
 }
@@ -2964,15 +3187,16 @@ function fermerDeadLinkBar(){ document.getElementById('dead-link-bar').style.dis
 // ============================================================
 // CATEGORY ACTIONS
 // ============================================================
-function modifierRang(catName){ if(!verifierMotDePasse()) return; if(isCategoryEncrypted(catName)){ showToast('Décryptez la catégorie d\'abord'); return; } const n=prompt(`Nouveau rang pour ${catName}:`, db[catName].rank); if(n!==null){ db[catName].rank=parseInt(n); save(); } }
+function modifierRang(catName){ if(!verifierMotDePasse()) return; if(isCategoryEncrypted(catName)){ showToast('Décryptez la catégorie d\'abord'); return; } const n=prompt(`Nouveau rang pour ${catName}:`, db[catName].rank); if(n!==null){ pushUndoSnapshot(`Changement de rang de "${catName}"`); db[catName].rank=parseInt(n); save(); } }
 function renommerCategorie(oldName){
   if(!verifierMotDePasse()) return; if(isCategoryEncrypted(oldName)){ showToast('Décryptez la catégorie d\'abord'); return; }
   const nv=prompt(`Renommer "${oldName}" :`, oldName); if(!nv||!nv.trim()||nv.trim()===oldName) return;
   const t=nv.trim(); if(db[t] && !isCategoryEncrypted(t)){ alert("Ce nom existe déjà."); return; }
+  pushUndoSnapshot(`Renommage de la catégorie "${oldName}"`);
   db[t]={...db[oldName]}; delete db[oldName];
   const groups = getGroups(); for(const g in groups){ const idx=groups[g].indexOf(oldName); if(idx>=0){ groups[g][idx]=t; } } saveGroups(groups); save();
 }
-function supprimerCategorie(catName){ if(!verifierMotDePasse()) return; if(isCategoryEncrypted(catName)){ showToast('Décryptez la catégorie d\'abord'); return; } if(!confirm(`Supprimer "${catName}" et ses ${db[catName].links.length} lien(s) ? Irréversible.`)) return; delete db[catName]; save(); }
+function supprimerCategorie(catName){ if(!verifierMotDePasse()) return; if(isCategoryEncrypted(catName)){ showToast('Décryptez la catégorie d\'abord'); return; } if(!confirm(`Supprimer "${catName}" et ses ${db[catName].links.length} lien(s) ? Irréversible.`)) return; pushUndoSnapshot(`Suppression de la catégorie "${catName}"`); delete db[catName]; save(); }
 function openCatStats(catName){
   if(isCategoryEncrypted(catName)){ showToast('Décryptez la catégorie pour voir les stats'); return; }
   const cat=db[catName]; const total=cat.links.reduce((s,l)=>s+l.clicks,0); const mx=cat.links.reduce((m,l)=>Math.max(m,l.clicks),0);
@@ -2991,14 +3215,15 @@ function closeCatStats(){ document.getElementById('catStatsModal').style.display
 function supprimerLien(catName, index, siteName){
   if(prompt(`Entrez le mot de passe correspondant pour confirmer la suppression de ce lien :`) === siteName){
     const link = db[catName].links[index];
+    pushUndoSnapshot(`Suppression du lien "${link.name}"`);
     pousserCorbeille(catName, { ...link });
     db[catName].links.splice(index,1);
     if(!db[catName].links.length) delete db[catName];
     save(); showToast('✓ Lien déplacé dans la corbeille');
   }
 }
-function renommerLien(catName, index){ if(!verifierMotDePasse()) return; if(isCategoryEncrypted(catName)){ showToast('Décryptez la catégorie d\'abord'); return; } const link=db[catName].links[index]; if(isLinkEncrypted(link)){ showToast('Décryptez le lien d\'abord'); return; } const nv=prompt(`Nouveau nom :`, link.name); if(!nv||!nv.trim()) return; link.name=nv.trim(); save(); }
-function modifierUrl(catName, index){ if(!verifierMotDePasse()) return; if(isCategoryEncrypted(catName)){ showToast('Décryptez la catégorie d\'abord'); return; } const link=db[catName].links[index]; if(isLinkEncrypted(link)){ showToast('Décryptez le lien d\'abord'); return; } const nv=prompt(`Nouvelle URL :`, link.url); if(!nv||!nv.trim()) return; link.url=nv.trim(); save(); showToast('✓ URL mise à jour'); }
+function renommerLien(catName, index){ if(!verifierMotDePasse()) return; if(isCategoryEncrypted(catName)){ showToast('Décryptez la catégorie d\'abord'); return; } const link=db[catName].links[index]; if(isLinkEncrypted(link)){ showToast('Décryptez le lien d\'abord'); return; } const nv=prompt(`Nouveau nom :`, link.name); if(!nv||!nv.trim()) return; pushUndoSnapshot(`Renommage du lien "${link.name}"`); link.name=nv.trim(); save(); }
+function modifierUrl(catName, index){ if(!verifierMotDePasse()) return; if(isCategoryEncrypted(catName)){ showToast('Décryptez la catégorie d\'abord'); return; } const link=db[catName].links[index]; if(isLinkEncrypted(link)){ showToast('Décryptez le lien d\'abord'); return; } const nv=prompt(`Nouvelle URL :`, link.url); if(!nv||!nv.trim()) return; pushUndoSnapshot(`Modification de l'URL de "${link.name}"`); link.url=nv.trim(); save(); showToast('✓ URL mise à jour'); }
 function copierUrl(url, btn){ const full=url.startsWith('http')?url:'https://'+url; navigator.clipboard.writeText(full).then(()=>{ btn.innerHTML='<i class="fa-solid fa-check"></i>'; showToast('✓ URL copiée'); setTimeout(()=>btn.innerHTML='<i class="fa-solid fa-link"></i>', 1800); }); }
 function ouvrirDuplication(catName, index){
   if(!verifierMotDePasse()) return; if(isCategoryEncrypted(catName)){ showToast('Décryptez la catégorie d\'abord'); return; }
@@ -3026,13 +3251,13 @@ function toggleDragMode(){ if(!dragModeActive&&!verifierMotDePasse()) return; dr
 function onCatDragStart(e,cat){ dragSrcCat=cat; dragSrcLink=null; e.dataTransfer.effectAllowed='move'; e.currentTarget.classList.add('dragging-cat'); }
 function onCatDragEnd(e){ e.currentTarget.classList.remove('dragging-cat'); document.querySelectorAll('.category-group').forEach(el=>el.classList.remove('drag-over-cat')); }
 function onCatDragOver(e,cat){ e.preventDefault(); if(cat===dragSrcCat||dragSrcLink!==null) return; document.querySelectorAll('.category-group').forEach(el=>el.classList.remove('drag-over-cat')); e.currentTarget.closest('.category-group').classList.add('drag-over-cat'); }
-function onCatDrop(e,target){ e.preventDefault(); if(dragSrcLink!==null||!dragSrcCat||dragSrcCat===target) return; const r=db[dragSrcCat].rank; db[dragSrcCat].rank=db[target].rank; db[target].rank=r; dragSrcCat=null; save(); }
+function onCatDrop(e,target){ e.preventDefault(); if(dragSrcLink!==null||!dragSrcCat||dragSrcCat===target) return; pushUndoSnapshot(`Réorganisation des catégories`); const r=db[dragSrcCat].rank; db[dragSrcCat].rank=db[target].rank; db[target].rank=r; dragSrcCat=null; save(); }
 function onLinkDragStart(e,cat,i){ dragSrcLink=i; dragSrcLinkCat=cat; dragSrcCat=null; e.dataTransfer.effectAllowed='move'; setTimeout(()=>e.currentTarget.classList.add('dragging-link'),0); }
 function onLinkDragEnd(e){ e.currentTarget.classList.remove('dragging-link'); document.querySelectorAll('.link-wrapper').forEach(el=>el.classList.remove('drag-over-link')); document.querySelectorAll('.links-stack').forEach(el=>el.classList.remove('drop-target-stack')); }
 function onLinkDragOver(e,cat,i){ e.preventDefault(); document.querySelectorAll('.link-wrapper').forEach(el=>el.classList.remove('drag-over-link')); document.querySelectorAll('.links-stack').forEach(el=>el.classList.remove('drop-target-stack')); e.currentTarget.classList.add('drag-over-link'); }
-function onLinkDrop(e,cat,ti){ e.preventDefault(); document.querySelectorAll('.link-wrapper').forEach(el=>el.classList.remove('drag-over-link')); document.querySelectorAll('.links-stack').forEach(el=>el.classList.remove('drop-target-stack')); if(dragSrcLink===null) return; if(dragSrcLinkCat===cat){ if(dragSrcLink===ti) return; const [m]=db[cat].links.splice(dragSrcLink,1); db[cat].links.splice(ti,0,m); } else { const [m]=db[dragSrcLinkCat].links.splice(dragSrcLink,1); db[cat].links.splice(ti,0,m); if(!db[dragSrcLinkCat].links.length) delete db[dragSrcLinkCat]; } dragSrcLink=null; dragSrcLinkCat=null; save(); }
+function onLinkDrop(e,cat,ti){ e.preventDefault(); document.querySelectorAll('.link-wrapper').forEach(el=>el.classList.remove('drag-over-link')); document.querySelectorAll('.links-stack').forEach(el=>el.classList.remove('drop-target-stack')); if(dragSrcLink===null) return; pushUndoSnapshot(`Déplacement d'un lien`); if(dragSrcLinkCat===cat){ if(dragSrcLink===ti) return; const [m]=db[cat].links.splice(dragSrcLink,1); db[cat].links.splice(ti,0,m); } else { const [m]=db[dragSrcLinkCat].links.splice(dragSrcLink,1); db[cat].links.splice(ti,0,m); if(!db[dragSrcLinkCat].links.length) delete db[dragSrcLinkCat]; } dragSrcLink=null; dragSrcLinkCat=null; save(); }
 function onStackDragOver(e,cat){ if(dragSrcLink===null) return; e.preventDefault(); document.querySelectorAll('.links-stack').forEach(el=>el.classList.remove('drop-target-stack')); const el=document.getElementById('stack-'+CSS.escape(cat)); if(el) el.classList.add('drop-target-stack'); }
-function onStackDrop(e,cat){ if(dragSrcLink===null) return; e.preventDefault(); document.querySelectorAll('.links-stack').forEach(el=>el.classList.remove('drop-target-stack')); if(dragSrcLinkCat===cat) return; const [m]=db[dragSrcLinkCat].links.splice(dragSrcLink,1); db[cat].links.push(m); if(!db[dragSrcLinkCat].links.length) delete db[dragSrcLinkCat]; dragSrcLink=null; dragSrcLinkCat=null; save(); }
+function onStackDrop(e,cat){ if(dragSrcLink===null) return; e.preventDefault(); document.querySelectorAll('.links-stack').forEach(el=>el.classList.remove('drop-target-stack')); if(dragSrcLinkCat===cat) return; pushUndoSnapshot(`Déplacement d'un lien vers "${cat}"`); const [m]=db[dragSrcLinkCat].links.splice(dragSrcLink,1); db[cat].links.push(m); if(!db[dragSrcLinkCat].links.length) delete db[dragSrcLinkCat]; dragSrcLink=null; dragSrcLinkCat=null; save(); }
 
 // ============================================================
 // SEARCH
@@ -3245,6 +3470,7 @@ function modifierPositionLien(catName, index){
   if(isNaN(newPos) || newPos < 0) newPos = 0;
   if(newPos > total - 1) newPos = total - 1;
   if(newPos === index) return;
+  pushUndoSnapshot(`Déplacement de "${link.name}"`);
   const [moved] = db[catName].links.splice(index, 1);
   db[catName].links.splice(newPos, 0, moved);
   save();
@@ -4446,6 +4672,45 @@ function sauvegarderMultiDays() {
 // ============================================================
 // NOTES RAPPEL PLEIN ECRAN
 // ============================================================
+// ============================================================
+// ANNULER LA DERNIÈRE ACTION (CTRL+Z) - FILET DE SÉCURITÉ GÉNÉRIQUE
+// ============================================================
+let undoStack = [];
+const UNDO_MAX = 20;
+
+function pushUndoSnapshot(label){
+  try {
+    undoStack.push({
+      label,
+      ts: Date.now(),
+      db: JSON.parse(JSON.stringify(db)),
+      groups: JSON.parse(JSON.stringify(getGroups()))
+    });
+    if (undoStack.length > UNDO_MAX) undoStack.shift();
+  } catch(e) { /* si le clonage échoue, on n'empêche pas l'action de continuer */ }
+}
+
+function annulerDerniereAction(){
+  if (!undoStack.length) { showToast('Rien à annuler pour le moment'); return; }
+  const snap = undoStack.pop();
+  db = snap.db;
+  saveGroups(snap.groups);
+  save();
+  showToast(`↩️ Annulé : ${snap.label}`);
+}
+
+document.addEventListener('keydown', function(e){
+  const isUndoCombo = (e.ctrlKey || e.metaKey) && !e.shiftKey && (e.key === 'z' || e.key === 'Z');
+  if (!isUndoCombo) return;
+  const target = e.target;
+  const isEditableField = target && (
+    target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable
+  );
+  if (isEditableField) return; // laisser le navigateur gérer l'annulation native dans les champs de texte
+  e.preventDefault();
+  annulerDerniereAction();
+});
+
 function getReminderNotes(){ return JSON.parse(localStorage.getItem('hsml_reminder_notes') || '[]'); }
 function saveReminderNotes(list){ localStorage.setItem('hsml_reminder_notes', JSON.stringify(list)); }
 
@@ -4473,6 +4738,82 @@ function formatIntervalRappel(ms){
   return parts.join(' ');
 }
 
+// ============ EDITEUR RICHE - NOTE RAPPEL : formatage par sélection ============
+let noteEditorSavedRange = null;
+
+function saveNoteEditorSelection(){
+  const editor = document.getElementById('reminder-note-editor');
+  const sel = window.getSelection();
+  if(sel && sel.rangeCount > 0){
+    const range = sel.getRangeAt(0);
+    if(editor.contains(range.commonAncestorContainer)){
+      noteEditorSavedRange = range.cloneRange();
+    }
+  }
+}
+
+function restoreNoteEditorSelection(){
+  if(!noteEditorSavedRange) return false;
+  const sel = window.getSelection();
+  sel.removeAllRanges();
+  sel.addRange(noteEditorSavedRange);
+  return true;
+}
+
+function appliquerStyleSelectionNote(styleObj){
+  const editor = document.getElementById('reminder-note-editor');
+  if(!restoreNoteEditorSelection()){ showToast('⚠️ Sélectionnez d\'abord du texte dans la note'); return; }
+  const sel = window.getSelection();
+  if(!sel.rangeCount){ showToast('⚠️ Sélectionnez d\'abord du texte dans la note'); return; }
+  const range = sel.getRangeAt(0);
+  if(range.collapsed || !editor.contains(range.commonAncestorContainer)){ showToast('⚠️ Sélectionnez d\'abord du texte dans la note'); return; }
+  const span = document.createElement('span');
+  Object.assign(span.style, styleObj);
+  const frag = range.extractContents();
+  span.appendChild(frag);
+  range.insertNode(span);
+  sel.removeAllRanges();
+  const newRange = document.createRange();
+  newRange.selectNodeContents(span);
+  sel.addRange(newRange);
+  noteEditorSavedRange = newRange.cloneRange();
+  editor.focus();
+}
+
+function appliquerCouleurPersonnaliseeNote(){
+  const color = document.getElementById('rn-color-picker').value;
+  appliquerStyleSelectionNote({color});
+}
+
+function appliquerTailleNote(){
+  const size = parseInt(document.getElementById('rn-fontsize').value) || 16;
+  appliquerStyleSelectionNote({fontSize: size+'px'});
+}
+
+function effacerStyleSelectionNote(){
+  const editor = document.getElementById('reminder-note-editor');
+  if(!restoreNoteEditorSelection()){ showToast('⚠️ Sélectionnez d\'abord du texte dans la note'); return; }
+  const sel = window.getSelection();
+  const range = sel.rangeCount ? sel.getRangeAt(0) : null;
+  if(!range || range.collapsed || !editor.contains(range.commonAncestorContainer)){ showToast('⚠️ Sélectionnez d\'abord du texte dans la note'); return; }
+  const frag = range.extractContents();
+  const plain = document.createElement('span');
+  plain.textContent = frag.textContent;
+  range.insertNode(plain);
+  sel.removeAllRanges();
+  const newRange = document.createRange();
+  newRange.selectNodeContents(plain);
+  sel.addRange(newRange);
+  noteEditorSavedRange = newRange.cloneRange();
+  editor.focus();
+}
+
+function htmlNoteToPlainText(html){
+  const tmp = document.createElement('div');
+  tmp.innerHTML = html || '';
+  return tmp.textContent || '';
+}
+
 function ouvrirRappelsNotes(){
   if(!verifierMotDePasse()) return;
   renderReminderNotesList();
@@ -4483,10 +4824,11 @@ function closeRemindersModal(){ document.getElementById('remindersModal').style.
 let editingReminderNoteId = null;
 
 function resetReminderNoteForm(){
-  document.getElementById('reminder-note-text').value = '';
+  document.getElementById('reminder-note-editor').innerHTML = '';
   document.getElementById('reminder-note-important').checked = false;
   appliquerPresetRappel(0,0,0,30);
   editingReminderNoteId = null;
+  noteEditorSavedRange = null;
   document.getElementById('reminder-note-submit-btn').innerHTML = '<i class="fa-solid fa-plus"></i> Ajouter cette note';
   document.getElementById('reminder-note-cancel-btn').style.display = 'none';
 }
@@ -4495,7 +4837,7 @@ function editerNoteRappel(id){
   const n = getReminderNotes().find(x=>x.id===id);
   if(!n) return;
   editingReminderNoteId = id;
-  document.getElementById('reminder-note-text').value = n.text;
+  document.getElementById('reminder-note-editor').innerHTML = n.richHtml ? n.text : renderMarkdown(n.text);
   document.getElementById('reminder-note-important').checked = !!n.important;
   appliquerPresetRappel(n.days||0, n.hours||0, n.minutes||0, n.seconds||0);
   document.getElementById('reminder-note-submit-btn').innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Enregistrer les modifications';
@@ -4510,14 +4852,16 @@ function annulerEditionNoteRappel(){
 }
 
 function enregistrerNoteRappel(){
-  const text = document.getElementById('reminder-note-text').value.trim();
+  const editor = document.getElementById('reminder-note-editor');
+  const text = editor.innerHTML.trim();
+  const plainCheck = editor.textContent.trim();
   const important = document.getElementById('reminder-note-important').checked;
   const d = parseInt(document.getElementById('ri-days').value) || 0;
   const h = parseInt(document.getElementById('ri-hours').value) || 0;
   const m = parseInt(document.getElementById('ri-minutes').value) || 0;
   const s = parseInt(document.getElementById('ri-seconds').value) || 0;
   const ms = intervalMsFromFields(d,h,m,s);
-  if(!text){ showToast("⚠️ Entrez le contenu de la note"); return; }
+  if(!plainCheck){ showToast("⚠️ Entrez le contenu de la note"); return; }
   if(ms < 1000){ showToast("⚠️ L'intervalle doit être d'au moins 1 seconde"); return; }
 
   const list = getReminderNotes();
@@ -4528,6 +4872,7 @@ function enregistrerNoteRappel(){
     // Si l'utilisateur retire le statut "importante", on protège quand même ce changement par mot de passe
     if(n.important && !important){ if(!verifierMotDePasse()) return; }
     n.text = text;
+    n.richHtml = true;
     n.important = important;
     n.days = d; n.hours = h; n.minutes = m; n.seconds = s;
     n.intervalMs = ms;
@@ -4542,7 +4887,7 @@ function enregistrerNoteRappel(){
 
   list.push({
     id: 'rn_'+Date.now()+'_'+Math.floor(Math.random()*10000),
-    text, important, days:d, hours:h, minutes:m, seconds:s,
+    text, richHtml: true, important, days:d, hours:h, minutes:m, seconds:s,
     intervalMs: ms,
     active: true,
     nextTrigger: Date.now() + ms
@@ -4595,7 +4940,7 @@ function renderReminderNotesList(){
     return `
     <div class="reminder-note-row ${n.active ? '' : 'paused'} ${editingReminderNoteId===n.id ? 'editing' : ''}">
       <div class="reminder-note-info">
-        <div class="reminder-note-text">${renderMarkdown(n.text)}</div>
+        <div class="reminder-note-text">${n.richHtml ? n.text : renderMarkdown(n.text)}</div>
         <div class="reminder-note-meta">
           <span class="reminder-note-badge"><i class="fa-solid fa-repeat"></i> ${formatIntervalRappel(n.intervalMs)}</span>
           ${n.important ? '<span class="reminder-note-badge reminder-note-badge-important"><i class="fa-solid fa-star"></i> Importante</span>' : ''}
@@ -4641,7 +4986,7 @@ function afficherProchaineNoteFullscreen(){
   const overlay = document.getElementById('note-fullscreen-overlay');
   const queueLabel = document.getElementById('note-fs-queue-label');
   queueLabel.textContent = reminderNotesQueue.length > 1 ? `Note 1 sur ${reminderNotesQueue.length}` : '';
-  document.getElementById('note-fs-content').innerHTML = renderMarkdown(n.text);
+  document.getElementById('note-fs-content').innerHTML = n.richHtml ? n.text : renderMarkdown(n.text);
   overlay.classList.add('open');
 }
 
@@ -4782,6 +5127,7 @@ const QS_COMMANDS = [
   { type:'command', label:'Bloc-notes', icon:'fa-file-lines', action:() => { fermerQuickSearch(); document.getElementById('notes-section').scrollIntoView({behavior:'smooth'}); } },
   { type:'command', label:'Galerie', icon:'fa-images', action:() => { fermerQuickSearch(); document.getElementById('image-gallery-section').scrollIntoView({behavior:'smooth'}); } },
   { type:'command', label:'Exporter / Importer', icon:'fa-file-export', action:() => { fermerQuickSearch(); ouvrirExportImportModal(); } },
+  { type:'command', label:'Annuler la dernière action', icon:'fa-rotate-left', action:() => { fermerQuickSearch(); annulerDerniereAction(); } },
 ];
 
 function ouvrirQuickSearch(){
@@ -4818,7 +5164,8 @@ function qsSearch(query){
   });
 
   getReminderNotes().forEach(n => {
-    if((n.text || '').toLowerCase().includes(q)) results.push({ type:'reminder', id:n.id, text:n.text });
+    const plain = n.richHtml ? htmlNoteToPlainText(n.text) : (n.text || '');
+    if(plain.toLowerCase().includes(q)) results.push({ type:'reminder', id:n.id, text:plain });
   });
 
   return results.slice(0, 30);
