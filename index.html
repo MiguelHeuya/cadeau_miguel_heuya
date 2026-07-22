@@ -1379,7 +1379,7 @@ footer{width:100%;padding:56px 20px;text-align:center;border-top:1px solid var(-
     </div>
     <div id="export-panel" class="import-panel active">
       <p style="color:rgba(255,255,255,.5);font-size:.78rem;margin-bottom:18px;">
-        <i class="fa-solid fa-database"></i> Exportez TOUTES vos données : liens, catégories, notes, tags, statistiques, images, groupes, corbeille, et préférences.
+        <i class="fa-solid fa-database"></i> Exportez TOUTES vos données : liens, catégories, notes (onglets de texte), tags, statistiques, groupes, corbeille, et préférences. <strong>Les images ne sont pas incluses.</strong>
       </p>
       <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;">
         <button class="btn-primary" onclick="exporterComplet('local')" style="flex:1;">
@@ -1681,7 +1681,7 @@ footer{width:100%;padding:56px 20px;text-align:center;border-top:1px solid var(-
 <footer id="site-footer">
   <div class="footer-quote uv-phrase"></div>
   <div style="display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-bottom:28px;">
-    <button class="btn-reset" onclick="footerResetStats()">Réinitialiser statistiques</button>
+    <button class="btn-reset" onclick="footerResetApp()" style="border-color:rgba(255,68,68,.6);color:rgba(255,110,110,.9);">Réinitialiser l'application</button>
     <button class="btn-reset" onclick="footerModifierPassword()">Modifier le mot de passe</button>
     <button class="btn-reset" onclick="footerSupprimerPassword()" style="border-color:rgba(255,68,68,.6);">Supprimer le mot de passe</button>
     <button class="btn-reset" onclick="footerCommentSupprimer()">Comment supprimer un lien</button>
@@ -1911,21 +1911,14 @@ function getCompleteBackup() {
     textTabs: textTabsBackup, activeTextTabId: activeTextTabIdBackup,
     planner, plannerReminded, sitePassword, colorCombos, reminderNotes
   };
-  return new Promise((resolve) => {
-    if (!galDB) {
-      resolve({ db, groups, trash, recents, collapsedCats, collapsedGroups,
-        theme: { primary: getUvPrimaryColor(), bg: getUvBgColor(), danger: getUvDangerColor() },
-        quotes: { main: getUvQuote(), header: getUvHeaderQuote(), name: getUvHeaderName() }, gallery: [], meta });
-      return;
-    }
-    galGetAll().then(images => {
-      resolve({ db, groups, trash, recents, collapsedCats, collapsedGroups,
-        theme: { primary: getUvPrimaryColor(), bg: getUvBgColor(), danger: getUvDangerColor() },
-        quotes: { main: getUvQuote(), header: getUvHeaderQuote(), name: getUvHeaderName() },
-        gallery: images.map(img => ({ name: img.name, blob: img.blob ? Array.from(new Uint8Array(img.blob)) : null, src: img.src, addedAt: img.addedAt, w: img.w, h: img.h })),
-        meta
-      });
-    }).catch(() => resolve({ db, groups, trash, recents, collapsedCats, collapsedGroups, theme: {}, quotes: {}, gallery: [], meta }));
+  // Les images (galerie) sont volontairement exclues de l'export : seuls les
+  // liens, catégories, notes (onglets de texte), groupes, corbeille,
+  // planificateur, statistiques, thème, citations et mot de passe sont inclus.
+  return Promise.resolve({ db, groups, trash, recents, collapsedCats, collapsedGroups,
+    theme: { primary: getUvPrimaryColor(), bg: getUvBgColor(), danger: getUvDangerColor() },
+    quotes: { main: getUvQuote(), header: getUvHeaderQuote(), name: getUvHeaderName() },
+    gallery: [],
+    meta
   });
 }
 async function exporterComplet(destination) {
@@ -3539,7 +3532,36 @@ function afficherGalerie(){
 function footerModifierPassword(){ const pwd=getSitePassword(); if(!pwd){ const np=prompt("Créer un mot de passe :"); if(np){ localStorage.setItem('site_global_password',np.trim()); alert("Mot de passe créé."); } return; } const c=prompt("Mot de passe actuel :"); if(c!==pwd){ alert("Incorrect."); return; } const np=prompt("Nouveau mot de passe :"); if(np){ localStorage.setItem('site_global_password',np.trim()); alert("Mis à jour."); } }
 function footerSupprimerPassword(){ const pwd=getSitePassword(); if(!pwd){ alert("Aucun mot de passe configuré."); return; } const c=prompt("Entrez le mot de passe pour le supprimer :"); if(c!==pwd){ alert("Incorrect."); return; } if(!confirm("Retirer la protection par mot de passe ?")) return; localStorage.removeItem('site_global_password'); alert("Mot de passe supprimé."); }
 function footerCommentSupprimer(){ if(!verifierMotDePasse()) return; alert("Pour supprimer un lien : survolez-le, puis cliquez sur l'icône 🗑 rouge qui apparaît. Saisissez ensuite exactement le nom du lien pour confirmer."); }
-function footerResetStats(){ if(!verifierMotDePasse()) return; if(!confirm("Réinitialiser tous les compteurs de clics ?")) return; for(const cat in db){ if(isCategoryEncrypted(cat)) continue; db[cat].links.forEach(l=>{ if(!isLinkEncrypted(l)){ l.clicks=0; l.clickHistory=[]; } }); } localStorage.removeItem('hsml_recents'); save(); alert("Statistiques réinitialisées."); }
+function footerResetApp(){
+  const pwd = getSitePassword();
+  if (pwd) {
+    const p1 = prompt("Réinitialiser l'app\n\nMot de passe (1/2) :");
+    if (p1 === null) return;
+    if (p1.trim() !== pwd) { alert("Mot de passe incorrect."); return; }
+    const p2 = prompt("Réinitialiser l'app\n\nMot de passe (2/2) — confirmez à nouveau :");
+    if (p2 === null) return;
+    if (p2.trim() !== pwd) { alert("Mot de passe incorrect."); return; }
+  }
+  if (!confirm("Réinitialiser l'app\n\nÊtes-vous sûr de vouloir réinitialiser l'application ?")) return;
+  if (!confirm("Réinitialiser l'app — dernière vérification\n\n⚠️ Cette action est IRRÉVERSIBLE : tous vos liens, catégories, notes, statistiques, images, réglages et le mot de passe seront définitivement supprimés.\n\nConfirmer la réinitialisation complète ?")) return;
+  executerReinitialisationComplete();
+}
+function executerReinitialisationComplete(){
+  const keys = ['hsml_db','hsml_groups','hsml_trash','hsml_recents','hsml_collapsed','hsml_collapsed_groups',
+    'hsml_text_tabs','hsml_active_text_tab','hsml_planner','hsml_planner_reminded','hsml_reminder_notes',
+    'hsml_share_ids','hsml_device_salt','hsml_modal_display_mode','hsml_first_use_ts','hsml_last_backup_ts',
+    'hsml_backup_reminder_last_shown','hsml_glance_last_shown','site_global_password',
+    'uv_quote','uv_header_quote','uv_header_name','uv_primary_color','uv_bg_color','uv_danger_color','uv_color_combos'];
+  keys.forEach(k => localStorage.removeItem(k));
+  const finish = () => { alert("Application réinitialisée."); location.reload(); };
+  try {
+    if (galDB) {
+      const tx = galDB.transaction(GAL_STORE, 'readwrite');
+      tx.objectStore(GAL_STORE).clear();
+      tx.oncomplete = finish; tx.onerror = finish;
+    } else { finish(); }
+  } catch(e) { finish(); }
+}
 
 // ============================================================
 // KEYBOARD SHORTCUTS
