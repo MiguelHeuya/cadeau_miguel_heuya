@@ -2389,7 +2389,19 @@ const ONLINE_APP_HOSTNAME = 'cadeaumiguelheuya.netlify.app';
 function isAppEnLigne(){ return window.location.hostname === ONLINE_APP_HOSTNAME; }
 function majBoutonAppEnLigne(){
   const btn = document.getElementById('btn-app-en-ligne');
-  if(btn) btn.style.display = isAppEnLigne() ? 'none' : '';
+  if(!btn) return;
+  if (isAppEnLigne()){
+    btn.href = 'https://miguelheuya.netlify.app/';
+    btn.removeAttribute('onclick');
+    btn.style.borderColor = 'rgba(255,198,9,.4)';
+    btn.innerHTML = '<i class="fa-solid fa-download"></i> Télécharger l\'app';
+  } else {
+    btn.href = 'https://cadeaumiguelheuya.netlify.app/';
+    btn.setAttribute('onclick', 'return clicUtiliserAppEnLigne(event)');
+    btn.style.borderColor = 'rgba(100,220,140,.4)';
+    btn.innerHTML = '<i class="fa-solid fa-cloud-arrow-up"></i> Utiliser l\'app en ligne';
+  }
+  btn.style.display = '';
 }
 function clicUtiliserAppEnLigne(event){
   if (isAppEnLigne()){
