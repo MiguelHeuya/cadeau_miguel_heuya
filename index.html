@@ -194,6 +194,7 @@ select option{background:#1a1a1a;color:#fff;}
 .link-tag{background:rgba(255, 197, 7, 0.12);color:var(--primary);border:1px solid rgba(255, 197, 7, 0.25);padding:2px 8px;border-radius:20px;font-size:.6rem;font-weight:700;}
 .link-tag.private-badge{background:rgba(255,68,68,.12);color:var(--danger);border-color:rgba(255,68,68,.25);}
 .link-tag.encrypted-badge{background:rgba(100,100,255,.12);color:#7a7aff;border-color:rgba(100,100,255,.25);}
+.link-tag.important-badge{background:rgba(255, 197, 7, 0.18);color:var(--primary);border-color:rgba(255, 197, 7, 0.4);}
 
 .analytics-badges{display:flex;align-items:center;gap:5px;flex-shrink:0;flex-wrap:wrap;justify-content:flex-end;}
 .badge-clicks{font-size:.62rem;background:rgba(0,0,0,.5);padding:3px 7px;border-radius:7px;border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.55);}
@@ -211,6 +212,7 @@ select option{background:#1a1a1a;color:#fff;}
 .badge-deadline-expired{background:rgba(255,68,68,.25);color:var(--danger);font-size:.58rem;padding:3px 7px;border-radius:5px;font-weight:700;}
 .badge-deadline-ok{background:rgba(100,200,100,.15);color:#6fc97a;font-size:.58rem;padding:3px 7px;border-radius:5px;font-weight:700;}
 .badge-encrypted{background:rgba(100,100,255,.2);color:#7a7aff;font-size:.58rem;padding:3px 7px;border-radius:5px;font-weight:700;}
+.badge-important{background:var(--primary);color:#000;font-size:.58rem;padding:3px 7px;border-radius:5px;font-weight:800;text-transform:uppercase;}
 
 .link-wrapper .link-actions{
   position:absolute;top:-10px;right:-2px;
@@ -244,9 +246,20 @@ select option{background:#1a1a1a;color:#fff;}
 .lbtn-encrypt:hover{background:#7a7aff;color:#000;border-color:#7a7aff;}
 .lbtn-decrypt{background:rgba(255,100,100,.12);color:#ff7a7a;border-color:rgba(255,100,100,.25);}
 .lbtn-decrypt:hover{background:#ff7a7a;color:#000;border-color:#ff7a7a;}
+.lbtn-important{background:rgba(255, 197, 7, 0.1);color:rgba(255, 197, 7, 0.75);border-color:rgba(255, 197, 7, 0.3);}
+.lbtn-important:hover{background:var(--primary);color:#000;border-color:var(--primary);}
+.lbtn-important.active{background:var(--primary);color:#000;border-color:var(--primary);}
 
 .link-card.dead-link{border-color:rgba(255,68,68,.4) !important;background:rgba(255,68,68,.04) !important;}
 .badge-dead{background:rgba(255,68,68,.2);color:var(--danger);font-size:.58rem;padding:3px 7px;border-radius:5px;font-weight:700;}
+
+.link-card.important-link{
+  border-color:rgba(255, 197, 7, 0.55);
+  background:linear-gradient(90deg, rgba(255, 197, 7, 0.08), rgba(255, 197, 7, 0.02));
+  box-shadow:0 0 0 1px rgba(255, 197, 7, 0.12), 0 0 16px rgba(255, 197, 7, 0.1);
+}
+.link-card.important-link:hover{background:linear-gradient(90deg, rgba(255, 198, 9, 0.16), rgba(255, 198, 9, 0.06));border-color:var(--primary);}
+.important-star{color:var(--primary);font-size:.85rem;flex-shrink:0;filter:drop-shadow(0 0 3px rgba(255, 197, 7, 0.6));}
 
 .link-wrapper.search-hidden{display:none;}
 .link-card .label mark{background:rgba(255, 199, 13, 0.3);color:var(--primary);border-radius:3px;padding:0 2px;}
@@ -259,6 +272,14 @@ select option{background:#1a1a1a;color:#fff;}
 .link-wrapper.drag-over-link{border-top:2px solid var(--primary);margin-top:-2px;}
 .link-wrapper[draggable="true"]{cursor:grab;}
 .links-stack.drop-target-stack{outline:2px dashed var(--primary);outline-offset:4px;border-radius:12px;background:rgba(255, 198, 9, 0.03);}
+
+.shortcuts-list{display:flex;flex-direction:column;gap:10px;}
+.shortcuts-group-title{font-size:.68rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--primary);font-weight:800;margin:16px 0 4px;}
+.shortcuts-group-title:first-child{margin-top:0;}
+.shortcut-row{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:9px 12px;background:rgba(255,255,255,.02);border:1px solid var(--glass-border);border-radius:10px;}
+.shortcut-desc{font-size:.8rem;color:var(--text);flex:1;}
+.shortcut-keys{display:flex;gap:4px;flex-shrink:0;}
+.shortcut-key{background:rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.85);font-size:.68rem;font-weight:700;padding:3px 8px;border-radius:6px;font-family:monospace;}
 
 #drag-mode-bar{
   display:none;position:fixed;bottom:28px;left:50%;transform:translateX(-50%);
@@ -561,7 +582,8 @@ footer{width:100%;padding:56px 20px;text-align:center;border-top:1px solid var(-
 .note-rendered-full ul,.note-rendered-full ol{padding-left:18px;margin:6px 0;}
 .note-rendered-full li{margin-bottom:4px;}
 .note-rendered-full a{color:var(--primary);}
-.note-preview-md{font-size:.7rem;color:rgba(255,255,255,.4);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:180px;}
+.note-preview-md{font-size:.7rem;color:rgba(255,255,255,.4);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:180px;cursor:pointer;}
+.note-preview-md:hover{color:var(--primary);text-decoration:underline;}
 .md-hint{font-size:.62rem;color:rgba(255,255,255,.25);margin-top:4px;font-style:italic;}
 
 .toggle-wrap{display:flex;align-items:center;gap:10px;margin-top:8px;}
@@ -769,6 +791,8 @@ footer{width:100%;padding:56px 20px;text-align:center;border-top:1px solid var(-
 
 #note-fullscreen-overlay{display:none;position:fixed;inset:0;z-index:5000;background:rgba(5,5,8,.97);backdrop-filter:blur(24px);align-items:center;justify-content:center;padding:24px;animation:fadeInNoteFs .35s ease-out;}
 #note-fullscreen-overlay.open{display:flex;}
+#link-note-view-overlay{display:none;position:fixed;inset:0;z-index:5000;background:rgba(5,5,8,.97);backdrop-filter:blur(24px);align-items:center;justify-content:center;padding:24px;animation:fadeInNoteFs .35s ease-out;}
+#link-note-view-overlay.open{display:flex;}
 @keyframes fadeInNoteFs{from{opacity:0;}to{opacity:1;}}
 .note-fs-card{max-width:780px;width:100%;max-height:85vh;overflow-y:auto;background:rgba(20,20,20,.7);border:1px solid var(--primary);border-radius:28px;padding:44px;box-shadow:0 30px 70px rgba(0,0,0,.6);position:relative;animation:slideDown .4s ease-out;}
 .note-fs-icon{font-size:2.4rem;color:var(--primary);margin-bottom:18px;}
@@ -866,6 +890,49 @@ footer{width:100%;padding:56px 20px;text-align:center;border-top:1px solid var(-
   </div>
 </div>
 
+<!-- OVERLAY PLEIN ECRAN - CONSULTATION NOTE DE LIEN -->
+<div id="link-note-view-overlay">
+  <div class="note-fs-card">
+    <button class="note-fs-close" onclick="fermerNoteLienConsultation()" title="Fermer">&times;</button>
+    <div class="note-fs-icon"><i class="fa-solid fa-note-sticky"></i></div>
+    <div class="note-fs-queue" id="link-note-view-title"></div>
+    <div class="note-fs-content" id="link-note-view-content"></div>
+    <div class="note-fs-actions" style="gap:12px;">
+      <button onclick="editerNoteLienDepuisConsultation()" style="background:transparent;border:1px solid var(--primary);color:var(--primary);"><i class="fa-solid fa-pen"></i> Modifier</button>
+      <button onclick="fermerNoteLienConsultation()">Fermer</button>
+    </div>
+  </div>
+</div>
+
+<div id="shortcutsModal" class="modal">
+  <div class="modal-inner" style="max-width:640px;">
+    <span class="close-modal" onclick="fermerRaccourcis()">&times;</span>
+    <h2><i class="fa-solid fa-keyboard" style="margin-right:7px;"></i>Raccourcis clavier</h2>
+    <p style="color:rgba(255,255,255,.4);font-size:.75rem;margin-bottom:18px;">Toutes les combinaisons disponibles, ainsi que la syntaxe de recherche par tag et par importance.</p>
+
+    <div class="shortcuts-group-title">Navigation & recherche</div>
+    <div class="shortcuts-list">
+      <div class="shortcut-row"><span class="shortcut-desc">Ouvrir la recherche rapide</span><span class="shortcut-keys"><span class="shortcut-key">Ctrl</span><span class="shortcut-key">K</span></span></div>
+      <div class="shortcut-row"><span class="shortcut-desc">Rechercher les liens importants</span><span class="shortcut-keys"><span class="shortcut-key">Alt</span><span class="shortcut-key">I</span></span></div>
+      <div class="shortcut-row"><span class="shortcut-desc">Effacer la recherche / fermer une fenêtre</span><span class="shortcut-keys"><span class="shortcut-key">Échap</span></span></div>
+      <div class="shortcut-row"><span class="shortcut-desc">Aller à la catégorie précédente / suivante</span><span class="shortcut-keys"><span class="shortcut-key">Alt</span><span class="shortcut-key">↑</span> / <span class="shortcut-key">Alt</span><span class="shortcut-key">↓</span></span></div>
+      <div class="shortcut-row"><span class="shortcut-desc">Naviguer dans la recherche rapide</span><span class="shortcut-keys"><span class="shortcut-key">↑</span><span class="shortcut-key">↓</span><span class="shortcut-key">Entrée</span></span></div>
+      <div class="shortcut-row"><span class="shortcut-desc">Naviguer dans la galerie (image agrandie)</span><span class="shortcut-keys"><span class="shortcut-key">←</span><span class="shortcut-key">→</span></span></div>
+    </div>
+
+    <div class="shortcuts-group-title">Actions</div>
+    <div class="shortcuts-list">
+      <div class="shortcut-row"><span class="shortcut-desc">Annuler la dernière action</span><span class="shortcut-keys"><span class="shortcut-key">Ctrl</span><span class="shortcut-key">Z</span></span></div>
+    </div>
+
+    <div class="shortcuts-group-title">Syntaxe de la barre de recherche</div>
+    <div class="shortcuts-list">
+      <div class="shortcut-row"><span class="shortcut-desc">Rechercher par tag ou mémo : tapez <b style="color:var(--primary);">/</b> suivi du tag (ex : <b>/sql</b>)</span><span class="shortcut-keys"><span class="shortcut-key">/tag</span></span></div>
+      <div class="shortcut-row"><span class="shortcut-desc">Afficher uniquement les liens importants : tapez <b style="color:var(--primary);">!</b> (optionnellement suivi d'un nom)</span><span class="shortcut-keys"><span class="shortcut-key">!</span></span></div>
+    </div>
+  </div>
+</div>
+
 <!-- RECHERCHE RAPIDE (CTRL+K) -->
 <div id="quickSearchOverlay">
   <div class="qs-box">
@@ -919,6 +986,7 @@ footer{width:100%;padding:56px 20px;text-align:center;border-top:1px solid var(-
       <button class="btn-ghost" onclick="openDashboard()"><i class="fa-solid fa-chart-line"></i> Analytics</button>
       <button class="btn-ghost" onclick="ouvrirAujourdhui()" style="border-color:rgba(255,170,0,.4);color:#ffb84d;"><i class="fa-solid fa-sun"></i> Aujourd'hui</button>
       <button class="btn-ghost" onclick="ouvrirQuickSearch()" style="border-color:rgba(120,180,255,.4);color:#7aaeff;"><i class="fa-solid fa-magnifying-glass"></i> Recherche <span style="opacity:.5;font-size:.68rem;margin-left:4px;">Ctrl+K</span></button>
+      <button class="btn-ghost" onclick="ouvrirRaccourcis()" style="border-color:rgba(255, 197, 7, 0.4);color:var(--primary);"><i class="fa-solid fa-keyboard"></i> Raccourcis</button>
     </div>
 
     <div class="btn-group">
@@ -944,7 +1012,7 @@ footer{width:100%;padding:56px 20px;text-align:center;border-top:1px solid var(-
     <div style="display:flex;align-items:center;gap:13px;max-width:1200px;width:100%;flex-wrap:wrap;justify-content:center;">
       <div id="search-bar-wrapper" style="flex:1;min-width:220px;">
         <i class="fa-solid fa-magnifying-glass"></i>
-        <input type="text" id="search-input" placeholder="Rechercher un lien ou appuyer / pour rechercher un tag..." oninput="handleSearchInput(this.value)">
+        <input type="text" id="search-input" placeholder="Rechercher un lien, / pour un tag, ! pour les importants (Alt+I)..." oninput="handleSearchInput(this.value)">
         <div id="search-hint"></div>
         <span id="search-count"></span>
       </div>
@@ -1001,6 +1069,15 @@ footer{width:100%;padding:56px 20px;text-align:center;border-top:1px solid var(-
               <span class="toggle-slider"></span>
             </label>
             <span class="toggle-label">Lien confidentiel (visible seulement après déverrouillage)</span>
+          </div>
+        </div>
+        <div class="full-width">
+          <div class="toggle-wrap">
+            <label class="toggle">
+              <input type="checkbox" id="link-important">
+              <span class="toggle-slider"></span>
+            </label>
+            <span class="toggle-label"><i class="fa-solid fa-star" style="color:var(--primary);margin-right:4px;"></i>Lien important (affiché en priorité, recherche via Alt+I)</span>
           </div>
         </div>
       </div>
@@ -1874,6 +1951,7 @@ async function confirmerDecryptageCategorie() {
 let searchMode = 'normal';
 function handleSearchInput(value) {
   if (value.startsWith('/')) { searchMode = 'tag'; filtrerLiensParTag(value.substring(1).toLowerCase().trim()); }
+  else if (value.startsWith('!')) { searchMode = 'important'; filtrerLiensImportants(value.substring(1).toLowerCase().trim()); }
   else { searchMode = 'normal'; filtrerLiens(value); }
 }
 function filtrerLiensParTag(tagQuery) {
@@ -1889,6 +1967,20 @@ function filtrerLiensParTag(tagQuery) {
   });
   if (tagQuery) { cEl.textContent = found + ' résultat' + (found > 1 ? 's' : '') + ' (tag/mémo)'; cEl.style.display = 'block'; }
   else { cEl.style.display = 'none'; }
+}
+function filtrerLiensImportants(query) {
+  const cEl = document.getElementById('search-count');
+  let found = 0;
+  document.querySelectorAll('.link-wrapper').forEach(wrapper => {
+    const isImportant = wrapper.classList.contains('important-wrapper');
+    const labelEl = wrapper.querySelector('.label');
+    const nameText = labelEl ? (labelEl.getAttribute('data-original') || '').toLowerCase() : '';
+    const matches = isImportant && (query === '' || nameText.includes(query));
+    if (matches) { wrapper.classList.remove('search-hidden'); found++; }
+    else { wrapper.classList.add('search-hidden'); }
+  });
+  cEl.textContent = found + ' lien' + (found > 1 ? 's' : '') + ' important' + (found > 1 ? 's' : '');
+  cEl.style.display = 'block';
 }
 
 // ============================================================
@@ -3027,6 +3119,7 @@ function ajouterLien(){
   const url = document.getElementById('link-url').value.trim();
   let memo = document.getElementById('link-memo').value.trim();
   const priv = document.getElementById('link-private').checked;
+  const important = document.getElementById('link-important').checked;
   const deadline = document.getElementById('link-deadline').value || null;
   const sel = document.getElementById('category-select');
   let catName;
@@ -3045,11 +3138,11 @@ function ajouterLien(){
   if(!memo){ memo = auto.memo; }
   if(!currentTags.length){ currentTags = [auto.tag]; }
   const tagObjects = currentTags.map(tag => ({ name: tag, memo: memo }));
-  db[catName].links.push({ name, url, clicks:0, tags: tagObjects, note: '', private: priv, deadline, addedAt: Date.now(), clickHistory: [] });
+  db[catName].links.push({ name, url, clicks:0, tags: tagObjects, note: '', private: priv, important, deadline, addedAt: Date.now(), clickHistory: [] });
   currentTags=[]; renderTagPills();
   document.getElementById('link-name').value=''; document.getElementById('link-url').value='';
   document.getElementById('link-memo').value=''; document.getElementById('link-deadline').value='';
-  document.getElementById('link-private').checked=false; document.getElementById('duplicate-alert').style.display='none';
+  document.getElementById('link-private').checked=false; document.getElementById('link-important').checked=false; document.getElementById('duplicate-alert').style.display='none';
   save(); toggleInput(false); showToast('✓ Lien ajouté');
 }
 
@@ -3063,7 +3156,7 @@ function trackClick(catName, idx){
   let recents = JSON.parse(localStorage.getItem('hsml_recents')||'[]');
   recents = recents.filter(r=>!(r.cat===catName&&r.idx===idx));
   recents.unshift({cat:catName, idx, name:l.name, url:l.url, ts:Date.now()});
-  recents = recents.slice(0,8);
+  recents = recents.slice(0,20);
   localStorage.setItem('hsml_recents', JSON.stringify(recents));
   save();
 }
@@ -3244,10 +3337,44 @@ function confirmerDuplication(){
   db[dest].links.push({name:orig.name,url:orig.url,clicks:0,tags:[...(orig.tags||[])],note:orig.note||'',private:orig.private||false,addedAt:Date.now(),clickHistory:[]});
   closeDuplicateModal(); save(); showToast(`✓ Lien dupliqué vers "${dest}"`);
 }
-function ouvrirNote(catName, index){ if(!verifierMotDePasse()) return; if(isCategoryEncrypted(catName)){ showToast('Décryptez la catégorie d\'abord'); return; } const link=db[catName].links[index]; if(isLinkEncrypted(link)){ showToast('Décryptez le lien d\'abord'); return; } notePending={cat:catName,index}; document.getElementById('note-modal-link-name').textContent=link.name; document.getElementById('note-modal-textarea').value=link.note||''; updateNotePreview(); document.getElementById('noteModal').style.display='block'; }
+function ouvrirNote(catName, index){
+  if(!verifierMotDePasse()) return;
+  if(isCategoryEncrypted(catName)){ showToast('Décryptez la catégorie d\'abord'); return; }
+  const link=db[catName].links[index];
+  if(isLinkEncrypted(link)){ showToast('Décryptez le lien d\'abord'); return; }
+  if(link.note && link.note.trim()){ ouvrirNoteLienConsultation(catName, index); }
+  else { ouvrirNoteLienEdition(catName, index); }
+}
+function ouvrirNoteLienEdition(catName, index){
+  const link=db[catName].links[index];
+  notePending={cat:catName,index};
+  document.getElementById('note-modal-link-name').textContent=link.name;
+  document.getElementById('note-modal-textarea').value=link.note||'';
+  updateNotePreview();
+  document.getElementById('noteModal').style.display='block';
+}
+let noteLienViewPending = null;
+function ouvrirNoteLienConsultation(catName, index){
+  const link=db[catName].links[index];
+  noteLienViewPending = {cat:catName, index};
+  document.getElementById('link-note-view-title').textContent = link.name;
+  document.getElementById('link-note-view-content').innerHTML = renderMarkdown(link.note || '') || '<span style="color:rgba(255,255,255,.3);font-style:italic;">Aucune note pour le moment.</span>';
+  document.getElementById('link-note-view-overlay').classList.add('open');
+}
+function fermerNoteLienConsultation(){
+  document.getElementById('link-note-view-overlay').classList.remove('open');
+  noteLienViewPending = null;
+}
+function editerNoteLienDepuisConsultation(){
+  if(!noteLienViewPending) return;
+  const {cat, index} = noteLienViewPending;
+  fermerNoteLienConsultation();
+  ouvrirNoteLienEdition(cat, index);
+}
 function closeNoteModal(){ document.getElementById('noteModal').style.display='none'; notePending=null; }
 function saveNote(){ if(!notePending) return; db[notePending.cat].links[notePending.index].note=document.getElementById('note-modal-textarea').value.trim(); closeNoteModal(); save(); showToast('✓ Note enregistrée'); }
 function togglePrivate(catName, index){ if(!verifierMotDePasse()) return; if(isCategoryEncrypted(catName)){ showToast('Décryptez la catégorie d\'abord'); return; } db[catName].links[index].private=!db[catName].links[index].private; save(); showToast(db[catName].links[index].private ? '🔒 Lien marqué confidentiel' : '🔓 Lien rendu public'); }
+function toggleImportant(catName, index){ if(!verifierMotDePasse()) return; if(isCategoryEncrypted(catName)){ showToast('Décryptez la catégorie d\'abord'); return; } const link=db[catName].links[index]; if(isLinkEncrypted(link)){ showToast('Décryptez le lien d\'abord'); return; } link.important=!link.important; save(); showToast(link.important ? '⭐ Lien marqué important' : 'Lien retiré des importants'); }
 
 // ============================================================
 // DRAG & DROP
@@ -3338,17 +3465,20 @@ function renderCategoryGroup(catName, globalMax, catTotals, topCatName, unlocked
     let dlBadge = '';
     if(dlStatus){ if(dlStatus.type==='expired') dlBadge=`<span class="badge-deadline-expired">${dlStatus.label}</span>`; else if(dlStatus.type==='urgent') dlBadge=`<span class="badge-deadline-urgent">${dlStatus.label}</span>`; else dlBadge=`<span class="badge-deadline-ok">📅 ${dlStatus.label}</span>`; }
     const notePlain = (!isEncryptedLink && l.note) ? l.note.replace(/\*\*|__|\*|_|`|\[([^\]]+)\]\([^)]+\)/g,'$1').substring(0,60)+(l.note.length>60?'…':'') : '';
+    const isImportant = !isEncryptedLink && !!l.important;
     const onClickHandler = dragModeActive ? 'return false;' : (isEncryptedLink ? `ouvrirDecryptageLien('${scat}',${origIdx}); return false;` : (l.private ? `return demanderMdpPourLien(event,'${displayUrl.replace(/'/g,"\\'")}','${scat}',${origIdx})` : `trackClick('${scat}',${origIdx})`));
-    return `<div class="link-wrapper" data-memo="${memoSearchText.replace(/"/g,'&quot;')}" ${dragModeActive ? `draggable="true" ondragstart="onLinkDragStart(event,'${scat}',${origIdx})" ondragend="onLinkDragEnd(event)" ondragover="onLinkDragOver(event,'${scat}',${origIdx})" ondrop="onLinkDrop(event,'${scat}',${origIdx})"` : ''}>
-      <a href="${(isEncryptedLink || l.private) ? '#' : displayUrl}" target="${(isEncryptedLink || l.private) ? '_self' : '_blank'}" class="link-card${isDead ? ' dead-link' : ''}" onclick="${onClickHandler}">
+    return `<div class="link-wrapper${isImportant ? ' important-wrapper' : ''}" data-memo="${memoSearchText.replace(/"/g,'&quot;')}" ${dragModeActive ? `draggable="true" ondragstart="onLinkDragStart(event,'${scat}',${origIdx})" ondragend="onLinkDragEnd(event)" ondragover="onLinkDragOver(event,'${scat}',${origIdx})" ondrop="onLinkDrop(event,'${scat}',${origIdx})"` : ''}>
+      <a href="${(isEncryptedLink || l.private) ? '#' : displayUrl}" target="${(isEncryptedLink || l.private) ? '_self' : '_blank'}" class="link-card${isDead ? ' dead-link' : ''}${isImportant ? ' important-link' : ''}" onclick="${onClickHandler}">
         ${dragModeActive ? '<i class="fa-solid fa-grip-vertical" style="color:rgba(255,255,255,.3);font-size:.85rem;flex-shrink:0;"></i>' : (isEncryptedLink ? '<i class="fa-solid fa-lock" style="color:#7a7aff;flex-shrink:0;"></i>' : faviconHtml(l.url))}
+        ${isImportant && !dragModeActive ? '<i class="fa-solid fa-star important-star" title="Lien important"></i>' : ''}
         <div class="link-card-content">
           <div class="label" data-original="${displayName.replace(/"/g,'&quot;')}">${displayName}</div>
-          ${!isEncryptedLink && notePlain ? `<div class="note-preview-md">${notePlain}</div>` : ''}
-          ${!isEncryptedLink && tags.length ? `<div class="link-tags" data-tags="${tags.join(' ')}">${tags.map(t=>`<span class="link-tag">${t}</span>`).join('')}${l.private?'<span class="link-tag private-badge">🔒 Privé</span>':''}</div>` : (!isEncryptedLink && l.private ? '<div class="link-tags"><span class="link-tag private-badge">🔒 Privé</span></div>' : '')}
+          ${!isEncryptedLink && notePlain ? `<div class="note-preview-md" title="Consulter la note" onclick="event.preventDefault();event.stopPropagation();ouvrirNoteLienConsultation('${scat}',${origIdx})">${notePlain}</div>` : ''}
+          ${!isEncryptedLink && tags.length ? `<div class="link-tags" data-tags="${tags.join(' ')}">${tags.map(t=>`<span class="link-tag">${t}</span>`).join('')}${l.private?'<span class="link-tag private-badge">🔒 Privé</span>':''}${isImportant?'<span class="link-tag important-badge">⭐ Important</span>':''}</div>` : (!isEncryptedLink && (l.private || isImportant) ? `<div class="link-tags">${l.private?'<span class="link-tag private-badge">🔒 Privé</span>':''}${isImportant?'<span class="link-tag important-badge">⭐ Important</span>':''}</div>` : '')}
           ${isEncryptedLink ? '<div class="link-tags"><span class="link-tag encrypted-badge">🔐 Crypté</span></div>' : ''}
         </div>
         <div class="analytics-badges">
+          ${isImportant ? '<span class="badge-important"><i class="fa-solid fa-star"></i> Important</span>' : ''}
           ${!isEncryptedLink && isDead ? '<span class="badge-dead">MORT</span>' : ''}
           ${!isEncryptedLink && dlBadge}
           ${!isEncryptedLink && isGlobalTop ? '<span class="badge-top-global">TOP</span>' : ''}
@@ -3363,6 +3493,7 @@ function renderCategoryGroup(catName, globalMax, catTotals, topCatName, unlocked
       ${!dragModeActive ? `<div class="link-actions">
         ${!isEncryptedLink ? `${!l.private ? `<button class="lbtn lbtn-dup" title="Dupliquer" onclick="ouvrirDuplication('${scat}',${origIdx})"><i class="fa-solid fa-copy"></i></button>` : ''}
         <button class="lbtn lbtn-position" title="Changer de position" onclick="modifierPositionLien('${scat}',${origIdx})"><i class="fa-solid fa-arrow-up-9-1"></i></button>
+        <button class="lbtn lbtn-important${isImportant ? ' active' : ''}" title="Basculer important" onclick="toggleImportant('${scat}',${origIdx})"><i class="fa-solid fa-star"></i></button>
         ${!l.private ? `<button class="lbtn lbtn-edit-url" title="Modifier l'URL" onclick="modifierUrl('${scat}',${origIdx})"><i class="fa-solid fa-pen-to-square"></i></button>` : ''}
         ${!l.private ? `<button class="lbtn lbtn-copy" title="Copier l'URL" onclick="copierUrl('${surl}',this)"><i class="fa-solid fa-link"></i></button>` : ''}
         ${!l.private ? `<button class="lbtn lbtn-note" title="Note" onclick="ouvrirNote('${scat}',${origIdx})"><i class="fa-solid fa-note-sticky"></i></button>` : ''}
@@ -3579,9 +3710,20 @@ function executerReinitialisationComplete(){
 // KEYBOARD SHORTCUTS
 // ============================================================
 document.addEventListener('keydown', function(e){
-  if(e.key==='Escape'){ const s=document.getElementById('search-input'); if(document.activeElement===s && s.value){ s.value=''; filtrerLiens(''); s.blur(); } }
+  if(e.key==='Escape'){ const s=document.getElementById('search-input'); if(document.activeElement===s && s.value){ s.value=''; handleSearchInput(''); s.blur(); } }
   if(e.altKey && (e.key==='ArrowUp'||e.key==='ArrowDown')){ e.preventDefault(); const catEls=getCategoryElements(); if(!catEls.length) return; const cur=getCurrentCatIndex(catEls); let next=e.key==='ArrowDown'?Math.min(cur+1,catEls.length-1):Math.max(cur-1,0); catEls[next].scrollIntoView({behavior:'smooth',block:'start'}); catEls[next].style.transition='box-shadow .3s'; catEls[next].style.boxShadow=`0 0 0 2px var(--primary)`; setTimeout(()=>{ catEls[next].style.boxShadow=''; },700); }
+  if(e.altKey && (e.key==='i'||e.key==='I')){
+    e.preventDefault();
+    const s=document.getElementById('search-input');
+    const activatingImportant = s.value.trim() !== '!';
+    s.value = activatingImportant ? '!' : '';
+    handleSearchInput(s.value);
+    s.focus();
+    if(activatingImportant) showToast('⭐ Recherche des liens importants');
+  }
 });
+function ouvrirRaccourcis(){ document.getElementById('shortcutsModal').style.display = 'block'; }
+function fermerRaccourcis(){ document.getElementById('shortcutsModal').style.display = 'none'; }
 function getCategoryElements(){ return Array.from(document.querySelectorAll('.category-group')); }
 function getCurrentCatIndex(catEls){ const mid=window.innerHeight/2; let best=0,bestDist=Infinity; catEls.forEach((el,i)=>{ const rect=el.getBoundingClientRect(); const dist=Math.abs(rect.top+rect.height/2-mid); if(dist<bestDist){ bestDist=dist; best=i; } }); return best; }
 
@@ -5162,6 +5304,7 @@ const QS_COMMANDS = [
   { type:'command', label:'Galerie', icon:'fa-images', action:() => { fermerQuickSearch(); document.getElementById('image-gallery-section').scrollIntoView({behavior:'smooth'}); } },
   { type:'command', label:'Exporter / Importer', icon:'fa-file-export', action:() => { fermerQuickSearch(); ouvrirExportImportModal(); } },
   { type:'command', label:'Annuler la dernière action', icon:'fa-rotate-left', action:() => { fermerQuickSearch(); annulerDerniereAction(); } },
+  { type:'command', label:'Raccourcis clavier', icon:'fa-keyboard', action:() => { fermerQuickSearch(); ouvrirRaccourcis(); } },
 ];
 
 function ouvrirQuickSearch(){
