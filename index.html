@@ -1875,7 +1875,8 @@ async function confirmerCryptage() {
     db[encryptionPending.cat].links[encryptionPending.index] = {
       encrypted: true, encryptedData: encrypted,
       clicks: link.clicks || 0, addedAt: link.addedAt || Date.now(),
-      private: link.private || false, deadline: link.deadline || null
+      private: link.private || false, deadline: link.deadline || null,
+      important: link.important || false
     };
     closeEncryptModal(); save(); showToast('✓ Lien crypté avec succès');
   } catch(e) { showToast('Erreur lors du cryptage: ' + e.message); }
@@ -1900,7 +1901,8 @@ async function confirmerDecryptage() {
     db[decryptionPending.cat].links[decryptionPending.index] = {
       name: decrypted.name, url: decrypted.url, note: decrypted.note || '', tags: decrypted.tags || [],
       clicks: encryptedLink.clicks || 0, addedAt: encryptedLink.addedAt || Date.now(),
-      private: encryptedLink.private || false, deadline: encryptedLink.deadline || null
+      private: encryptedLink.private || false, deadline: encryptedLink.deadline || null,
+      important: encryptedLink.important || false
     };
     closeDecryptModal(); save(); showToast('✓ Lien décrypté avec succès');
   } catch(e) { showToast('Mot de passe incorrect'); }
@@ -2603,10 +2605,10 @@ function construireDonneesPartage(){
         return;
       }
       if (l.private) {
-        if (opts.private) links.push({ name: l.name, url: l.url, clicks: opts.stats ? (l.clicks || 0) : 0, tags: l.tags || [], note: l.note || '', addedAt: l.addedAt || 0, private: true });
+        if (opts.private) links.push({ name: l.name, url: l.url, clicks: opts.stats ? (l.clicks || 0) : 0, tags: l.tags || [], note: l.note || '', addedAt: l.addedAt || 0, private: true, important: l.important || false });
         return;
       }
-      if (opts.public) links.push({ name: l.name, url: l.url, clicks: opts.stats ? (l.clicks || 0) : 0, tags: l.tags || [], note: l.note || '', addedAt: l.addedAt || 0 });
+      if (opts.public) links.push({ name: l.name, url: l.url, clicks: opts.stats ? (l.clicks || 0) : 0, tags: l.tags || [], note: l.note || '', addedAt: l.addedAt || 0, important: l.important || false });
     });
     if (links.length) shareDb[cat] = { rank: db[cat].rank, links };
   }
