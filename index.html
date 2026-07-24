@@ -929,6 +929,7 @@ footer{width:100%;padding:56px 20px;text-align:center;border-top:1px solid var(-
     <div class="shortcuts-list">
       <div class="shortcut-row"><span class="shortcut-desc">Rechercher par tag ou mémo : tapez <b style="color:var(--primary);">/</b> suivi du tag (ex : <b>/sql</b>)</span><span class="shortcut-keys"><span class="shortcut-key">/tag</span></span></div>
       <div class="shortcut-row"><span class="shortcut-desc">Afficher uniquement les liens importants : tapez <b style="color:var(--primary);">!</b> (optionnellement suivi d'un nom)</span><span class="shortcut-keys"><span class="shortcut-key">!</span></span></div>
+      <div class="shortcut-row"><span class="shortcut-desc">Filtrer par type : tapez <b style="color:var(--primary);">#</b> suivi de <b>simple</b>, <b>crypté</b> ou <b>confidentiel</b></span><span class="shortcut-keys"><span class="shortcut-key">#type</span></span></div>
     </div>
   </div>
 </div>
@@ -1012,7 +1013,7 @@ footer{width:100%;padding:56px 20px;text-align:center;border-top:1px solid var(-
     <div style="display:flex;align-items:center;gap:13px;max-width:1200px;width:100%;flex-wrap:wrap;justify-content:center;">
       <div id="search-bar-wrapper" style="flex:1;min-width:220px;">
         <i class="fa-solid fa-magnifying-glass"></i>
-        <input type="text" id="search-input" placeholder="Rechercher un lien, / pour un tag, ! pour les importants (Alt+I)..." oninput="handleSearchInput(this.value)">
+        <input type="text" id="search-input" placeholder="Rechercher, / pour un tag, ! importants, # simple/crypté/confidentiel..." oninput="handleSearchInput(this.value)">
         <div id="search-hint"></div>
         <span id="search-count"></span>
       </div>
@@ -1954,6 +1955,7 @@ let searchMode = 'normal';
 function handleSearchInput(value) {
   if (value.startsWith('/')) { searchMode = 'tag'; filtrerLiensParTag(value.substring(1).toLowerCase().trim()); }
   else if (value.startsWith('!')) { searchMode = 'important'; filtrerLiensImportants(value.substring(1).toLowerCase().trim()); }
+  else if (value.startsWith('#')) { searchMode = 'type'; filtrerLiensParType(value.substring(1).toLowerCase().trim()); }
   else { searchMode = 'normal'; filtrerLiens(value); }
 }
 function filtrerLiensParTag(tagQuery) {
@@ -1983,6 +1985,41 @@ function filtrerLiensImportants(query) {
   });
   cEl.textContent = found + ' lien' + (found > 1 ? 's' : '') + ' important' + (found > 1 ? 's' : '');
   cEl.style.display = 'block';
+}
+function filtrerLiensParType(keyword) {
+  const cEl = document.getElementById('search-count');
+  const aliases = {
+    simple: ['simple','simples','normal','normaux','public','publics'],
+    encrypted: ['crypte','cryptes','crypté','cryptés','chiffre','chiffres','chiffré','chiffrés'],
+    private: ['prive','prives','privé','privés','confidentiel','confidentiels']
+  };
+  const labels = { simple: 'simple', encrypted: 'crypté', private: 'confidentiel' };
+  let type = null;
+  if (keyword) {
+    for (const key in aliases) {
+      if (aliases[key].some(a => a.startsWith(keyword) || keyword.startsWith(a))) { type = key; break; }
+    }
+  }
+  let found = 0;
+  document.querySelectorAll('.link-wrapper').forEach(wrapper => {
+    let matches;
+    if (!type) { matches = true; }
+    else if (type === 'simple') matches = wrapper.classList.contains('type-simple');
+    else if (type === 'encrypted') matches = wrapper.classList.contains('type-encrypted');
+    else matches = wrapper.classList.contains('type-private');
+    if (matches) { wrapper.classList.remove('search-hidden'); found++; }
+    else { wrapper.classList.add('search-hidden'); }
+  });
+  if (!keyword) { cEl.textContent = 'Tapez simple, crypté ou confidentiel'; }
+  else if (!type) { cEl.textContent = 'Type inconnu — essayez simple, crypté ou confidentiel'; }
+  else { cEl.textContent = found + ' lien' + (found > 1 ? 's' : '') + ' ' + labels[type] + (found > 1 && type !== 'simple' ? 's' : ''); }
+  cEl.style.display = 'block';
+}
+function activerFiltreType(prefix){
+  const s = document.getElementById('search-input');
+  s.value = prefix;
+  handleSearchInput(prefix);
+  s.focus();
 }
 
 // ============================================================
@@ -3468,8 +3505,9 @@ function renderCategoryGroup(catName, globalMax, catTotals, topCatName, unlocked
     if(dlStatus){ if(dlStatus.type==='expired') dlBadge=`<span class="badge-deadline-expired">${dlStatus.label}</span>`; else if(dlStatus.type==='urgent') dlBadge=`<span class="badge-deadline-urgent">${dlStatus.label}</span>`; else dlBadge=`<span class="badge-deadline-ok">📅 ${dlStatus.label}</span>`; }
     const notePlain = (!isEncryptedLink && l.note) ? l.note.replace(/\*\*|__|\*|_|`|\[([^\]]+)\]\([^)]+\)/g,'$1').substring(0,60)+(l.note.length>60?'…':'') : '';
     const isImportant = !isEncryptedLink && !!l.important;
+    const linkTypeClass = isEncryptedLink ? 'type-encrypted' : (l.private ? 'type-private' : 'type-simple');
     const onClickHandler = dragModeActive ? 'return false;' : (isEncryptedLink ? `ouvrirDecryptageLien('${scat}',${origIdx}); return false;` : (l.private ? `return demanderMdpPourLien(event,'${displayUrl.replace(/'/g,"\\'")}','${scat}',${origIdx})` : `trackClick('${scat}',${origIdx})`));
-    return `<div class="link-wrapper${isImportant ? ' important-wrapper' : ''}" data-memo="${memoSearchText.replace(/"/g,'&quot;')}" ${dragModeActive ? `draggable="true" ondragstart="onLinkDragStart(event,'${scat}',${origIdx})" ondragend="onLinkDragEnd(event)" ondragover="onLinkDragOver(event,'${scat}',${origIdx})" ondrop="onLinkDrop(event,'${scat}',${origIdx})"` : ''}>
+    return `<div class="link-wrapper${isImportant ? ' important-wrapper' : ''} ${linkTypeClass}" data-memo="${memoSearchText.replace(/"/g,'&quot;')}" ${dragModeActive ? `draggable="true" ondragstart="onLinkDragStart(event,'${scat}',${origIdx})" ondragend="onLinkDragEnd(event)" ondragover="onLinkDragOver(event,'${scat}',${origIdx})" ondrop="onLinkDrop(event,'${scat}',${origIdx})"` : ''}>
       <a href="${(isEncryptedLink || l.private) ? '#' : displayUrl}" target="${(isEncryptedLink || l.private) ? '_self' : '_blank'}" class="link-card${isDead ? ' dead-link' : ''}${isImportant ? ' important-link' : ''}" onclick="${onClickHandler}">
         ${dragModeActive ? '<i class="fa-solid fa-grip-vertical" style="color:rgba(255,255,255,.3);font-size:.85rem;flex-shrink:0;"></i>' : (isEncryptedLink ? '<i class="fa-solid fa-lock" style="color:#7a7aff;flex-shrink:0;"></i>' : faviconHtml(l.url))}
         ${isImportant && !dragModeActive ? '<i class="fa-solid fa-star important-star" title="Lien important"></i>' : ''}
@@ -5306,6 +5344,10 @@ const QS_COMMANDS = [
   { type:'command', label:'Galerie', icon:'fa-images', action:() => { fermerQuickSearch(); document.getElementById('image-gallery-section').scrollIntoView({behavior:'smooth'}); } },
   { type:'command', label:'Exporter / Importer', icon:'fa-file-export', action:() => { fermerQuickSearch(); ouvrirExportImportModal(); } },
   { type:'command', label:'Annuler la dernière action', icon:'fa-rotate-left', action:() => { fermerQuickSearch(); annulerDerniereAction(); } },
+  { type:'command', label:'Liens importants', icon:'fa-star', action:() => { fermerQuickSearch(); const s=document.getElementById('search-input'); s.value='!'; handleSearchInput('!'); s.focus(); } },
+  { type:'command', label:'Liens simples', icon:'fa-link', action:() => { fermerQuickSearch(); activerFiltreType('#simple'); } },
+  { type:'command', label:'Liens cryptés', icon:'fa-lock', action:() => { fermerQuickSearch(); activerFiltreType('#crypte'); } },
+  { type:'command', label:'Liens confidentiels', icon:'fa-eye-slash', action:() => { fermerQuickSearch(); activerFiltreType('#prive'); } },
   { type:'command', label:'Raccourcis clavier', icon:'fa-keyboard', action:() => { fermerQuickSearch(); ouvrirRaccourcis(); } },
 ];
 
